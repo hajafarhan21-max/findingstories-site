@@ -475,106 +475,223 @@
   </footer>
 
   <script>
-    const WEB3FORMS_ACCESS_KEY = "2d2e0ceb-c42f-47be-824e-6cd246a108fb";
+  const WEB3FORMS_ACCESS_KEY = "2d2e0ceb-c42f-47be-824e-6cd246a108fb";
 
-    const developers = [
-      "Emaar Properties","Aldar Properties","Dubai Holding Real Estate","Meraas","Nakheel","DAMAC Properties",
-      "Sobha Realty","Ellington Properties","Omniyat","Binghatti Developers","Danube Properties","Wasl Properties",
-      "Dubai Properties","Azizi Developments","Select Group","Majid Al Futtaim Properties","Arada","Deyaar Development",
-      "MAG Property Development","Nshama","Iman Developers","Imtiaz Developments","H&H Development","Meydan Group",
-      "Union Properties","Reportage Properties","RAK Properties","Tiger Properties","Samana Developers","Object 1 Development",
-      "LEOS Developments","LIV Developers","DarGlobal","Palma Holding","Aqua Properties","London Gate",
-      "Meteora Developers","TownX Development","BNW Developments","Peace Homes Development"
-    ];
+  const MAKE_WEBHOOK_URL = "https://hook.eu1.make.com/bgsnfqxf2keuk7nxtgy9odl02q5mu02b";
 
-    function renderDeveloperTrack(id, list, gold) {
-      const el = document.getElementById(id);
-      const repeated = list.concat(list);
-      el.innerHTML = repeated.map(name => `<div class="developer-box ${gold ? 'gold' : ''}">${name}</div>`).join('');
+  const developers = [
+    "Emaar Properties","Aldar Properties","Dubai Holding Real Estate","Meraas","Nakheel","DAMAC Properties",
+    "Sobha Realty","Ellington Properties","Omniyat","Binghatti Developers","Danube Properties","Wasl Properties",
+    "Dubai Properties","Azizi Developments","Select Group","Majid Al Futtaim Properties","Arada","Deyaar Development",
+    "MAG Property Development","Nshama","Iman Developers","Imtiaz Developments","H&H Development","Meydan Group",
+    "Union Properties","Reportage Properties","RAK Properties","Tiger Properties","Samana Developers","Object 1 Development",
+    "LEOS Developments","LIV Developers","DarGlobal","Palma Holding","Aqua Properties","London Gate",
+    "Meteora Developers","TownX Development","BNW Developments","Peace Homes Development"
+  ];
+
+  function renderDeveloperTrack(id, list, gold) {
+    const el = document.getElementById(id);
+    const repeated = list.concat(list);
+
+    el.innerHTML = repeated.map(name =>
+      `<div class="developer-box ${gold ? 'gold' : ''}">${name}</div>`
+    ).join('');
+  }
+
+  renderDeveloperTrack("track1", developers, false);
+  renderDeveloperTrack("track2", developers.slice().reverse(), true);
+
+  function getFormData() {
+    return {
+      name: document.getElementById("name").value.trim(),
+      phone: document.getElementById("phone").value.trim(),
+      intent: document.getElementById("intent").value,
+      budget: document.getElementById("budget").value,
+      location: document.getElementById("location").value.trim(),
+    };
+  }
+
+  function openWhatsAppWithLead(data) {
+    const message = encodeURIComponent(
+`Hi Finding Stories, I am interested in UAE property options.
+
+Name: ${data.name || ""}
+Phone: ${data.phone || ""}
+Intent: ${data.intent || ""}
+Budget: ${data.budget || ""}
+Preferred Location: ${data.location || ""}`
+    );
+
+    window.open(
+      "https://wa.me/971585757459?text=" + message,
+      "_blank"
+    );
+  }
+
+  function openWhatsApp() {
+    const message = encodeURIComponent(
+      "Hi Finding Stories, I am interested in UAE property options."
+    );
+
+    window.open(
+      "https://wa.me/971585757459?text=" + message,
+      "_blank"
+    );
+  }
+
+  async function submitLead() {
+
+    const data = getFormData();
+
+    const successMessage = document.getElementById("successMessage");
+    const errorMessage = document.getElementById("errorMessage");
+    const submitBtn = document.getElementById("submitBtn");
+
+    successMessage.style.display = "none";
+    errorMessage.style.display = "none";
+
+    if (!data.name || !data.phone) {
+
+      errorMessage.textContent =
+        "Please enter your name and WhatsApp number.";
+
+      errorMessage.style.display = "block";
+
+      return;
     }
 
-    renderDeveloperTrack("track1", developers, false);
-    renderDeveloperTrack("track2", developers.slice().reverse(), true);
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting...";
 
-    function getFormData() {
-      return {
-        name: document.getElementById("name").value.trim(),
-        phone: document.getElementById("phone").value.trim(),
-        intent: document.getElementById("intent").value,
-        budget: document.getElementById("budget").value,
-        location: document.getElementById("location").value.trim(),
-      };
-    }
+    try {
 
-    function openWhatsAppWithLead(data) {
-      const message = encodeURIComponent(
-        `Hi Finding Stories, I am interested in UAE property options. Name: ${data.name || ""}. Phone: ${data.phone || ""}. Budget: ${data.budget || ""}. Intent: ${data.intent || ""}. Preferred location: ${data.location || ""}.`
-      );
-      window.open("https://wa.me/971585757459?text=" + message, "_blank");
-    }
+      // =========================
+      // WEB3FORMS SUBMISSION
+      // =========================
 
-    function openWhatsApp() {
-      const message = encodeURIComponent("Hi Finding Stories, I am interested in UAE property options.");
-      window.open("https://wa.me/971585757459?text=" + message, "_blank");
-    }
-
-    async function submitLead() {
-      const data = getFormData();
-      const successMessage = document.getElementById("successMessage");
-      const errorMessage = document.getElementById("errorMessage");
-      const submitBtn = document.getElementById("submitBtn");
-
-      successMessage.style.display = "none";
-      errorMessage.style.display = "none";
-
-      if (!data.name || !data.phone) {
-        errorMessage.textContent = "Please enter your name and WhatsApp number.";
-        errorMessage.style.display = "block";
-        return;
-      }
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Submitting...";
-
-      try {
-        const response = await fetch("https://api.web3forms.com/submit", {
+      const web3Response = await fetch(
+        "https://api.web3forms.com/submit",
+        {
           method: "POST",
+
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json"
           },
+
           body: JSON.stringify({
+
             access_key: WEB3FORMS_ACCESS_KEY,
+
             subject: "New Finding Stories Lead",
+
             from_name: "Finding Stories Landing Page",
+
             name: data.name,
+
             phone: data.phone,
+
             intent: data.intent,
+
             budget: data.budget,
+
             location: data.location,
+
             source: "finding-stories.com",
-            message: `New lead from Finding Stories website. Name: ${data.name}, Phone: ${data.phone}, Intent: ${data.intent}, Budget: ${data.budget}, Location: ${data.location}`
+
+            message:
+`New lead from website
+
+Name: ${data.name}
+Phone: ${data.phone}
+Intent: ${data.intent}
+Budget: ${data.budget}
+Location: ${data.location}`
           })
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-          successMessage.style.display = "block";
-          openWhatsAppWithLead(data);
-        } else {
-          throw new Error(result.message || "Web3Forms rejected the submission");
         }
-      } catch (error) {
-        console.error(error);
-        errorMessage.textContent = "Submission failed. Please contact us on WhatsApp.";
-        errorMessage.style.display = "block";
-        openWhatsAppWithLead(data);
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Submit & Get Deals";
+      );
+
+      const web3Result = await web3Response.json();
+
+      if (!web3Result.success) {
+        throw new Error(web3Result.message);
       }
+
+      // =========================
+      // MAKE.COM WEBHOOK
+      // =========================
+
+      await fetch(MAKE_WEBHOOK_URL, {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+
+          date: new Date().toLocaleDateString(),
+
+          name: data.name,
+
+          phone: data.phone,
+
+          intent: data.intent,
+
+          budget: data.budget,
+
+          location: data.location,
+
+          source: "finding-stories.com",
+
+          status: "New",
+
+          remarks: "Website Lead"
+        })
+      });
+
+      // =========================
+      // SUCCESS
+      // =========================
+
+      successMessage.style.display = "block";
+
+      formReset();
+
+      openWhatsAppWithLead(data);
+
+    } catch (error) {
+
+      console.error(error);
+
+      errorMessage.textContent =
+        "Submission failed. Please contact us on WhatsApp.";
+
+      errorMessage.style.display = "block";
+
+      openWhatsAppWithLead(data);
+
+    } finally {
+
+      submitBtn.disabled = false;
+
+      submitBtn.textContent = "Submit & Get Deals";
     }
-  </script>
+  }
+
+  function formReset() {
+
+    document.getElementById("name").value = "";
+
+    document.getElementById("phone").value = "";
+
+    document.getElementById("location").value = "";
+
+    document.getElementById("budget").selectedIndex = 0;
+
+    document.getElementById("intent").selectedIndex = 0;
+  }
+</script>
 </body>
 </html>
