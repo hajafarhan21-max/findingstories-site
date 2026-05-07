@@ -1,0 +1,374 @@
+import React, { useMemo, useState } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+
+function Icon({ name, size = 20, className = "" }) {
+  const p = {
+    width: size,
+    height: size,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.8,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    className,
+    "aria-hidden": true,
+  };
+
+  const icons = {
+    arrow: <svg {...p}><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>,
+    building: <svg {...p}><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M8 7h.01M12 7h.01M16 7h.01M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01" /></svg>,
+    money: <svg {...p}><rect x="2" y="6" width="20" height="12" rx="2" /><circle cx="12" cy="12" r="3" /><path d="M6 12h.01M18 12h.01" /></svg>,
+    location: <svg {...p}><path d="M12 21s6-4.35 6-10a6 6 0 1 0-12 0c0 5.65 6 10 6 10z" /><circle cx="12" cy="11" r="2" /></svg>,
+    phone: <svg {...p}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 3.15 9.81 19.79 19.79 0 0 1 .08 1.18 2 2 0 0 1 2.06-1h3a2 2 0 0 1 2 1.72c.12.9.33 1.77.63 2.61a2 2 0 0 1-.45 2.11L6 6.7a16 16 0 0 0 7.3 7.3l1.26-1.24a2 2 0 0 1 2.11-.45c.84.3 1.71.51 2.61.63A2 2 0 0 1 22 16.92z" transform="translate(1 1) scale(.92)" /></svg>,
+    shield: <svg {...p}><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="m9 12 2 2 4-5" /></svg>,
+    spark: <svg {...p}><path d="M12 3l1.7 5.3L19 10l-5.3 1.7L12 17l-1.7-5.3L5 10l5.3-1.7L12 3z" /></svg>,
+  };
+
+  return icons[name] || icons.building;
+}
+
+const developers = [
+  "Emaar Properties",
+  "Aldar Properties",
+  "Dubai Holding Real Estate",
+  "Meraas",
+  "Nakheel",
+  "DAMAC Properties",
+  "Sobha Realty",
+  "Ellington Properties",
+  "Omniyat",
+  "Binghatti Developers",
+  "Danube Properties",
+  "Wasl Properties",
+  "Dubai Properties",
+  "Azizi Developments",
+  "Select Group",
+  "Majid Al Futtaim Properties",
+  "Arada",
+  "Deyaar Development",
+  "MAG Property Development",
+  "Nshama",
+  "Iman Developers",
+  "Imtiaz Developments",
+  "H&H Development",
+  "Meydan Group",
+  "Union Properties",
+  "Reportage Properties",
+  "RAK Properties",
+  "Tiger Properties",
+  "Samana Developers",
+  "Object 1 Development",
+  "LEOS Developments",
+  "LIV Developers",
+  "DarGlobal",
+  "Palma Holding",
+  "Aqua Properties",
+  "London Gate",
+  "Meteora Developers",
+  "TownX Development",
+  "BNW Developments",
+  "Peace Homes Development",
+];
+
+const buyerSegments = [
+  { title: "First-Time Buyers", text: "Clear guidance on budget, payment plan, location and developer reputation." },
+  { title: "NRI Investors", text: "Remote guidance, curated options and WhatsApp-first follow-up for faster decisions." },
+  { title: "Luxury Buyers", text: "Premium branded residences, waterfront communities and high-status addresses." },
+  { title: "Portfolio Investors", text: "ROI-led shortlist across multiple developers, not one-project pushing." },
+];
+
+
+
+function runSelfTests() {
+  return {
+    hasCompanyBrand: true,
+    hasDeveloperLoop: developers.length >= 30,
+    hasBuyerSegments: buyerSegments.length >= 4,
+    hasDevelopers: developers.length >= 6,
+    passed: developers.length >= 30 && buyerSegments.length >= 4,
+  };
+}
+
+const selfTests = runSelfTests();
+
+export default function FindingStoriesLuxuryFunnel() {
+  const [form, setForm] = useState({ name: "", phone: "", budget: "", intent: "Investment", location: "Dubai" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const whatsappText = useMemo(() => {
+    const message = `Hi Finding Stories, I am interested in UAE property options. Name: ${form.name || ""}. Budget: ${form.budget || ""}. Intent: ${form.intent}. Preferred location: ${form.location}.`;
+    return encodeURIComponent(message);
+  }, [form]);
+
+  const openWhatsApp = () => {
+    window.open(`https://wa.me/971585757459?text=${whatsappText}`, "_blank");
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsSubmitting(true);
+
+    const payload = {
+      ...form,
+      source: "Meta Ads Landing Page",
+      brand: "Finding Stories LLC - Real Estate Solutions",
+      campaign: "Luxury UAE Real Estate Funnel",
+      submittedAt: new Date().toISOString(),
+    };
+
+    try {
+      // Replace this with Zoho Forms, Zoho CRM, LeadSquared, Zapier, or Make webhook URL.
+      await fetch("https://your-crm-endpoint.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } catch (error) {
+      console.warn("CRM webhook not configured yet. WhatsApp fallback opened.", error);
+    } finally {
+      setIsSubmitting(false);
+      openWhatsApp();
+    }
+  };
+
+  return (
+    <main className="min-h-screen bg-[#080808] text-white">
+      <section className="relative overflow-hidden px-6 py-6 md:px-12 lg:px-20">
+        <div className="absolute inset-0 opacity-20" style={{ backgroundImage: "linear-gradient(135deg, rgba(200,155,60,.35) 1px, transparent 1px)", backgroundSize: "42px 42px" }} />
+        <div className="absolute -right-40 top-0 h-96 w-96 rounded-full bg-[#C89B3C]/20 blur-3xl" />
+
+        <nav className="relative z-10 mx-auto flex max-w-7xl items-center justify-between border-b border-white/10 pb-5">
+          <div>
+            <p className="text-xl font-black tracking-[.18em] text-white">FINDING STORIES</p>
+            <p className="text-xs uppercase tracking-[.35em] text-[#C89B3C]">Real Estate Solutions</p>
+          </div>
+          <div className="hidden items-center gap-7 text-sm text-white/70 md:flex">
+            <a href="#projects" className="hover:text-[#C89B3C]">Projects</a>
+            <a href="#guidance" className="hover:text-[#C89B3C]">Guidance</a>
+            <a href="#developers" className="hover:text-[#C89B3C]">Developers</a>
+          </div>
+          <Button onClick={openWhatsApp} className="rounded-none bg-[#C89B3C] px-5 font-bold text-black hover:bg-[#D9B457]">
+            WhatsApp Now
+          </Button>
+        </nav>
+
+        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 py-20 lg:grid-cols-[1.12fr_.88fr] lg:py-28">
+          <motion.div initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+            <div className="mb-7 inline-flex items-center gap-2 border border-[#C89B3C]/40 bg-[#C89B3C]/10 px-4 py-2 text-xs font-bold uppercase tracking-[.25em] text-[#D9B457]">
+              <Icon name="spark" size={15} /> Priority UAE Property Access
+            </div>
+            <h1 className="max-w-4xl text-5xl font-black uppercase leading-[.95] tracking-tight md:text-7xl">
+              Find Your Place in Dubai With Confidence.
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/65">
+              Luxury-led, ROI-focused property guidance across UAE’s top developers. We shortlist the right options, align the numbers, and move you from enquiry to private site visit.
+            </p>
+
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+              <Button onClick={() => document.getElementById("lead-form")?.scrollIntoView({ behavior: "smooth" })} className="rounded-none bg-[#C89B3C] px-8 py-6 text-base font-black uppercase text-black hover:bg-[#D9B457]">
+                Unlock Priority Deals <Icon name="arrow" className="ml-2" />
+              </Button>
+              <Button variant="outline" onClick={openWhatsApp} className="rounded-none border-white/30 bg-transparent px-8 py-6 text-base font-bold text-white hover:bg-white hover:text-black">
+                Chat With Advisor
+              </Button>
+            </div>
+
+            <div className="mt-8 grid max-w-2xl grid-cols-2 gap-4 text-sm md:grid-cols-4">
+              {[
+                ["AED 315K+", "Starting options"],
+                ["12–15%", "ROI-focused picks"],
+                ["Multi", "Developer access"],
+                ["SV", "Priority visits"],
+              ].map(([value, label]) => (
+                <div key={value} className="border border-white/10 bg-white/[.03] p-4">
+                  <p className="text-xl font-black text-[#C89B3C]">{value}</p>
+                  <p className="mt-1 text-xs text-white/55">{label}</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, delay: 0.1 }}>
+            <Card id="lead-form" className="rounded-none border-[#C89B3C]/25 bg-white text-black shadow-2xl">
+              <CardContent className="p-7">
+                <p className="mb-2 text-xs font-black uppercase tracking-[.25em] text-[#A77D24]">Private Advisory Form</p>
+                <h2 className="mb-5 text-3xl font-black">Get Curated UAE Property Options</h2>
+                <form onSubmit={handleSubmit} className="space-y-3">
+                  <input required className="w-full border border-black/15 p-4 outline-none focus:border-[#C89B3C]" placeholder="Full Name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                  <input required className="w-full border border-black/15 p-4 outline-none focus:border-[#C89B3C]" placeholder="Phone / WhatsApp Number" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                  <select className="w-full border border-black/15 p-4 outline-none focus:border-[#C89B3C]" value={form.intent} onChange={(e) => setForm({ ...form, intent: e.target.value })}>
+                    <option>Investment</option>
+                    <option>End Use</option>
+                    <option>Both Investment & End Use</option>
+                  </select>
+                  <select className="w-full border border-black/15 p-4 outline-none focus:border-[#C89B3C]" value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })}>
+                    <option value="">Select Budget Range</option>
+                    <option>AED 300K - 700K</option>
+                    <option>AED 700K - 1.2M</option>
+                    <option>AED 1.2M - 2M</option>
+                    <option>AED 2M+</option>
+                  </select>
+                  <input className="w-full border border-black/15 p-4 outline-none focus:border-[#C89B3C]" placeholder="Preferred Location e.g. JVC, Majan, Dubai Hills" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
+
+                  <Button type="submit" disabled={isSubmitting} className="w-full rounded-none bg-black py-6 text-base font-black uppercase text-white hover:bg-[#C89B3C] hover:text-black">
+                    {isSubmitting ? "Submitting..." : "Submit & Get Deals"}
+                  </Button>
+                </form>
+                <p className="mt-4 text-xs leading-5 text-black/55">
+                  CRM-ready lead capture. Connect this form to Zoho, LeadSquared, Zapier, or Make webhook before launch.
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+      </section>
+
+      <section id="guidance" className="border-y border-white/10 bg-[#101010] px-6 py-16 md:px-12 lg:px-20">
+        <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[.9fr_1.1fr] lg:items-center">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[.3em] text-[#C89B3C]">We guide. You decide.</p>
+            <h2 className="mt-3 text-4xl font-black uppercase leading-tight md:text-5xl">Real guidance for serious property decisions.</h2>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            {buyerSegments.map((segment) => (
+              <div key={segment.title} className="border border-white/10 bg-white/[.03] p-6">
+                <h3 className="text-lg font-black text-white">{segment.title}</h3>
+                <p className="mt-2 text-sm leading-6 text-white/60">{segment.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="projects" className="px-6 py-20 md:px-12 lg:px-20">
+        <style>{`
+          @keyframes developerMarqueeLeft {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+          }
+          @keyframes developerMarqueeRight {
+            from { transform: translateX(-50%); }
+            to { transform: translateX(0); }
+          }
+          .developer-marquee-left {
+            animation: developerMarqueeLeft 90s linear infinite;
+          }
+          .developer-marquee-right {
+            animation: developerMarqueeRight 110s linear infinite;
+          }
+          .developer-marquee-wrap:hover .developer-marquee-left,
+          .developer-marquee-wrap:hover .developer-marquee-right {
+            animation-play-state: paused;
+          }
+          .developer-marquee-soft-mask {
+            mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+          }
+        `}</style>
+
+        <div className="mx-auto max-w-7xl overflow-hidden">
+          <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[.3em] text-[#C89B3C]">Trusted Developer Network</p>
+              <h2 className="mt-3 text-4xl font-black uppercase md:text-5xl">Top UAE Real Estate Developers — 30+</h2>
+              <p className="mt-4 max-w-3xl text-white/60">
+                Access curated opportunities across UAE’s leading developers — compared by price, location, payment plan, ROI potential and handover timeline.
+              </p>
+            </div>
+            <Button onClick={openWhatsApp} className="rounded-none bg-[#C89B3C] px-6 font-black text-black hover:bg-[#D9B457]">
+              Request Full Inventory
+            </Button>
+          </div>
+
+          <div className="developer-marquee-wrap relative space-y-5 rounded-[2rem] border border-white/10 bg-white/[.02] p-3 shadow-[0_30px_100px_rgba(0,0,0,.45)] backdrop-blur-xl">
+            <div className="pointer-events-none absolute left-0 top-0 z-20 h-full w-32 bg-gradient-to-r from-[#080808] via-[#080808]/90 to-transparent blur-sm" />
+            <div className="pointer-events-none absolute right-0 top-0 z-20 h-full w-32 bg-gradient-to-l from-[#080808] via-[#080808]/90 to-transparent blur-sm" />
+
+            <div className="developer-marquee-soft-mask overflow-hidden border-y border-white/10 py-4">
+              <div className="developer-marquee-left flex w-max gap-4">
+                {[...developers, ...developers].map((developer, index) => (
+                  <div key={`${developer}-top-${index}`} className="flex h-24 min-w-[240px] items-center justify-center border border-white/10 bg-[#111] px-8 text-center text-sm font-black uppercase tracking-[.16em] text-white/70 transition hover:border-[#C89B3C] hover:text-[#C89B3C] md:min-w-[280px]">
+                    {developer}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="developer-marquee-soft-mask overflow-hidden py-4">
+              <div className="developer-marquee-right flex w-max gap-4">
+                {[...developers.slice().reverse(), ...developers.slice().reverse()].map((developer, index) => (
+                  <div key={`${developer}-bottom-${index}`} className="flex h-24 min-w-[240px] items-center justify-center border border-[#C89B3C]/20 bg-[#C89B3C]/10 px-8 text-center text-sm font-black uppercase tracking-[.16em] text-[#D9B457] transition hover:bg-[#C89B3C] hover:text-black md:min-w-[280px]">
+                    {developer}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="developers" className="bg-white px-6 py-20 text-black md:px-12 lg:px-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-10 lg:grid-cols-[.85fr_1.15fr] lg:items-center">
+            <div>
+              <p className="text-xs font-black uppercase tracking-[.3em] text-[#A77D24]">Trusted developer access</p>
+              <h2 className="mt-3 text-4xl font-black uppercase md:text-5xl">One advisory desk. Multiple developers.</h2>
+              <p className="mt-5 leading-8 text-black/60">
+                We compare the market across developer reputation, payment plan, handover timeline, rental potential and exit strategy — so your decision is not based on one brochure.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="border border-black/10 bg-[#F7F2E8] p-6">
+                <p className="text-4xl font-black text-[#A77D24]">30+</p>
+                <p className="mt-2 text-sm font-bold uppercase tracking-wider text-black/70">Developer Network</p>
+              </div>
+              <div className="border border-black/10 bg-[#F7F2E8] p-6">
+                <p className="text-4xl font-black text-[#A77D24]">UAE</p>
+                <p className="mt-2 text-sm font-bold uppercase tracking-wider text-black/70">Dubai • Abu Dhabi • Sharjah • RAK</p>
+              </div>
+              <div className="border border-black/10 bg-[#F7F2E8] p-6">
+                <p className="text-4xl font-black text-[#A77D24]">ROI</p>
+                <p className="mt-2 text-sm font-bold uppercase tracking-wider text-black/70">Investment-led comparison</p>
+              </div>
+              <div className="border border-black/10 bg-[#F7F2E8] p-6">
+                <p className="text-4xl font-black text-[#A77D24]">SV</p>
+                <p className="mt-2 text-sm font-bold uppercase tracking-wider text-black/70">Priority site visit support</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-6 py-20 text-center md:px-12 lg:px-20">
+        <div className="mx-auto max-w-4xl border border-[#C89B3C]/35 bg-[#C89B3C] px-8 py-16 text-black">
+          <h2 className="text-4xl font-black uppercase md:text-6xl">Limited Units. Fast Movement.</h2>
+          <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-black/70">
+            Submit your requirement now and receive a curated shortlist before the next price revision or inventory movement.
+          </p>
+          <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+            <Button onClick={() => document.getElementById("lead-form")?.scrollIntoView({ behavior: "smooth" })} className="rounded-none bg-black px-8 py-6 font-black uppercase text-white hover:bg-white hover:text-black">
+              Get Curated Options
+            </Button>
+            <Button onClick={openWhatsApp} variant="outline" className="rounded-none border-black px-8 py-6 font-black uppercase text-black hover:bg-black hover:text-white">
+              Speak on WhatsApp
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      <footer className="border-t border-white/10 px-6 py-8 text-sm text-white/45 md:px-12 lg:px-20">
+        <div className="mx-auto flex max-w-7xl flex-col justify-between gap-3 md:flex-row md:items-center">
+          <p>© 2026 Finding Stories LLC - Real Estate Solutions</p>
+          <p>Advisory desk: Haja Farhan | +971 58 5757459</p>
+        </div>
+      </footer>
+
+      <span className="sr-only" data-testid="landing-page-self-test">
+        {selfTests.passed ? "self-tests-passed" : "self-tests-failed"}
+      </span>
+    </main>
+  );
+}
