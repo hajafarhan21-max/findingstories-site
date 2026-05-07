@@ -1,48 +1,620 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Finding Stories LLC</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finding Stories LLC - Real Estate Solutions</title>
+  <meta name="description" content="Luxury-led, ROI-focused UAE real estate advisory across Dubai, Abu Dhabi, Sharjah and RAK." />
   <style>
-    body { margin:0; font-family:Arial, sans-serif; background:#080808; color:white; }
-    section { padding:60px 8%; }
-    .gold { color:#C89B3C; }
-    h1 { font-size:56px; max-width:850px; }
-    p { color:#ccc; font-size:18px; line-height:1.6; }
-    button { background:#C89B3C; color:#000; padding:16px 28px; border:0; font-weight:bold; cursor:pointer; }
-    .marquee { overflow:hidden; white-space:nowrap; border-top:1px solid #333; border-bottom:1px solid #333; padding:25px 0; }
-    .track { display:inline-block; animation:scroll 90s linear infinite; }
-    .track span { display:inline-block; margin:0 18px; padding:20px 35px; border:1px solid #333; color:#C89B3C; font-weight:bold; }
-    .marquee:hover .track { animation-play-state:paused; }
-    @keyframes scroll { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+    :root {
+      --black: #080808;
+      --dark: #101010;
+      --soft: #171717;
+      --gold: #C89B3C;
+      --gold2: #D9B457;
+      --white: #ffffff;
+      --muted: rgba(255,255,255,.65);
+      --line: rgba(255,255,255,.12);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--black);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button, input, select { font-family: inherit; }
+
+    .pattern {
+      position: absolute;
+      inset: 0;
+      opacity: .22;
+      background-image: linear-gradient(135deg, rgba(200,155,60,.35) 1px, transparent 1px);
+      background-size: 42px 42px;
+      pointer-events: none;
+    }
+
+    .glow {
+      position: absolute;
+      right: -180px;
+      top: -80px;
+      width: 460px;
+      height: 460px;
+      border-radius: 999px;
+      background: rgba(200,155,60,.22);
+      filter: blur(70px);
+      pointer-events: none;
+    }
+
+    .section { padding: 72px 7%; position: relative; }
+    .container { max-width: 1240px; margin: 0 auto; position: relative; z-index: 1; }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+      padding: 22px 0;
+      gap: 20px;
+    }
+
+    .brand-title {
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: .18em;
+    }
+
+    .brand-sub {
+      margin-top: 4px;
+      color: var(--gold);
+      font-size: 11px;
+      letter-spacing: .35em;
+      text-transform: uppercase;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .btn {
+      border: 0;
+      background: var(--gold);
+      color: #000;
+      padding: 16px 24px;
+      font-weight: 900;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: .25s ease;
+    }
+
+    .btn:hover { background: var(--gold2); transform: translateY(-2px); }
+    .btn-dark { background: #000; color: #fff; }
+    .btn-dark:hover { background: #fff; color: #000; }
+    .btn-outline { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.3); }
+    .btn-outline:hover { background: #fff; color: #000; }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.12fr .88fr;
+      gap: 52px;
+      align-items: center;
+      padding: 82px 0 60px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid rgba(200,155,60,.42);
+      background: rgba(200,155,60,.1);
+      color: var(--gold2);
+      padding: 10px 16px;
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(42px, 7vw, 84px);
+      line-height: .95;
+      text-transform: uppercase;
+      letter-spacing: -.04em;
+      font-weight: 1000;
+      max-width: 880px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: -.035em;
+      font-weight: 1000;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 17px;
+    }
+
+    .hero-copy { max-width: 700px; margin-top: 24px; }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      max-width: 720px;
+      margin-top: 32px;
+    }
+
+    .stat {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.035);
+      padding: 18px;
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--gold);
+      font-size: 23px;
+      font-weight: 1000;
+    }
+
+    .stat span {
+      color: rgba(255,255,255,.55);
+      font-size: 12px;
+    }
+
+    .lead-card {
+      background: #fff;
+      color: #000;
+      border: 1px solid rgba(200,155,60,.3);
+      box-shadow: 0 30px 90px rgba(0,0,0,.45);
+      padding: 32px;
+    }
+
+    .lead-card h3 {
+      margin: 8px 0 22px;
+      font-size: 32px;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .lead-card .small {
+      color: #A77D24;
+      font-size: 11px;
+      letter-spacing: .25em;
+      font-weight: 1000;
+      text-transform: uppercase;
+    }
+
+    .field {
+      width: 100%;
+      border: 1px solid rgba(0,0,0,.15);
+      padding: 16px;
+      margin-bottom: 12px;
+      outline: none;
+      font-size: 15px;
+      background: #fff;
+    }
+
+    .field:focus { border-color: var(--gold); }
+
+    .full-btn {
+      width: 100%;
+      margin-top: 4px;
+      padding: 18px;
+      background: #000;
+      color: #fff;
+      border: 0;
+      cursor: pointer;
+      font-weight: 1000;
+      text-transform: uppercase;
+    }
+
+    .full-btn:hover { background: var(--gold); color: #000; }
+
+    .guidance {
+      background: #101010;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .guidance-grid {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 44px;
+      align-items: center;
+    }
+
+    .segment-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .segment {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.035);
+      padding: 26px;
+    }
+
+    .segment h3 { margin: 0; font-size: 19px; text-transform: uppercase; }
+    .segment p { margin-bottom: 0; font-size: 14px; }
+
+    .developer-wrap {
+      margin-top: 42px;
+      position: relative;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.02);
+      padding: 14px;
+      border-radius: 30px;
+      box-shadow: 0 30px 100px rgba(0,0,0,.45);
+      backdrop-filter: blur(12px);
+      overflow: hidden;
+    }
+
+    .developer-wrap::before,
+    .developer-wrap::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      z-index: 5;
+      height: 100%;
+      width: 130px;
+      pointer-events: none;
+      filter: blur(2px);
+    }
+
+    .developer-wrap::before {
+      left: 0;
+      background: linear-gradient(to right, #080808, rgba(8,8,8,.8), transparent);
+    }
+
+    .developer-wrap::after {
+      right: 0;
+      background: linear-gradient(to left, #080808, rgba(8,8,8,.8), transparent);
+    }
+
+    .marquee-line {
+      overflow: hidden;
+      padding: 15px 0;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    }
+
+    .marquee-line:first-child { border-bottom: 1px solid rgba(255,255,255,.08); }
+
+    .marquee-track {
+      display: flex;
+      gap: 16px;
+      width: max-content;
+      animation: scrollLeft 95s linear infinite;
+    }
+
+    .marquee-track.reverse {
+      animation: scrollRight 115s linear infinite;
+    }
+
+    .developer-wrap:hover .marquee-track { animation-play-state: paused; }
+
+    .developer-box {
+      min-width: 275px;
+      height: 92px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 28px;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      font-size: 13px;
+      font-weight: 1000;
+      color: rgba(255,255,255,.72);
+      transition: .25s ease;
+    }
+
+    .developer-box.gold {
+      border-color: rgba(200,155,60,.22);
+      background: rgba(200,155,60,.1);
+      color: var(--gold2);
+    }
+
+    .developer-box:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    @keyframes scrollLeft {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    @keyframes scrollRight {
+      from { transform: translateX(-50%); }
+      to { transform: translateX(0); }
+    }
+
+    .white-section {
+      background: #fff;
+      color: #000;
+    }
+
+    .white-section p { color: rgba(0,0,0,.6); }
+
+    .trust-grid {
+      display: grid;
+      grid-template-columns: .85fr 1.15fr;
+      gap: 52px;
+      align-items: center;
+    }
+
+    .trust-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .trust-card {
+      background: #F7F2E8;
+      border: 1px solid rgba(0,0,0,.1);
+      padding: 28px;
+    }
+
+    .trust-card strong {
+      display: block;
+      color: #A77D24;
+      font-size: 42px;
+      font-weight: 1000;
+    }
+
+    .trust-card span {
+      margin-top: 8px;
+      display: block;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      font-weight: 900;
+      color: rgba(0,0,0,.7);
+    }
+
+    .final-cta {
+      text-align: center;
+    }
+
+    .final-box {
+      max-width: 980px;
+      margin: 0 auto;
+      background: var(--gold);
+      color: #000;
+      padding: 64px 36px;
+    }
+
+    .final-box h2 {
+      font-size: clamp(36px, 6vw, 72px);
+    }
+
+    .final-box p { color: rgba(0,0,0,.7); max-width: 700px; margin: 20px auto 0; }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 28px 7%;
+      color: rgba(255,255,255,.45);
+      font-size: 14px;
+    }
+
+    .footer-row {
+      max-width: 1240px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .hero-grid, .guidance-grid, .trust-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .segment-grid, .trust-cards { grid-template-columns: 1fr; }
+      .section { padding: 54px 6%; }
+      .developer-box { min-width: 220px; }
+    }
   </style>
 </head>
 <body>
+  <section class="section">
+    <div class="pattern"></div>
+    <div class="glow"></div>
 
-<section>
-  <h3 class="gold">PRIORITY UAE PROPERTY ACCESS</h3>
-  <h1>Find Your Place in Dubai With Confidence.</h1>
-  <p>Luxury-led, ROI-focused real estate guidance across UAE’s top developers.</p>
-  <button onclick="window.open('https://wa.me/971585757459')">WhatsApp Now</button>
-</section>
+    <div class="container">
+      <nav class="nav">
+        <div>
+          <div class="brand-title">FINDING STORIES</div>
+          <div class="brand-sub">Real Estate Solutions</div>
+        </div>
+        <div class="nav-links">
+          <a href="#developers">Developers</a>
+          <a href="#guidance">Guidance</a>
+          <a href="#advisory">Advisory</a>
+        </div>
+        <button class="btn" onclick="openWhatsApp()">WhatsApp Now</button>
+      </nav>
 
-<section>
-  <h3 class="gold">TRUSTED DEVELOPER NETWORK</h3>
-  <h1>Top UAE Real Estate Developers — 30+</h1>
+      <div class="hero-grid">
+        <div>
+          <div class="eyebrow">✦ Priority UAE Property Access</div>
+          <h1>Find Your Place in Dubai With Confidence.</h1>
+          <p class="hero-copy">
+            Luxury-led, ROI-focused property guidance across UAE’s top developers. We shortlist the right options, align the numbers, and move you from enquiry to private site visit.
+          </p>
 
-  <div class="marquee">
-    <div class="track">
-      <span>Emaar</span><span>Aldar</span><span>Meraas</span><span>Nakheel</span><span>DAMAC</span><span>Sobha</span><span>Binghatti</span><span>Danube</span><span>Omniyat</span><span>Ellington</span><span>Azizi</span><span>Deyaar</span><span>Arada</span><span>Reportage</span><span>Samana</span>
-      <span>Emaar</span><span>Aldar</span><span>Meraas</span><span>Nakheel</span><span>DAMAC</span><span>Sobha</span><span>Binghatti</span><span>Danube</span><span>Omniyat</span><span>Ellington</span><span>Azizi</span><span>Deyaar</span><span>Arada</span><span>Reportage</span><span>Samana</span>
+          <div class="hero-actions">
+            <button class="btn" onclick="document.getElementById('lead-form').scrollIntoView({behavior:'smooth'})">Unlock Priority Deals</button>
+            <button class="btn btn-outline" onclick="openWhatsApp()">Chat With Advisor</button>
+          </div>
+
+          <div class="stats">
+            <div class="stat"><strong>AED 315K+</strong><span>Starting options</span></div>
+            <div class="stat"><strong>12–15%</strong><span>ROI-focused picks</span></div>
+            <div class="stat"><strong>30+</strong><span>Developer access</span></div>
+            <div class="stat"><strong>SV</strong><span>Priority visits</span></div>
+          </div>
+        </div>
+
+        <div class="lead-card" id="lead-form">
+          <div class="small">Private Advisory Form</div>
+          <h3>Get Curated UAE Property Options</h3>
+          <input class="field" id="name" placeholder="Full Name" />
+          <input class="field" id="phone" placeholder="Phone / WhatsApp Number" />
+          <select class="field" id="intent">
+            <option>Investment</option>
+            <option>End Use</option>
+            <option>Both Investment & End Use</option>
+          </select>
+          <select class="field" id="budget">
+            <option value="">Select Budget Range</option>
+            <option>AED 300K - 700K</option>
+            <option>AED 700K - 1.2M</option>
+            <option>AED 1.2M - 2M</option>
+            <option>AED 2M+</option>
+          </select>
+          <input class="field" id="location" placeholder="Preferred Location e.g. JVC, Majan, Dubai Hills" />
+          <button class="full-btn" onclick="submitLead()">Submit & Get Deals</button>
+          <p style="font-size:12px;color:rgba(0,0,0,.55)">Response within 5 minutes via WhatsApp.</p>
+        </div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section style="background:#C89B3C;color:#000;text-align:center;">
-  <h1 style="margin:auto;">Limited Units. Fast Movement.</h1>
-  <p style="color:#111;">Speak to our advisory desk before the next price revision.</p>
-  <button onclick="window.open('https://wa.me/971585757459')" style="background:#000;color:white;">Speak to Advisor</button>
-</section>
+  <section class="section guidance" id="guidance">
+    <div class="container guidance-grid">
+      <div>
+        <div class="eyebrow">We guide. You decide.</div>
+        <h2>Real guidance for serious property decisions.</h2>
+      </div>
+      <div class="segment-grid">
+        <div class="segment"><h3>First-Time Buyers</h3><p>Clear guidance on budget, payment plan, location and developer reputation.</p></div>
+        <div class="segment"><h3>NRI Investors</h3><p>Remote guidance, curated options and WhatsApp-first follow-up for faster decisions.</p></div>
+        <div class="segment"><h3>Luxury Buyers</h3><p>Premium branded residences, waterfront communities and high-status addresses.</p></div>
+        <div class="segment"><h3>Portfolio Investors</h3><p>ROI-led shortlist across multiple developers, not one-project pushing.</p></div>
+      </div>
+    </div>
+  </section>
 
+  <section class="section" id="developers">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;gap:24px;align-items:end;flex-wrap:wrap;">
+        <div>
+          <div class="eyebrow">Trusted Developer Network</div>
+          <h2>Top UAE Real Estate Developers — 30+</h2>
+          <p style="max-width:780px;">Access curated opportunities across UAE’s leading developers — compared by price, location, payment plan, ROI potential and handover timeline.</p>
+        </div>
+        <button class="btn" onclick="openWhatsApp()">Request Full Inventory</button>
+      </div>
+
+      <div class="developer-wrap">
+        <div class="marquee-line">
+          <div class="marquee-track" id="track1"></div>
+        </div>
+        <div class="marquee-line">
+          <div class="marquee-track reverse" id="track2"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section white-section" id="advisory">
+    <div class="container trust-grid">
+      <div>
+        <div class="eyebrow" style="background:#F7F2E8;color:#A77D24;">Trusted developer access</div>
+        <h2>One advisory desk. Multiple developers.</h2>
+        <p>We compare the market across developer reputation, payment plan, handover timeline, rental potential and exit strategy — so your decision is not based on one brochure.</p>
+      </div>
+      <div class="trust-cards">
+        <div class="trust-card"><strong>30+</strong><span>Developer Network</span></div>
+        <div class="trust-card"><strong>UAE</strong><span>Dubai • Abu Dhabi • Sharjah • RAK</span></div>
+        <div class="trust-card"><strong>ROI</strong><span>Investment-led comparison</span></div>
+        <div class="trust-card"><strong>SV</strong><span>Priority site visit support</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section final-cta">
+    <div class="final-box">
+      <h2>Limited Units. Fast Movement.</h2>
+      <p>Submit your requirement now and receive a curated shortlist before the next price revision or inventory movement.</p>
+      <div class="hero-actions" style="justify-content:center;">
+        <button class="btn btn-dark" onclick="document.getElementById('lead-form').scrollIntoView({behavior:'smooth'})">Get Curated Options</button>
+        <button class="btn btn-outline" style="border-color:#000;color:#000;" onclick="openWhatsApp()">Speak on WhatsApp</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-row">
+      <div>© 2026 Finding Stories LLC - Real Estate Solutions</div>
+      <div>Advisory desk: Haja Farhan | +971 58 5757459</div>
+    </div>
+  </footer>
+
+  <script>
+    const developers = [
+      "Emaar Properties","Aldar Properties","Dubai Holding Real Estate","Meraas","Nakheel","DAMAC Properties",
+      "Sobha Realty","Ellington Properties","Omniyat","Binghatti Developers","Danube Properties","Wasl Properties",
+      "Dubai Properties","Azizi Developments","Select Group","Majid Al Futtaim Properties","Arada","Deyaar Development",
+      "MAG Property Development","Nshama","Iman Developers","Imtiaz Developments","H&H Development","Meydan Group",
+      "Union Properties","Reportage Properties","RAK Properties","Tiger Properties","Samana Developers","Object 1 Development",
+      "LEOS Developments","LIV Developers","DarGlobal","Palma Holding","Aqua Properties","London Gate",
+      "Meteora Developers","TownX Development","BNW Developments","Peace Homes Development"
+    ];
+
+    function renderDeveloperTrack(id, list, gold) {
+      const el = document.getElementById(id);
+      const repeated = list.concat(list);
+      el.innerHTML = repeated.map(name => `<div class="developer-box ${gold ? 'gold' : ''}">${name}</div>`).join('');
+    }
+
+    renderDeveloperTrack("track1", developers, false);
+    renderDeveloperTrack("track2", developers.slice().reverse(), true);
+
+    function openWhatsApp() {
+      const message = encodeURIComponent("Hi Finding Stories, I am interested in UAE property options.");
+      window.open("https://wa.me/971585757459?text=" + message, "_blank");
+    }
+
+    function submitLead() {
+      const name = document.getElementById("name").value || "";
+      const budget = document.getElementById("budget").value || "";
+      const intent = document.getElementById("intent").value || "";
+      const location = document.getElementById("location").value || "";
+      const message = encodeURIComponent(
+        `Hi Finding Stories, I am interested in UAE property options. Name: ${name}. Budget: ${budget}. Intent: ${intent}. Preferred location: ${location}.`
+      );
+      window.open("https://wa.me/971585757459?text=" + message, "_blank");
+    }
+  </script>
 </body>
 </html>
