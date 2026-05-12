@@ -417,50 +417,103 @@
   backdrop-filter: blur(12px);
 }
 
-    .card h3 {
-      font-size: 24px;
-      margin-bottom: 12px;
-    }
+.icon-img {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  background-size: cover;
+  background-position: center;
+  margin-bottom: 22px;
+  border: 1px solid rgba(214,180,106,0.28);
+  box-shadow: 0 14px 35px rgba(0,0,0,0.35);
+}
 
-    .card p {
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 15px;
-    }
+.card h3 {
+  font-size: 24px;
+  margin-bottom: 12px;
+}
 
-    .property-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 14px;
-    }
+.card p {
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 15px;
+}
 
-    .property-pill {
-      min-height: 120px;
-      padding: 18px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.065);
-      border: 1px solid var(--line);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: 0.25s ease;
-    }
+.property-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 14px;
+}
 
-    .property-pill:hover {
-      background: rgba(214,180,106,0.12);
-      border-color: rgba(214,180,106,0.4);
-    }
+.property-pill {
+  min-height: 120px;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.065);
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: 0.25s ease;
+}
 
-    .property-pill span {
+.property-pill:hover {
+  background: rgba(214,180,106,0.12);
+  border-color: rgba(214,180,106,0.4);
+}
+
+.property-pill span {
   font-size: 22px;
   color: var(--gold2);
   opacity: 0.9;
   letter-spacing: 2px;
 }
 
-    .property-pill strong {
-      font-size: 14px;
-    }
+.property-pill strong {
+  font-size: 14px;
+}
+
+.image-pill {
+  position: relative;
+  overflow: hidden;
+  background-size: cover !important;
+  background-position: center !important;
+  justify-content: flex-end;
+  min-height: 150px;
+}
+
+.image-pill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.82));
+  z-index: 0;
+}
+
+.image-pill strong {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  font-size: 15px;
+}
+
+.image-pill:hover {
+  transform: translateY(-4px);
+  border-color: rgba(214,180,106,0.45);
+}
+
+.image-pill::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(214,180,106,0.06);
+  opacity: 0;
+  transition: 0.3s ease;
+}
+
+.image-pill:hover::after {
+  opacity: 1;
+}
 
     .featured {
       background: linear-gradient(180deg, rgba(214,180,106,0.08), transparent);
@@ -989,17 +1042,17 @@
 
         <div class="cards">
           <div class="card">
-            <div class="icon">◈</div>
+            <div class="icon-img" style="background-image:url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=500&q=90');"></div>
             <h3>First-Time Buyers</h3>
             <p>Understand areas, developers, payment plans, DLD, service charges, and handover timelines before committing.</p>
           </div>
           <div class="card">
-            <div class="icon">▲</div>
+            <div class="icon-img" style="background-image:url('https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=500&q=90');"></div>
             <h3>Investors</h3>
             <p>Compare rental yield, capital growth, entry price, unit positioning, and exit strategy across multiple options.</p>
           </div>
           <div class="card">
-            <div class="icon">◆</div>
+            <div class="icon-img" style="background-image:url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=500&q=90');"></div>
             <h3>End Users</h3>
             <p>Shortlist family-friendly communities based on lifestyle, school access, work location, and long-term comfort.</p>
           </div>
@@ -1015,12 +1068,29 @@
         </div>
 
         <div class="property-grid">
-          <div class="property-pill"><span>◫</span><strong>Apartments</strong></div>
-          <div class="property-pill"><span>◌</span><strong>Waterfront</strong></div>
-          <div class="property-pill"><span>◈</span><strong>Townhouses</strong></div>
-          <div class="property-pill"><span>◆</span><strong>Villas</strong></div>
-          <div class="property-pill"><span>✦</span><strong>Branded Residences</strong></div>
-          <div class="property-pill"><span>⬒</span><strong>Ready / Near Handover</strong></div>
+          <div class="property-pill image-pill" style="background-image:url('https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=600&q=90');">
+  <strong>Apartments</strong>
+</div>
+
+<div class="property-pill image-pill" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=90');">
+  <strong>Waterfront</strong>
+</div>
+
+<div class="property-pill image-pill" style="background-image:url('https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=600&q=90');">
+  <strong>Townhouses</strong>
+</div>
+
+<div class="property-pill image-pill" style="background-image:url('https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=600&q=90');">
+  <strong>Villas</strong>
+</div>
+
+<div class="property-pill image-pill" style="background-image:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=600&q=90');">
+  <strong>Branded Residences</strong>
+</div>
+
+<div class="property-pill image-pill" style="background-image:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=90');">
+  <strong>Ready / Near Handover</strong>
+</div>
         </div>
       </div>
     </section>
