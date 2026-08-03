@@ -21,3 +21,14 @@ export function isAdmin(req) {
   if (!timingSafeEqual(Buffer.from(signature(payload)), Buffer.from(sig))) return false;
   try { return JSON.parse(Buffer.from(payload, 'base64url').toString()).exp > Date.now(); } catch { return false; }
 }
+
+export function isSameOrigin(req) {
+  const host = String(req.headers['x-forwarded-host'] || req.headers.host || '').split(',')[0].trim().toLowerCase();
+  const origin = String(req.headers.origin || '');
+  if (!host || !origin) return false;
+  try {
+    const url = new URL(origin);
+    return url.protocol === 'https:' && url.host.toLowerCase() === host &&
+      (!req.headers['sec-fetch-site'] || req.headers['sec-fetch-site'] === 'same-origin');
+  } catch { return false; }
+}
