@@ -61,3 +61,15 @@ test('every event API awaits schema initialization before database access', asyn
     assert.ok(source.indexOf('await ensureEventSchema()') < source.indexOf('database()'), file);
   }
 });
+
+test('PR 6 consolidation and PR 7 bootstrap remain conflict-free together', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const files = ['README.md','api/admin/events.js','api/events/rsvp.js','api/events/slots.js','api/events/visit.js'];
+  for (const file of files) {
+    const source = await readFile(file, 'utf8');
+    assert.doesNotMatch(source, /^(<<<<<<<|=======|>>>>>>>)/m, file);
+  }
+  const admin = await readFile('api/admin/events.js', 'utf8');
+  assert.match(admin, /\['GET', 'PATCH', 'POST'\]/);
+  assert.match(admin, /await ensureEventSchema\(\)/);
+});
