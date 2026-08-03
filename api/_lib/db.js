@@ -92,3 +92,14 @@ export async function ensureSchema() {
   }
   return initialized;
 }
+
+import { createEventSchemaInitializer, eventSchemaQueries } from './event-schema.js';
+
+const initializeEventSchema = createEventSchemaInitializer(async () => {
+  const sql = database();
+  await sql.transaction(eventSchemaQueries(sql));
+});
+
+export async function ensureEventSchema() {
+  return initializeEventSchema();
+}

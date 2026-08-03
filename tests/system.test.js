@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile, access } from 'node:fs/promises';
+import { readFile, access, readdir } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { validPassword } from '../api/_lib/auth.js';
 import { databaseUrl } from '../api/_lib/db.js';
@@ -43,7 +43,9 @@ test('production build includes required routes/assets and no secret canaries', 
     ADMIN_PASSWORD: canaries[3], SESSION_SECRET: canaries[4]
   }});
   assert.equal(result.status, 0, result.stderr);
-  const files = ['dist/index.html','dist/admin.html','dist/public/advisor.js','dist/public/advisor.css'];
+  const files = ['dist/index.html','dist/admin.html','dist/open-house.html','dist/event-admin.html',
+    'dist/public/advisor.js','dist/public/advisor.css','dist/public/open-house.js','dist/public/open-house.css',
+    'dist/public/event-admin.js','dist/public/event-admin.css'];
   for (const file of files) await access(file);
   const output = (await Promise.all(files.map(file => readFile(file, 'utf8')))).join('\n');
   for (const canary of canaries) assert.equal(output.includes(canary), false);
@@ -55,4 +57,11 @@ test('frontend contains in-flight guards and stable submission IDs', async () =>
   assert.match(source, /dataset\.submitting/);
   assert.match(source, /submission_id/);
   assert.match(source, /crypto\.randomUUID/);
+});
+
+test('Vercel deployment stays within the Hobby serverless function limit', async () => {
+  const files = await readdir('api', { recursive: true });
+  const handlers = files.filter(file => file.endsWith('.js') && !file.startsWith('_lib/'));
+  assert.equal(handlers.length, 10);
+  assert.ok(handlers.length <= 12);
 });
