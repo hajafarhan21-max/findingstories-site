@@ -79,3 +79,21 @@ Production deployment requires an explicit later approval, production-scoped env
 5. **CRM follow-up agent:** Add lead ownership, statuses, notes, tasks, reminders, audit trails and approved message sequences driven by consent and temperature.
 6. **WhatsApp automation:** Use the official WhatsApp Business Platform, approved templates, opt-in/opt-out tracking, delivery webhooks and human handoff.
 7. **Daily reporting:** Email/WhatsApp a permission-controlled digest of funnel conversion, response SLA, lead source, overdue follow-ups and data quality—aggregated to avoid unnecessary PII.
+
+## Dubai Open House event system
+
+The focused event landing page is available at `/open-house`, and the authenticated event CRM at `/admin/events`. Apply `database/migrations/003_event_rsvp.sql` with `psql "$DATABASE_URL" -f database/migrations/003_event_rsvp.sql` before exercising the routes. The migration is repeatable, preserves all lead records, seeds 36 half-hour Dubai-time slots (10:00–19:00 across 8–9 August 2026), and installs a row-locking appointment function that cannot exceed each slot's configurable capacity.
+
+Public RSVP submission validates consent and fields, normalises UAE numbers, rate limits by visitor IP, deduplicates phone/email, and uses a UUID idempotency key. An RSVP is persisted before OpenAI qualification; deterministic scoring and complete copy-ready messages are used if AI is unavailable. Requested times are never bookings: an authenticated associate must confirm them, and capacity is rechecked transactionally in Postgres.
+
+The event CRM provides pipeline, list, slot calendar, associate performance and safe CSV preview/import views. Admin mutations require both the signed HttpOnly session and same-origin requests. Activity history covers notes, calls, WhatsApp, confirmation and rescheduling. `next_follow_up_at` is the internal, provider-free reminder queue: new/imported contacts are immediately due, and confirmed appointments become due 24 hours before their confirmed time. Staff use copy/open-WhatsApp actions; the system never sends externally on its own.
+
+### Preview smoke test
+
+1. Apply migration 003 to the Preview database, then open `/api/health` and confirm the database check is `ok` without any secret values.
+2. Open `/open-house?utm_source=smoke&utm_campaign=august-open-house`, select an available 8 August time, consent, and submit a unique test phone/email. Re-submit without changing the page to verify idempotency.
+3. Sign into `/admin/events`; confirm the RSVP, attribution, qualification/fallback messages, and immediate follow-up are visible.
+4. Confirm a slot, verify its remaining count decreases, reschedule it, and verify both slots' counts and the activity history behavior. Attempt a fifth concurrent confirmation against a capacity-four slot and expect HTTP 409.
+5. Mark the RSVP contacted, attended, no-show, follow-up, booked and lost as applicable; add note/call/WhatsApp activity and verify overdue reminders surface.
+6. Preview a CSV containing a duplicate and malformed number; verify accepted/rejected rows, then import and verify no existing record is overwritten.
+7. Download `/api/admin/events?action=export` while authenticated and confirm the CSV contains the test RSVP but no credentials.

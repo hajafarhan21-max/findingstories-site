@@ -44,3 +44,6 @@ CREATE INDEX IF NOT EXISTS leads_qualification_status_idx ON leads (qualificatio
 CREATE INDEX IF NOT EXISTS leads_status_idx ON leads (status);
 CREATE INDEX IF NOT EXISTS leads_assigned_to_idx ON leads (assigned_to);
 CREATE INDEX IF NOT EXISTS leads_next_follow_up_at_idx ON leads (next_follow_up_at);
+
+-- Event RSVP schema is maintained by the non-destructive migration below.
+\ir migrations/003_event_rsvp.sql
