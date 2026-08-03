@@ -2,9 +2,14 @@ import { neon } from '@neondatabase/serverless';
 
 let initialized;
 
+export function databaseUrl(env = process.env) {
+  return env.DATABASE_URL || env.PRODUCTION_DATABASE_URL;
+}
+
 export function database() {
-  if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is not configured');
-  return neon(process.env.DATABASE_URL);
+  const connectionString = databaseUrl();
+  if (!connectionString) throw new Error('Database is not configured');
+  return neon(connectionString);
 }
 
 export async function ensureSchema() {
