@@ -17,5 +17,20 @@ export const leadSchema = z.object({
 }).strict();
 
 export function safeText(value, max = 1500) {
+  // eslint-disable-next-line no-control-regex -- intentionally strips unprintable input
   return String(value || '').replace(/[<>\u0000-\u001F]/g, '').trim().slice(0, max);
 }
+
+const nullableDateTime = z.union([z.string().datetime({ offset: true }), z.null()]);
+const leadId = z.string().uuid();
+export const leadUpdateSchema = z.discriminatedUnion('action', [
+  z.object({ action: z.literal('status'), id: leadId, status: z.enum(['new', 'contacted', 'qualified', 'meeting_scheduled', 'site_visit_scheduled', 'booked', 'lost']) }).strict(),
+  z.object({ action: z.literal('assign'), id: leadId, assigned_to: z.string().trim().max(100) }).strict(),
+  z.object({ action: z.literal('notes'), id: leadId, agent_notes: z.string().trim().max(5000) }).strict(),
+  z.object({ action: z.literal('follow_up'), id: leadId, next_follow_up_at: nullableDateTime }).strict(),
+  z.object({ action: z.literal('meeting'), id: leadId, meeting_at: nullableDateTime }).strict(),
+  z.object({ action: z.literal('site_visit'), id: leadId, site_visit_at: nullableDateTime }).strict(),
+  z.object({ action: z.literal('contacted'), id: leadId }).strict(),
+  z.object({ action: z.literal('booked'), id: leadId }).strict(),
+  z.object({ action: z.literal('lost'), id: leadId, lost_reason: z.string().trim().min(2).max(500) }).strict()
+]);

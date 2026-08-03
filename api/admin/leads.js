@@ -11,7 +11,9 @@ export default async function handler(req, res) {
     const [leads, counts] = await Promise.all([
       sql`SELECT id, name, phone, email, source, budget, requirement_summary, lead_score, temperature,
           qualification_summary, next_action, suggested_follow_up_date, captured_at, qualification_status,
-          qualification_source, status FROM leads ORDER BY captured_at DESC LIMIT 500`,
+          qualification_source, status, assigned_to, agent_notes, last_contacted_at, next_follow_up_at,
+          meeting_at, site_visit_at, lost_reason, updated_at, preferred_areas, property_type,
+          bedrooms, purpose, purchase_timeline FROM leads ORDER BY captured_at DESC LIMIT 500`,
       sql`SELECT COUNT(*)::int total, COUNT(*) FILTER (WHERE status='new')::int new,
           COUNT(*) FILTER (WHERE temperature='Hot' AND qualification_status='completed')::int hot,
           COUNT(*) FILTER (WHERE temperature='Warm' AND qualification_status='completed')::int warm,

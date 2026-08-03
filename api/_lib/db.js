@@ -55,6 +55,9 @@ export async function ensureSchema() {
         qualification_started_at TIMESTAMPTZ,
         qualified_at TIMESTAMPTZ,
         status TEXT NOT NULL DEFAULT 'new',
+        assigned_to TEXT NOT NULL DEFAULT '', agent_notes TEXT NOT NULL DEFAULT '',
+        last_contacted_at TIMESTAMPTZ, next_follow_up_at TIMESTAMPTZ, meeting_at TIMESTAMPTZ,
+        site_visit_at TIMESTAMPTZ, lost_reason TEXT NOT NULL DEFAULT '', updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
         captured_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )`;
@@ -64,6 +67,15 @@ export async function ensureSchema() {
       await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualification_started_at TIMESTAMPTZ`;
       await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualified_at TIMESTAMPTZ`;
       await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS captured_at TIMESTAMPTZ`;
+      await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS assigned_to TEXT NOT NULL DEFAULT ''`;
+      await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS agent_notes TEXT NOT NULL DEFAULT ''`;
+      await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS last_contacted_at TIMESTAMPTZ`;
+      await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS next_follow_up_at TIMESTAMPTZ`;
+      await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS meeting_at TIMESTAMPTZ`;
+      await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS site_visit_at TIMESTAMPTZ`;
+      await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS lost_reason TEXT NOT NULL DEFAULT ''`;
+      await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()`;
+      await sql`UPDATE leads SET next_follow_up_at=suggested_follow_up_date::timestamp AT TIME ZONE 'Asia/Dubai' WHERE next_follow_up_at IS NULL AND suggested_follow_up_date IS NOT NULL`;
       await sql`UPDATE leads SET captured_at=created_at WHERE captured_at IS NULL`;
       await sql`ALTER TABLE leads ALTER COLUMN captured_at SET DEFAULT NOW()`;
       await sql`ALTER TABLE leads ALTER COLUMN captured_at SET NOT NULL`;
@@ -73,6 +85,9 @@ export async function ensureSchema() {
       await sql`CREATE INDEX IF NOT EXISTS leads_temperature_idx ON leads (temperature)`;
       await sql`CREATE UNIQUE INDEX IF NOT EXISTS leads_submission_id_idx ON leads (submission_id) WHERE submission_id IS NOT NULL`;
       await sql`CREATE INDEX IF NOT EXISTS leads_qualification_status_idx ON leads (qualification_status)`;
+      await sql`CREATE INDEX IF NOT EXISTS leads_status_idx ON leads (status)`;
+      await sql`CREATE INDEX IF NOT EXISTS leads_assigned_to_idx ON leads (assigned_to)`;
+      await sql`CREATE INDEX IF NOT EXISTS leads_next_follow_up_at_idx ON leads (next_follow_up_at)`;
     })();
   }
   return initialized;
