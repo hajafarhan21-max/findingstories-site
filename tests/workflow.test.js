@@ -21,6 +21,20 @@ test('lead is persisted before background qualification is scheduled', async () 
   await scheduled;
 });
 
+test('capture returns without waiting for slow qualification', async () => {
+  let finishQualification;
+  const slowQualification = new Promise(resolve => { finishQualification = resolve; });
+  let scheduled;
+  const result = await Promise.race([
+    persistAndSchedule({ lead: {}, persist: async () => ({ id: 'fast-lead', captured_at: new Date() }),
+      background: async () => slowQualification, schedule: promise => { scheduled = promise; } }),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('capture waited for qualification')), 50))
+  ]);
+  assert.equal(result.id, 'fast-lead');
+  finishQualification();
+  await scheduled;
+});
+
 test('a duplicate submission is returned without scheduling qualification again', async () => {
   let scheduled = false;
   const saved = await persistAndSchedule({ lead: {}, persist: async () => ({ id: 'lead-1', duplicate: true }),
@@ -35,8 +49,21 @@ test('OpenAI failure uses fallback without losing the saved lead', async () => {
     capturedAt: '2026-07-30T10:00:00Z', qualify: async () => { throw new Error('OpenAI unavailable'); }, fallback,
     update: async (id, value) => { updated = { id, value }; } });
   assert.equal(updated.id, 'saved-lead');
-  assert.equal(updated.value.qualification_status, 'fallback');
+  assert.equal(updated.value.qualification_status, 'completed');
+  assert.equal(updated.value.qualification_source, 'deterministic_fallback');
   assert.ok(result.suggested_follow_up_date >= '2026-07-30');
+});
+
+test('OpenAI success updates the saved lead and marks its source', async () => {
+  let updated;
+  await qualifySavedLead({ id: 'saved-lead', lead: {}, capturedAt: '2026-07-30T10:00:00Z',
+    qualify: async () => ({ ...fallback({ name: 'Test' }), lead_score: 80 }), fallback,
+    update: async (id, value) => { updated = { id, value }; } });
+  assert.equal(updated.id, 'saved-lead');
+  assert.equal(updated.value.lead_score, 80);
+  assert.equal(updated.value.temperature, 'Hot');
+  assert.equal(updated.value.qualification_status, 'completed');
+  assert.equal(updated.value.qualification_source, 'openai');
 });
 
 test('follow-up date cannot be in the past and is ISO YYYY-MM-DD', () => {

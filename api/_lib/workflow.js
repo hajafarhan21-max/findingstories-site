@@ -25,17 +25,18 @@ export async function persistAndSchedule({ lead, persist, schedule, background }
   return saved;
 }
 
-export async function qualifySavedLead({ id, lead, capturedAt, qualify, fallback, update }) {
+export async function qualifySavedLead({ id, lead, capturedAt, qualify, fallback, start = async () => {}, update }) {
+  await start(id);
   let qualification;
-  let status = 'qualified';
+  let source = 'openai';
   try {
     qualification = await qualify(lead);
   } catch (error) {
     console.error('Qualification unavailable:', error instanceof Error ? error.message : 'unknown');
     qualification = fallback(lead);
-    status = 'fallback';
+    source = 'deterministic_fallback';
   }
   const result = finaliseQualification(qualification, capturedAt);
-  await update(id, { ...result, qualification_status: status });
+  await update(id, { ...result, qualification_status: 'completed', qualification_source: source });
   return result;
 }

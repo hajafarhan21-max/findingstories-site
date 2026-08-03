@@ -42,7 +42,8 @@ test('OpenAI failure uses fallback without losing the saved lead', async () => {
     update: async (id, value) => { updated = { id, value }; }
   });
   assert.equal(updated.id, 'saved-lead');
-  assert.equal(updated.value.qualification_status, 'fallback');
+  assert.equal(updated.value.qualification_status, 'completed');
+  assert.equal(updated.value.qualification_source, 'deterministic_fallback');
   assert.equal(result.suggested_follow_up_date >= '2026-07-30', true);
 });
 

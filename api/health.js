@@ -1,11 +1,11 @@
 import { database, ensureSchema } from './_lib/db.js';
 import { json, method } from './_lib/http.js';
+import { healthReport } from './_lib/health.js';
 
 export default async function handler(req, res) {
   if (!method(req, res, ['GET'])) return;
-  const checks = { api: 'ok', database: 'not_configured', openai: process.env.OPENAI_API_KEY ? 'configured' : 'not_configured' };
-  try {
-    if (process.env.DATABASE_URL) { await ensureSchema(); await database()`SELECT 1`; checks.database = 'ok'; }
-  } catch { checks.database = 'error'; }
-  json(res, checks.database === 'error' ? 503 : 200, { status: checks.database === 'error' ? 'degraded' : 'ok', checks, timestamp: new Date().toISOString() });
+  const report = await healthReport({ databaseConfigured: Boolean(process.env.DATABASE_URL),
+    openaiConfigured: Boolean(process.env.OPENAI_API_KEY),
+    checkDatabase: async () => { await ensureSchema(); await database()`SELECT 1`; } });
+  json(res, report.status === 'degraded' ? 503 : 200, report);
 }

@@ -34,6 +34,8 @@ Copy `.env.example` to `.env.local` for local development:
 3. Either run `psql "$DATABASE_URL" -f database/schema.sql`, or call `/api/health` once after deployment; the server performs the same idempotent setup.
 4. Use a dedicated database role and rotate credentials if exposed. Neon backups/retention should match the business privacy policy.
 
+The migration is safe to repeat and preserves existing records. It adds stable submission IDs, capture and qualification timestamps, qualification status/source, and supporting indexes. Existing qualified rows are marked as `completed` with source `legacy`; their original `created_at` is retained as `captured_at`. New rows progress from `pending` to `processing` and then `completed`, with source `openai` or `deterministic_fallback`.
+
 ## Local development and checks
 
 ```bash

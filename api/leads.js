@@ -10,7 +10,12 @@ async function updateQualification(sql, id, result) {
     qualification_summary=${safeText(result.qualification_summary)}, requirement_summary=${safeText(result.requirement_summary)},
     missing_information=${JSON.stringify(result.missing_information || [])}, next_action=${safeText(result.next_action)},
     suggested_follow_up_date=${result.suggested_follow_up_date}, whatsapp_follow_up_draft=${safeText(result.whatsapp_follow_up_draft)},
-    call_opener=${safeText(result.call_opener)}, qualification_status=${result.qualification_status} WHERE id=${id}`;
+    call_opener=${safeText(result.call_opener)}, qualification_status=${result.qualification_status},
+    qualification_source=${result.qualification_source}, qualified_at=NOW() WHERE id=${id}`;
+}
+
+async function markQualificationStarted(sql, id) {
+  await sql`UPDATE leads SET qualification_status='processing', qualification_started_at=NOW() WHERE id=${id} AND qualification_status='pending'`;
 }
 
 async function persistLead(sql, lead) {
@@ -26,9 +31,9 @@ async function persistLead(sql, lead) {
       ${lead.landing_page || null}, ${lead.referrer || null}, ${lead.utm_source || null}, ${lead.utm_medium || null},
       ${lead.utm_campaign || null}, ${lead.content_source || null})
     ON CONFLICT (submission_id) WHERE submission_id IS NOT NULL DO NOTHING
-    RETURNING id, created_at`;
+    RETURNING id, captured_at`;
   if (rows[0]) return { ...rows[0], duplicate: false };
-  const existing = await sql`SELECT id, created_at FROM leads WHERE submission_id=${lead.submission_id} LIMIT 1`;
+  const existing = await sql`SELECT id, captured_at FROM leads WHERE submission_id=${lead.submission_id} LIMIT 1`;
   return { ...existing[0], duplicate: true };
 }
 
@@ -58,7 +63,8 @@ export default async function handler(req, res) {
       persist: value => persistLead(sql, value),
       schedule: scheduleQualification,
       background: value => qualifySavedLead({
-        id: value.id, lead, capturedAt: value.created_at, qualify: qualifyLead, fallback,
+        id: value.id, lead, capturedAt: value.captured_at, qualify: qualifyLead, fallback,
+        start: id => markQualificationStarted(sql, id),
         update: (id, result) => updateQualification(sql, id, result)
       }).catch(error => console.error('Background qualification update failed:', error instanceof Error ? error.message : 'unknown'))
     });

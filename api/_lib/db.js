@@ -46,14 +46,28 @@ export async function ensureSchema() {
         whatsapp_follow_up_draft TEXT,
         call_opener TEXT,
         qualification_status TEXT NOT NULL DEFAULT 'pending',
+        qualification_source TEXT,
+        qualification_started_at TIMESTAMPTZ,
+        qualified_at TIMESTAMPTZ,
         status TEXT NOT NULL DEFAULT 'new',
-        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        captured_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )`;
       await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS submission_id UUID`;
       await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualification_status TEXT NOT NULL DEFAULT 'pending'`;
+      await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualification_source TEXT`;
+      await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualification_started_at TIMESTAMPTZ`;
+      await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualified_at TIMESTAMPTZ`;
+      await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS captured_at TIMESTAMPTZ`;
+      await sql`UPDATE leads SET captured_at=created_at WHERE captured_at IS NULL`;
+      await sql`ALTER TABLE leads ALTER COLUMN captured_at SET DEFAULT NOW()`;
+      await sql`ALTER TABLE leads ALTER COLUMN captured_at SET NOT NULL`;
+      await sql`UPDATE leads SET qualification_status='completed', qualification_source=COALESCE(qualification_source, 'legacy'),
+        qualified_at=COALESCE(qualified_at, created_at) WHERE qualification_summary IS NOT NULL AND qualification_status='pending'`;
       await sql`CREATE INDEX IF NOT EXISTS leads_created_at_idx ON leads (created_at DESC)`;
       await sql`CREATE INDEX IF NOT EXISTS leads_temperature_idx ON leads (temperature)`;
       await sql`CREATE UNIQUE INDEX IF NOT EXISTS leads_submission_id_idx ON leads (submission_id) WHERE submission_id IS NOT NULL`;
+      await sql`CREATE INDEX IF NOT EXISTS leads_qualification_status_idx ON leads (qualification_status)`;
     })();
   }
   return initialized;

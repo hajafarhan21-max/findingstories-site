@@ -10,11 +10,13 @@ export default async function handler(req, res) {
     const sql = database();
     const [leads, counts] = await Promise.all([
       sql`SELECT id, name, phone, email, source, budget, requirement_summary, lead_score, temperature,
-          qualification_summary, next_action, suggested_follow_up_date, created_at, status
-          FROM leads ORDER BY created_at DESC LIMIT 500`,
+          qualification_summary, next_action, suggested_follow_up_date, captured_at, qualification_status,
+          qualification_source, status FROM leads ORDER BY captured_at DESC LIMIT 500`,
       sql`SELECT COUNT(*)::int total, COUNT(*) FILTER (WHERE status='new')::int new,
-          COUNT(*) FILTER (WHERE temperature='Hot')::int hot, COUNT(*) FILTER (WHERE temperature='Warm')::int warm,
-          COUNT(*) FILTER (WHERE temperature='Cold')::int cold FROM leads`
+          COUNT(*) FILTER (WHERE temperature='Hot' AND qualification_status='completed')::int hot,
+          COUNT(*) FILTER (WHERE temperature='Warm' AND qualification_status='completed')::int warm,
+          COUNT(*) FILTER (WHERE temperature='Cold' AND qualification_status='completed')::int cold,
+          COUNT(*) FILTER (WHERE qualification_status IN ('pending','processing'))::int processing FROM leads`
     ]);
     json(res, 200, { leads, counts: counts[0] });
   } catch (error) {
