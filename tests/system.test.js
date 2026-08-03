@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile, access } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { validPassword } from '../api/_lib/auth.js';
+import { databaseUrl } from '../api/_lib/db.js';
 import { healthReport } from '../api/_lib/health.js';
 
 test('admin authentication rejects wrong and accepts configured password', () => {
@@ -16,17 +17,30 @@ test('admin authentication rejects wrong and accepts configured password', () =>
   }
 });
 
-test('health report exposes availability states without values', async () => {
+test('health report marks a successful database connection as ok without exposing values', async () => {
   const configured = await healthReport({ databaseConfigured: true, openaiConfigured: true, checkDatabase: async () => {} });
   assert.deepEqual(configured.checks, { api: 'ok', database: 'ok', openai: 'configured' });
   const unavailable = await healthReport({ databaseConfigured: false, openaiConfigured: false, checkDatabase: async () => {} });
   assert.deepEqual(unavailable.checks, { api: 'ok', database: 'not_configured', openai: 'not_configured' });
 });
 
+test('database URL resolution prefers DATABASE_URL', () => {
+  assert.equal(databaseUrl({ DATABASE_URL: 'preview', PRODUCTION_DATABASE_URL: 'production' }), 'preview');
+});
+
+test('database URL resolution falls back to PRODUCTION_DATABASE_URL', () => {
+  assert.equal(databaseUrl({ PRODUCTION_DATABASE_URL: 'production' }), 'production');
+});
+
+test('database URL resolution returns undefined when configuration is missing', () => {
+  assert.equal(databaseUrl({}), undefined);
+});
+
 test('production build includes required routes/assets and no secret canaries', async () => {
-  const canaries = ['db-secret-canary', 'openai-secret-canary', 'admin-secret-canary', 'session-secret-canary'];
+  const canaries = ['db-secret-canary', 'production-db-secret-canary', 'openai-secret-canary', 'admin-secret-canary', 'session-secret-canary'];
   const result = spawnSync(process.execPath, ['scripts/build.mjs'], { encoding: 'utf8', env: {
-    ...process.env, DATABASE_URL: canaries[0], OPENAI_API_KEY: canaries[1], ADMIN_PASSWORD: canaries[2], SESSION_SECRET: canaries[3]
+    ...process.env, DATABASE_URL: canaries[0], PRODUCTION_DATABASE_URL: canaries[1], OPENAI_API_KEY: canaries[2],
+    ADMIN_PASSWORD: canaries[3], SESSION_SECRET: canaries[4]
   }});
   assert.equal(result.status, 0, result.stderr);
   const files = ['dist/index.html','dist/admin.html','dist/public/advisor.js','dist/public/advisor.css'];
