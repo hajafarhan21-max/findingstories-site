@@ -30,3 +30,12 @@ test('migration uses a locked transactional capacity function and idempotent DDL
 test('public form and admin event routes are present',async()=>{
  const page=await readFile('open-house.html','utf8'),admin=await readFile('event-admin.html','utf8');assert.match(page,/Event date/);assert.match(page,/Contacting me|contacting me/i);assert.match(admin,/Associate performance/);assert.match(admin,/CSV import/);
 });
+
+test('event admin operations share one Hobby-plan-compatible function',async()=>{
+ const source=await readFile('api/admin/events.js','utf8');
+ assert.match(source,/\['GET', 'PATCH', 'POST'\]/);
+ assert.match(source,/action === 'export'/);
+ assert.match(source,/isSameOrigin/);
+ const frontend=await readFile('public/event-admin.js','utf8');
+ assert.doesNotMatch(frontend,/api\/admin\/events\/(update|import|export)/);
+});

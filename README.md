@@ -96,4 +96,4 @@ The event CRM provides pipeline, list, slot calendar, associate performance and 
 4. Confirm a slot, verify its remaining count decreases, reschedule it, and verify both slots' counts and the activity history behavior. Attempt a fifth concurrent confirmation against a capacity-four slot and expect HTTP 409.
 5. Mark the RSVP contacted, attended, no-show, follow-up, booked and lost as applicable; add note/call/WhatsApp activity and verify overdue reminders surface.
 6. Preview a CSV containing a duplicate and malformed number; verify accepted/rejected rows, then import and verify no existing record is overwritten.
-7. Download `/api/admin/events/export` while authenticated and confirm the CSV contains the test RSVP but no credentials.
+7. Download `/api/admin/events?action=export` while authenticated and confirm the CSV contains the test RSVP but no credentials.
