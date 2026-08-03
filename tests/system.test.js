@@ -43,7 +43,9 @@ test('production build includes required routes/assets and no secret canaries', 
     ADMIN_PASSWORD: canaries[3], SESSION_SECRET: canaries[4]
   }});
   assert.equal(result.status, 0, result.stderr);
-  const files = ['dist/index.html','dist/admin.html','dist/public/advisor.js','dist/public/advisor.css'];
+  const files = ['dist/index.html','dist/admin.html','dist/open-house.html','dist/event-admin.html',
+    'dist/public/advisor.js','dist/public/advisor.css','dist/public/open-house.js','dist/public/open-house.css',
+    'dist/public/event-admin.js','dist/public/event-admin.css'];
   for (const file of files) await access(file);
   const output = (await Promise.all(files.map(file => readFile(file, 'utf8')))).join('\n');
   for (const canary of canaries) assert.equal(output.includes(canary), false);
