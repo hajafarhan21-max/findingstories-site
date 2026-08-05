@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { isAdmin, isSameOrigin } from '../_lib/auth.js';
-import { database } from '../_lib/db.js';
+import { database, ensureEventSchema } from '../_lib/db.js';
 import { json, method, parseJson } from '../_lib/http.js';
 import { adminEventSchema, normalizeUaePhone } from '../_lib/event.js';
 import { safeText } from '../_lib/validation.js';
@@ -116,6 +116,7 @@ export default async function handler(req, res) {
   if (!isAdmin(req)) return json(res, 401, { error: 'Authentication required.' });
   if (req.method !== 'GET' && !isSameOrigin(req)) return json(res, 403, { error: 'Same-origin request required.' });
   try {
+    await ensureEventSchema();
     const sql = database();
     if (req.method === 'GET' && req.query?.action === 'export') return await exportEvent(sql, res);
     if (req.method === 'GET') return await listEvent(sql, res);
