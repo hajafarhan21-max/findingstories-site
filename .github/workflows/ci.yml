@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+      - name: Reject destructive database operations
+        run: |
+          if rg --ignore-case --glob '*.sql' --glob '*.js' '\b(DROP|TRUNCATE)\b|\bDELETE\s+FROM\b|database\s+reset' database api/_lib/db.js; then
+            echo '### ❌ Destructive database statement detected' >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          echo '### ✅ Database safety policy passed' >> "$GITHUB_STEP_SUMMARY"
