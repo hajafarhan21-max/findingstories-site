@@ -2,21 +2,33 @@ import { neon } from '@neondatabase/serverless';
 
 let initialized;
 let eventInitialized;
+let sqlClient;
+let sqlClientUrl;
 
 export function databaseUrl(env = process.env) {
-  return env.DATABASE_URL || env.PRODUCTION_DATABASE_URL;
+  const configured = env.VERCEL_ENV === 'production'
+    ? env.PRODUCTION_DATABASE_URL || env.DATABASE_URL
+    : env.DATABASE_URL || env.PRODUCTION_DATABASE_URL;
+  return configured?.trim();
 }
 
 export function database() {
   const connectionString = databaseUrl();
   if (!connectionString) throw new Error('Database is not configured');
-  return neon(connectionString);
+  if (sqlClientUrl !== connectionString) {
+    sqlClient = neon(connectionString);
+    sqlClientUrl = connectionString;
+  }
+  return sqlClient;
 }
 
 export async function ensureSchema() {
   if (!initialized) {
     const sql = database();
     initialized = (async () => {
+      // gen_random_uuid() is used by the first table definition, so the
+      // extension must exist before that definition runs on a new database.
+      await sql`CREATE EXTENSION IF NOT EXISTS pgcrypto`;
       await sql`
       CREATE TABLE IF NOT EXISTS leads (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
