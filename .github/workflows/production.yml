@@ -6,46 +6,28 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: production
+  group: production-verification
   cancel-in-progress: false
 
 permissions:
   contents: read
 
 jobs:
-  deploy:
+  verify:
+    name: Verify Vercel production
     runs-on: ubuntu-latest
-    environment: production
+    timeout-minutes: 25
     env:
-      # Keep the production connection string explicitly named at the Actions
-      # boundary, while exposing the runtime name expected by the application.
-      DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
-      ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
-      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      # Vercel's Git integration owns deployment and its runtime environment.
+      PRODUCTION_URL: https://finding-stories.com
+      # Give the integration time to build/promote before polling the custom domain.
+      SMOKE_INITIAL_WAIT_MS: 90000
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-      - name: Verify required production secrets
-        shell: bash
-        run: |
-          missing=()
-          for name in DATABASE_URL ADMIN_PASSWORD VERCEL_TOKEN VERCEL_ORG_ID VERCEL_PROJECT_ID; do
-            [ -n "${!name:-}" ] || missing+=("$name")
-          done
-          if ((${#missing[@]})); then
-            echo "### ❌ Missing production secrets" >> "$GITHUB_STEP_SUMMARY"
-            for name in "${missing[@]}"; do
-              if [ "$name" = DATABASE_URL ]; then name=PRODUCTION_DATABASE_URL; fi
-              printf -- '- `%s`\n' "$name" >> "$GITHUB_STEP_SUMMARY"
-            done
-            exit 1
-          fi
-          echo '### ✅ Required production secrets are configured' >> "$GITHUB_STEP_SUMMARY"
       - run: npm ci
       - name: Test
         run: npm test
@@ -55,43 +37,13 @@ jobs:
         run: npm run typecheck
       - name: Production build
         run: npm run build
-      - name: Enforce non-destructive database policy
-        run: |
-          if rg --ignore-case --glob '*.sql' --glob '*.js' '\b(DROP|TRUNCATE)\b|\bDELETE\s+FROM\b|database\s+reset' database api/_lib/db.js; then
-            echo '### ❌ Destructive database statement detected' >> "$GITHUB_STEP_SUMMARY"
-            exit 1
-          fi
-          echo '### ✅ Database safety policy passed' >> "$GITHUB_STEP_SUMMARY"
-      - name: Test Neon and initialize schema safely
-        run: npm run db:init
-      - name: Pull Vercel production configuration
-        run: npx --yes vercel@latest pull --yes --environment=production --token="$VERCEL_TOKEN"
-      - name: Verify Vercel production runtime secrets
-        run: |
-          env_file=.vercel/.env.production.local
-          missing=()
-          for name in DATABASE_URL OPENAI_API_KEY ADMIN_PASSWORD SESSION_SECRET; do
-            rg --quiet "^${name}=" "$env_file" || missing+=("$name")
-          done
-          if ((${#missing[@]})); then
-            echo '### ❌ Missing Vercel production environment variables' >> "$GITHUB_STEP_SUMMARY"
-            printf -- '- `%s`\n' "${missing[@]}" >> "$GITHUB_STEP_SUMMARY"
-            exit 1
-          fi
-          echo '### ✅ Vercel production runtime secrets are configured' >> "$GITHUB_STEP_SUMMARY"
-      - name: Build with Vercel production settings
-        run: npx --yes vercel@latest build --prod --token="$VERCEL_TOKEN"
-      - name: Deploy and wait for Vercel production
-        id: deploy
-        run: |
-          url=$(npx --yes vercel@latest deploy --prebuilt --prod --yes --token="$VERCEL_TOKEN")
-          echo "url=$url" >> "$GITHUB_OUTPUT"
-          echo "### ✅ Vercel deployment completed\n\`$url\`" >> "$GITHUB_STEP_SUMMARY"
-      - name: Verify production routes and APIs
-        env:
-          PRODUCTION_URL: ${{ steps.deploy.outputs.url }}
+      - name: Wait for Vercel Git deployment and verify production
         run: npm run smoke:production
       - name: Report workflow failure
         if: failure()
-        run: echo '### ❌ Production deployment failed
-          Review the failed step above. Production is successful only when `/api/health` reports `api=ok` and `database=ok`.' >> "$GITHUB_STEP_SUMMARY"
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
+          ### ❌ Production verification failed
+
+          Review the failed step and its diagnostics above. Vercel's Git integration is the only deployer; this workflow does not deploy or access production secrets. A healthy production response must report `api=ok` and `database=ok`, and both public pages must return HTML successfully.
+          EOF
