@@ -1,14 +1,17 @@
 export function databaseFailureCategory(error) {
+  if (typeof error?.diagnostic === 'string') return error.diagnostic;
   const code = typeof error?.code === 'string' ? error.code : '';
-  if (code === '28P01' || code === '28000') return 'authentication';
-  if (code === '3D000') return 'database_not_found';
-  if (code === '42501') return 'permission';
-  if (code === '42P01' || code === '42703' || code === '42883') return 'schema';
-  if (code.startsWith('08')) return 'connectivity';
+  if (code === '28P01' || code === '28000') return 'authentication_failed';
+  if (code === '42501') return 'permission_failed';
+  if (code === '0A000' || code === '58P01') return 'extension_failed';
+  if (['42P01', '42703', '42883', '42P07', '23505'].includes(code)) return 'schema_failed';
+  if (code.startsWith('08') || code === '3D000') return 'connection_failed';
 
   const name = typeof error?.name === 'string' ? error.name.toLowerCase() : '';
-  if (name.includes('typeerror') || name.includes('fetch')) return 'connectivity';
-  return 'unknown';
+  const message = typeof error?.message === 'string' ? error.message.toLowerCase() : '';
+  if (message.includes('ssl') || message.includes('tls') || message.includes('certificate')) return 'ssl_failed';
+  if (name.includes('typeerror') || name.includes('fetch')) return 'connection_failed';
+  return 'query_failed';
 }
 
 export async function healthReport({ databaseConfigured, openaiConfigured, checkDatabase, log = console.error }) {
@@ -16,9 +19,9 @@ export async function healthReport({ databaseConfigured, openaiConfigured, check
   try { if (databaseConfigured) { await checkDatabase(); checks.database = 'ok'; } }
   catch (error) {
     checks.database = 'error';
+    checks.databaseDiagnostic = databaseFailureCategory(error);
     log('Database health check failed', {
-      category: databaseFailureCategory(error),
-      code: typeof error?.code === 'string' ? error.code : 'unavailable',
+      category: checks.databaseDiagnostic,
       runtime: process.env.VERCEL_ENV || 'local'
     });
   }
