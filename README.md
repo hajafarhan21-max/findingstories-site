@@ -50,18 +50,13 @@ npm run build
 
 Open the website at the URL printed by Vercel CLI, the CRM at `/admin.html`, and health status at `/api/health`.
 
-## Autonomous production deployment
+## Automated production deployment and verification
 
-Every pull request into `main` must pass the CI workflow's tests, lint, typecheck, production build, and destructive-SQL policy. After a merge reaches `main`, the Production workflow serially:
+Vercel's existing GitHub integration is the only production deployment system. Merging to `main` causes Vercel to build and promote the commit using the variables configured in Vercel's Production environment. GitHub Actions neither invokes the Vercel CLI nor reads production credentials, initializes the database, or modifies production data.
 
-1. verifies required GitHub and Vercel production secrets by name without printing their values;
-2. tests the Neon connection and runs only the application's additive, repeatable schema initialization;
-3. builds and deploys the prebuilt artifact to Vercel production and waits for the CLI deployment to complete; and
-4. polls `/api/health` until both `api=ok` and `database=ok`, then checks the public pages, creates an identifiable synthetic RSVP, and verifies it through the authenticated Event CRM API.
+After each merge, `.github/workflows/production.yml` runs tests, lint, typecheck, and a production build. It then waits for the Git-triggered deployment by polling `https://finding-stories.com/api/health` for up to ten minutes. Verification succeeds only when the endpoint returns HTTP 200 with `api=ok` and `database=ok`; it also confirms `/open-house` and `/event-admin.html` return their expected HTML. These smoke checks are strictly read-only and never submit, update, or delete client records.
 
-Failures add a concise diagnostic table or section to the GitHub Actions job summary. The workflow rejects `DROP`, `TRUNCATE`, database resets, and destructive `DELETE FROM` statements before any database or deployment step. Synthetic smoke records use the `production-deployment-smoke` source so they can be identified without deleting production data.
-
-Required GitHub production-environment secrets are `PRODUCTION_DATABASE_URL`, `ADMIN_PASSWORD`, `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID`. The workflow maps `PRODUCTION_DATABASE_URL` to the application's server-only `DATABASE_URL` runtime name. The linked Vercel Production environment must contain `DATABASE_URL`, `OPENAI_API_KEY`, `ADMIN_PASSWORD`, and `SESSION_SECRET`. Future `codex/*` pull requests have squash auto-merge enabled only after their CI run passes; repository branch protections remain the authority for all other required checks.
+Failures include the last HTTP status and sanitized health states in the Actions log and job summary. No GitHub production secrets are required. The linked Vercel Production environment remains responsible for `DATABASE_URL`, `OPENAI_API_KEY`, `ADMIN_PASSWORD`, and `SESSION_SECRET`; their values must never be copied into Actions or logs. Repository branch protections remain the authority for required pull-request checks.
 
 ## Vercel preview deployment
 
@@ -72,7 +67,7 @@ Required GitHub production-environment secrets are `PRODUCTION_DATABASE_URL`, `A
 5. Verify the generated `*.vercel.app` preview: `/api/health`, an adviser submission, each existing form, and `/admin.html` login/lead display.
 6. Inspect function logs for status errors only; do not add request-body logging. Delete test leads after acceptance if they contain personal data.
 
-Preview deployments must never receive production credentials. Production deploys are owned exclusively by the committed Production workflow; do not run ad-hoc `vercel --prod` commands from developer machines.
+Preview deployments must never receive production credentials. Production deploys are owned exclusively by Vercel's Git integration; do not run ad-hoc `vercel --prod` commands from developer machines or GitHub Actions.
 
 ## Security and privacy
 
