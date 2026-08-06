@@ -4,7 +4,7 @@ import { readFile, access, readdir } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { validPassword } from '../api/_lib/auth.js';
 import { databaseUrl } from '../api/_lib/db.js';
-import { healthReport } from '../api/_lib/health.js';
+import { databaseFailureCategory, healthReport } from '../api/_lib/health.js';
 
 test('admin authentication rejects wrong and accepts configured password', () => {
   const previous = process.env.ADMIN_PASSWORD;
@@ -24,12 +24,36 @@ test('health report marks a successful database connection as ok without exposin
   assert.deepEqual(unavailable.checks, { api: 'ok', database: 'not_configured', openai: 'not_configured' });
 });
 
+test('health report logs only safe database failure diagnostics', async () => {
+  const entries = [];
+  const error = Object.assign(new Error('secret connection details'), { code: '28P01' });
+  const report = await healthReport({
+    databaseConfigured: true,
+    openaiConfigured: true,
+    checkDatabase: async () => { throw error; },
+    log: (...entry) => entries.push(entry)
+  });
+  assert.equal(report.checks.database, 'error');
+  assert.equal(databaseFailureCategory(error), 'authentication');
+  assert.deepEqual(entries[0][1].category, 'authentication');
+  assert.equal(JSON.stringify(entries).includes(error.message), false);
+});
+
 test('database URL resolution prefers DATABASE_URL', () => {
   assert.equal(databaseUrl({ DATABASE_URL: 'preview', PRODUCTION_DATABASE_URL: 'production' }), 'preview');
 });
 
 test('database URL resolution falls back to PRODUCTION_DATABASE_URL', () => {
   assert.equal(databaseUrl({ PRODUCTION_DATABASE_URL: 'production' }), 'production');
+});
+
+test('production runtime prefers its explicitly scoped database URL and trims copy whitespace', () => {
+  assert.equal(databaseUrl({ VERCEL_ENV: 'production', DATABASE_URL: 'stale', PRODUCTION_DATABASE_URL: '  production\n' }), 'production');
+});
+
+test('runtime schema initialization enables UUID support before creating tables', async () => {
+  const source = await readFile('api/_lib/db.js', 'utf8');
+  assert.ok(source.indexOf('CREATE EXTENSION IF NOT EXISTS pgcrypto') < source.indexOf('CREATE TABLE IF NOT EXISTS leads'));
 });
 
 test('database URL resolution returns undefined when configuration is missing', () => {
