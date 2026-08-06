@@ -61,7 +61,7 @@ Every pull request into `main` must pass the CI workflow's tests, lint, typechec
 
 Failures add a concise diagnostic table or section to the GitHub Actions job summary. The workflow rejects `DROP`, `TRUNCATE`, database resets, and destructive `DELETE FROM` statements before any database or deployment step. Synthetic smoke records use the `production-deployment-smoke` source so they can be identified without deleting production data.
 
-Required GitHub production-environment secrets are `DATABASE_URL`, `ADMIN_PASSWORD`, `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID`. The linked Vercel Production environment must contain `DATABASE_URL`, `OPENAI_API_KEY`, `ADMIN_PASSWORD`, and `SESSION_SECRET`. Future `codex/*` pull requests have squash auto-merge enabled only after their CI run passes; repository branch protections remain the authority for all other required checks.
+Required GitHub production-environment secrets are `PRODUCTION_DATABASE_URL`, `ADMIN_PASSWORD`, `VERCEL_TOKEN`, `VERCEL_ORG_ID`, and `VERCEL_PROJECT_ID`. The workflow maps `PRODUCTION_DATABASE_URL` to the application's server-only `DATABASE_URL` runtime name. The linked Vercel Production environment must contain `DATABASE_URL`, `OPENAI_API_KEY`, `ADMIN_PASSWORD`, and `SESSION_SECRET`. Future `codex/*` pull requests have squash auto-merge enabled only after their CI run passes; repository branch protections remain the authority for all other required checks.
 
 ## Vercel preview deployment
 
