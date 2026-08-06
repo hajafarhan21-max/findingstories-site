@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile, access, readdir } from 'node:fs/promises';
 import { spawnSync } from 'node:child_process';
 import { validPassword } from '../api/_lib/auth.js';
-import { databaseUrl } from '../api/_lib/db.js';
+import { databaseUrl, neonConnectionUrl } from '../api/_lib/db.js';
 import { databaseFailureCategory, healthReport } from '../api/_lib/health.js';
 
 test('admin authentication rejects wrong and accepts configured password', () => {
@@ -34,8 +34,9 @@ test('health report logs only safe database failure diagnostics', async () => {
     log: (...entry) => entries.push(entry)
   });
   assert.equal(report.checks.database, 'error');
-  assert.equal(databaseFailureCategory(error), 'authentication');
-  assert.deepEqual(entries[0][1].category, 'authentication');
+  assert.equal(databaseFailureCategory(error), 'authentication_failed');
+  assert.deepEqual(entries[0][1].category, 'authentication_failed');
+  assert.equal(report.checks.databaseDiagnostic, 'authentication_failed');
   assert.equal(JSON.stringify(entries).includes(error.message), false);
 });
 
@@ -49,6 +50,31 @@ test('database URL resolution falls back to PRODUCTION_DATABASE_URL', () => {
 
 test('production runtime prefers its explicitly scoped database URL and trims copy whitespace', () => {
   assert.equal(databaseUrl({ VERCEL_ENV: 'production', DATABASE_URL: 'stale', PRODUCTION_DATABASE_URL: '  production\n' }), 'production');
+});
+
+test('Neon connection setup requires TLS without changing endpoint type', () => {
+  const direct = new URL(neonConnectionUrl({ DATABASE_URL: 'postgresql://user:pass@ep-example.us-east-2.aws.neon.tech/db' }));
+  const pooled = new URL(neonConnectionUrl({ DATABASE_URL: 'postgresql://user:pass@ep-example-pooler.us-east-2.aws.neon.tech/db?sslmode=disable' }));
+  assert.equal(direct.searchParams.get('sslmode'), 'require');
+  assert.equal(pooled.searchParams.get('sslmode'), 'require');
+  assert.match(pooled.hostname, /-pooler\./);
+});
+
+test('malformed database configuration has a safe connection diagnostic', () => {
+  assert.throws(() => neonConnectionUrl({ DATABASE_URL: 'not a connection string' }), error => {
+    assert.equal(databaseFailureCategory(error), 'connection_failed');
+    assert.equal(error.message.includes('not a connection string'), false);
+    return true;
+  });
+});
+
+test('legacy duplicate event contacts do not make additive schema initialization fail', async () => {
+  const runtime = await readFile('api/_lib/db.js', 'utf8');
+  const migration = await readFile('database/migrations/003_event_rsvp.sql', 'utf8');
+  for (const source of [runtime, migration]) {
+    assert.doesNotMatch(source, /CREATE UNIQUE INDEX IF NOT EXISTS event_rsvps_(?:phone|email)_unique/);
+    assert.match(source, /CREATE INDEX IF NOT EXISTS event_rsvps_phone_lookup_idx/);
+  }
 });
 
 test('runtime schema initialization enables UUID support before creating tables', async () => {

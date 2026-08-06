@@ -12,8 +12,25 @@ export function databaseUrl(env = process.env) {
   return configured?.trim();
 }
 
+export function neonConnectionUrl(env = process.env) {
+  const configured = databaseUrl(env);
+  if (!configured) return undefined;
+
+  let parsed;
+  try { parsed = new URL(configured); }
+  catch { throw Object.assign(new Error('Invalid database configuration'), { diagnostic: 'connection_failed' }); }
+  if (!['postgres:', 'postgresql:'].includes(parsed.protocol) || !parsed.hostname || !parsed.username) {
+    throw Object.assign(new Error('Invalid database configuration'), { diagnostic: 'connection_failed' });
+  }
+
+  // Neon supports both pooled and direct endpoints over its serverless driver.
+  // Require TLS even when an accidentally incomplete URL was pasted into Vercel.
+  parsed.searchParams.set('sslmode', 'require');
+  return parsed.toString();
+}
+
 export function database() {
-  const connectionString = databaseUrl();
+  const connectionString = neonConnectionUrl();
   if (!connectionString) throw new Error('Database is not configured');
   if (sqlClientUrl !== connectionString) {
     sqlClient = neon(connectionString);
@@ -177,8 +194,12 @@ export async function ensureEventSchema() {
       await sql`ALTER TABLE event_rsvps ADD COLUMN IF NOT EXISTS next_follow_up_at TIMESTAMPTZ NOT NULL DEFAULT NOW()`;
       await sql`ALTER TABLE event_rsvps ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()`;
       await sql`ALTER TABLE event_rsvps ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()`;
-      await sql`CREATE UNIQUE INDEX IF NOT EXISTS event_rsvps_phone_unique ON event_rsvps(event_id, phone)`;
-      await sql`CREATE UNIQUE INDEX IF NOT EXISTS event_rsvps_email_unique ON event_rsvps(event_id, lower(email)) WHERE email IS NOT NULL AND email <> ''`;
+      // Historical imports can legitimately contain duplicate contact details.
+      // Lookup indexes preserve every row and avoid making startup depend on
+      // retroactively enforcing uniqueness. New submissions deduplicate in the
+      // application using the event/idempotency key.
+      await sql`CREATE INDEX IF NOT EXISTS event_rsvps_phone_lookup_idx ON event_rsvps(event_id, phone)`;
+      await sql`CREATE INDEX IF NOT EXISTS event_rsvps_email_lookup_idx ON event_rsvps(event_id, lower(email)) WHERE email IS NOT NULL AND email <> ''`;
       await sql`CREATE INDEX IF NOT EXISTS event_rsvps_pipeline_idx ON event_rsvps(event_id,status,created_at DESC)`;
       await sql`CREATE INDEX IF NOT EXISTS event_rsvps_followup_idx ON event_rsvps(next_follow_up_at)`;
       await sql`CREATE TABLE IF NOT EXISTS event_rsvp_activity (

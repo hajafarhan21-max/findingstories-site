@@ -29,8 +29,9 @@ CREATE TABLE IF NOT EXISTS event_rsvps (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE(event_id,idempotency_key)
 );
-CREATE UNIQUE INDEX IF NOT EXISTS event_rsvps_phone_unique ON event_rsvps(event_id, phone);
-CREATE UNIQUE INDEX IF NOT EXISTS event_rsvps_email_unique ON event_rsvps(event_id, lower(email)) WHERE email IS NOT NULL AND email <> '';
+-- Preserve historical duplicate contacts; application idempotency prevents new duplicate submissions.
+CREATE INDEX IF NOT EXISTS event_rsvps_phone_lookup_idx ON event_rsvps(event_id, phone);
+CREATE INDEX IF NOT EXISTS event_rsvps_email_lookup_idx ON event_rsvps(event_id, lower(email)) WHERE email IS NOT NULL AND email <> '';
 CREATE INDEX IF NOT EXISTS event_rsvps_pipeline_idx ON event_rsvps(event_id,status,created_at DESC);
 CREATE INDEX IF NOT EXISTS event_rsvps_followup_idx ON event_rsvps(next_follow_up_at);
 CREATE TABLE IF NOT EXISTS event_rsvp_activity (
