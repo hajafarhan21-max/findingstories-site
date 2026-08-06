@@ -17,7 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      # Keep the production connection string explicitly named at the Actions
+      # boundary, while exposing the runtime name expected by the application.
+      DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
       ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -37,7 +39,10 @@ jobs:
           done
           if ((${#missing[@]})); then
             echo "### ❌ Missing production secrets" >> "$GITHUB_STEP_SUMMARY"
-            printf -- '- `%s`\n' "${missing[@]}" >> "$GITHUB_STEP_SUMMARY"
+            for name in "${missing[@]}"; do
+              if [ "$name" = DATABASE_URL ]; then name=PRODUCTION_DATABASE_URL; fi
+              printf -- '- `%s`\n' "$name" >> "$GITHUB_STEP_SUMMARY"
+            done
             exit 1
           fi
           echo '### ✅ Required production secrets are configured' >> "$GITHUB_STEP_SUMMARY"
