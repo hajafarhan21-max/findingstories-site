@@ -24,13 +24,6 @@ async function runPhase(phase, statementId, operation, { tolerateConcurrentDdl =
   }
 }
 
-async function ensureUuidGenerator(sql, phase) {
-  await runPhase(phase, 'create_extension_pgcrypto', async () => {
-    const available = await sql`SELECT to_regprocedure('gen_random_uuid()') IS NOT NULL AS available`;
-    if (!available[0]?.available) await sql`CREATE EXTENSION IF NOT EXISTS pgcrypto`;
-  }, { tolerateConcurrentDdl: true });
-}
-
 export function databaseUrl(env = process.env) {
   const configured = env.VERCEL_ENV === 'production'
     ? env.PRODUCTION_DATABASE_URL || env.DATABASE_URL
@@ -66,10 +59,9 @@ export function database() {
 }
 
 export async function initializeSchema(sql) {
-  await ensureUuidGenerator(sql, 'leads');
   await runPhase('leads', 'create_leads_table', () => sql`
       CREATE TABLE IF NOT EXISTS leads (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(),
         submission_id UUID,
         name TEXT NOT NULL,
         phone TEXT NOT NULL,
@@ -114,7 +106,7 @@ export async function initializeSchema(sql) {
   await runPhase('leads', 'alter_leads_columns', async () => {
     // A legacy table may predate any of the current capture fields. Keep every
     // addition nullable or give it a population-safe default.
-    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS id UUID DEFAULT gen_random_uuid()`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS id UUID DEFAULT pg_catalog.gen_random_uuid()`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS name TEXT`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS phone TEXT`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS email TEXT`;
@@ -188,22 +180,21 @@ export async function ensureSchema() {
 }
 
 export async function initializeEventSchema(sql) {
-  await ensureUuidGenerator(sql, 'events');
   await runPhase('events', 'create_event_tables', async () => {
       await sql`CREATE TABLE IF NOT EXISTS events (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(), slug TEXT NOT NULL UNIQUE, name TEXT NOT NULL,
+        id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(), slug TEXT NOT NULL UNIQUE, name TEXT NOT NULL,
         venue TEXT NOT NULL, timezone TEXT NOT NULL DEFAULT 'Asia/Dubai', starts_on DATE NOT NULL,
         ends_on DATE NOT NULL, default_slot_capacity INTEGER NOT NULL DEFAULT 4 CHECK(default_slot_capacity > 0),
         active BOOLEAN NOT NULL DEFAULT TRUE, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )`;
       await sql`CREATE TABLE IF NOT EXISTS event_slots (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(), event_id UUID NOT NULL REFERENCES events(id),
+        id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(), event_id UUID NOT NULL REFERENCES events(id),
         starts_at TIMESTAMPTZ NOT NULL, ends_at TIMESTAMPTZ NOT NULL, capacity INTEGER NOT NULL DEFAULT 4 CHECK(capacity > 0),
         booked_count INTEGER NOT NULL DEFAULT 0 CHECK(booked_count >= 0 AND booked_count <= capacity), active BOOLEAN NOT NULL DEFAULT TRUE,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), UNIQUE(event_id, starts_at)
       )`;
       await sql`CREATE TABLE IF NOT EXISTS event_rsvps (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(), event_id UUID NOT NULL REFERENCES events(id), idempotency_key UUID NOT NULL,
+        id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(), event_id UUID NOT NULL REFERENCES events(id), idempotency_key UUID NOT NULL,
         full_name TEXT NOT NULL, phone TEXT NOT NULL, email TEXT, purpose TEXT, budget TEXT, property_type TEXT,
         preferred_area TEXT, purchase_timeline TEXT, owns_uae_property TEXT, payment_method TEXT,
         preferred_event_date DATE NOT NULL, preferred_slot UUID REFERENCES event_slots(id), confirmed_slot UUID REFERENCES event_slots(id),
@@ -288,7 +279,7 @@ export async function initializeEventSchema(sql) {
   }, { tolerateConcurrentDdl: true });
   await runPhase('events', 'create_event_tables', async () => {
       await sql`CREATE TABLE IF NOT EXISTS event_rsvp_activity (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(), rsvp_id UUID NOT NULL REFERENCES event_rsvps(id) ON DELETE CASCADE,
+        id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(), rsvp_id UUID NOT NULL REFERENCES event_rsvps(id) ON DELETE CASCADE,
         activity_type TEXT NOT NULL, details JSONB NOT NULL DEFAULT '{}', created_by TEXT NOT NULL DEFAULT 'system',
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )`;
@@ -305,7 +296,8 @@ export async function initializeEventSchema(sql) {
       await sql`INSERT INTO event_slots(event_id,starts_at,ends_at,capacity)
         SELECT e.id, (d + t)::timestamp AT TIME ZONE 'Asia/Dubai', (d + t + interval '30 minutes')::timestamp AT TIME ZONE 'Asia/Dubai', e.default_slot_capacity
         FROM events e CROSS JOIN (VALUES(DATE '2026-08-08'),(DATE '2026-08-09')) dates(d)
-        CROSS JOIN generate_series(TIME '10:00', TIME '18:30', INTERVAL '30 minutes') times(t)
+        CROSS JOIN generate_series(0, 17) times(slot_number)
+        CROSS JOIN LATERAL (VALUES (TIME '10:00' + slot_number * INTERVAL '30 minutes')) slot_times(t)
         WHERE e.slug='dubai-open-house-august-2026' ON CONFLICT(event_id,starts_at) DO NOTHING`;
   });
       await runPhase('events', 'create_confirm_event_slot_function', () => sql`CREATE OR REPLACE FUNCTION confirm_event_slot(p_rsvp UUID, p_slot UUID, p_actor TEXT DEFAULT 'admin') RETURNS BOOLEAN

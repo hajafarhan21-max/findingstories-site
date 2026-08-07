@@ -1,23 +1,18 @@
 -- Idempotent Dubai Open House event pipeline. Existing lead/CRM tables are untouched.
-DO $$ BEGIN
-  IF to_regprocedure('gen_random_uuid()') IS NULL THEN
-    EXECUTE 'CREATE EXTENSION IF NOT EXISTS pgcrypto';
-  END IF;
-END $$;
 CREATE TABLE IF NOT EXISTS events (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), slug TEXT NOT NULL UNIQUE, name TEXT NOT NULL,
+  id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(), slug TEXT NOT NULL UNIQUE, name TEXT NOT NULL,
   venue TEXT NOT NULL, timezone TEXT NOT NULL DEFAULT 'Asia/Dubai', starts_on DATE NOT NULL,
   ends_on DATE NOT NULL, default_slot_capacity INTEGER NOT NULL DEFAULT 4 CHECK(default_slot_capacity > 0),
   active BOOLEAN NOT NULL DEFAULT TRUE, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 CREATE TABLE IF NOT EXISTS event_slots (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), event_id UUID NOT NULL REFERENCES events(id),
+  id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(), event_id UUID NOT NULL REFERENCES events(id),
   starts_at TIMESTAMPTZ NOT NULL, ends_at TIMESTAMPTZ NOT NULL, capacity INTEGER NOT NULL DEFAULT 4 CHECK(capacity > 0),
   booked_count INTEGER NOT NULL DEFAULT 0 CHECK(booked_count >= 0 AND booked_count <= capacity), active BOOLEAN NOT NULL DEFAULT TRUE,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), UNIQUE(event_id, starts_at)
 );
 CREATE TABLE IF NOT EXISTS event_rsvps (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), event_id UUID NOT NULL REFERENCES events(id), idempotency_key UUID NOT NULL,
+  id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(), event_id UUID NOT NULL REFERENCES events(id), idempotency_key UUID NOT NULL,
   full_name TEXT NOT NULL, phone TEXT NOT NULL, email TEXT, purpose TEXT, budget TEXT, property_type TEXT,
   preferred_area TEXT, purchase_timeline TEXT, owns_uae_property TEXT, payment_method TEXT,
   preferred_event_date DATE NOT NULL, preferred_slot UUID REFERENCES event_slots(id), confirmed_slot UUID REFERENCES event_slots(id),
@@ -63,7 +58,7 @@ CREATE INDEX IF NOT EXISTS event_rsvps_email_lookup_idx ON event_rsvps(event_id,
 CREATE INDEX IF NOT EXISTS event_rsvps_pipeline_idx ON event_rsvps(event_id,status,created_at DESC);
 CREATE INDEX IF NOT EXISTS event_rsvps_followup_idx ON event_rsvps(next_follow_up_at);
 CREATE TABLE IF NOT EXISTS event_rsvp_activity (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), rsvp_id UUID NOT NULL REFERENCES event_rsvps(id) ON DELETE CASCADE,
+  id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(), rsvp_id UUID NOT NULL REFERENCES event_rsvps(id) ON DELETE CASCADE,
   activity_type TEXT NOT NULL, details JSONB NOT NULL DEFAULT '{}', created_by TEXT NOT NULL DEFAULT 'system',
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
@@ -78,7 +73,8 @@ ON CONFLICT(slug) DO UPDATE SET name=EXCLUDED.name, venue=EXCLUDED.venue;
 INSERT INTO event_slots(event_id,starts_at,ends_at,capacity)
 SELECT e.id, (d + t)::timestamp AT TIME ZONE 'Asia/Dubai', (d + t + interval '30 minutes')::timestamp AT TIME ZONE 'Asia/Dubai', e.default_slot_capacity
 FROM events e CROSS JOIN (VALUES(DATE '2026-08-08'),(DATE '2026-08-09')) dates(d)
-CROSS JOIN generate_series(TIME '10:00', TIME '18:30', INTERVAL '30 minutes') times(t)
+CROSS JOIN generate_series(0, 17) times(slot_number)
+CROSS JOIN LATERAL (VALUES (TIME '10:00' + slot_number * INTERVAL '30 minutes')) slot_times(t)
 WHERE e.slug='dubai-open-house-august-2026' ON CONFLICT(event_id,starts_at) DO NOTHING;
 
 -- The row lock and conditional increment make confirmation safe under concurrent requests.
