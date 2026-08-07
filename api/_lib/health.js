@@ -14,14 +14,31 @@ export function databaseFailureCategory(error) {
   return 'query_failed';
 }
 
+function safeSqlState(error) {
+  return typeof error?.code === 'string' && /^[0-9A-Z]{5}$/.test(error.code) ? error.code : undefined;
+}
+
+function safeIdentifier(value) {
+  return typeof value === 'string' && /^[a-z][a-z0-9_]{2,63}$/.test(value) ? value : undefined;
+}
+
 export async function healthReport({ databaseConfigured, openaiConfigured, checkDatabase, log = console.error }) {
   const checks = { api: 'ok', database: databaseConfigured ? 'checking' : 'not_configured', openai: openaiConfigured ? 'configured' : 'not_configured' };
   try { if (databaseConfigured) { await checkDatabase(); checks.database = 'ok'; } }
   catch (error) {
     checks.database = 'error';
     checks.databaseDiagnostic = databaseFailureCategory(error);
+    const sqlState = safeSqlState(error);
+    const phase = safeIdentifier(error?.schemaPhase);
+    const statement = safeIdentifier(error?.statementId);
+    if (sqlState) checks.databaseSqlState = sqlState;
+    if (phase) checks.databasePhase = phase;
+    if (statement) checks.databaseStatement = statement;
     log('Database health check failed', {
       category: checks.databaseDiagnostic,
+      sqlState,
+      phase,
+      statement,
       runtime: process.env.VERCEL_ENV || 'local'
     });
   }

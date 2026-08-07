@@ -1,5 +1,9 @@
 -- Idempotent Dubai Open House event pipeline. Existing lead/CRM tables are untouched.
-CREATE EXTENSION IF NOT EXISTS pgcrypto;
+DO $$ BEGIN
+  IF to_regprocedure('gen_random_uuid()') IS NULL THEN
+    EXECUTE 'CREATE EXTENSION IF NOT EXISTS pgcrypto';
+  END IF;
+END $$;
 CREATE TABLE IF NOT EXISTS events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(), slug TEXT NOT NULL UNIQUE, name TEXT NOT NULL,
   venue TEXT NOT NULL, timezone TEXT NOT NULL DEFAULT 'Asia/Dubai', starts_on DATE NOT NULL,
@@ -29,6 +33,30 @@ CREATE TABLE IF NOT EXISTS event_rsvps (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   UNIQUE(event_id,idempotency_key)
 );
+-- Complete legacy/partial tables without applying new constraints to historical rows.
+ALTER TABLE events ADD COLUMN IF NOT EXISTS slug TEXT;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS name TEXT;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS venue TEXT;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS timezone TEXT DEFAULT 'Asia/Dubai';
+ALTER TABLE events ADD COLUMN IF NOT EXISTS starts_on DATE;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS ends_on DATE;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS default_slot_capacity INTEGER DEFAULT 4;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS active BOOLEAN DEFAULT TRUE;
+ALTER TABLE events ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW();
+ALTER TABLE event_slots ADD COLUMN IF NOT EXISTS event_id UUID;
+ALTER TABLE event_slots ADD COLUMN IF NOT EXISTS starts_at TIMESTAMPTZ;
+ALTER TABLE event_slots ADD COLUMN IF NOT EXISTS ends_at TIMESTAMPTZ;
+ALTER TABLE event_slots ADD COLUMN IF NOT EXISTS capacity INTEGER DEFAULT 4;
+ALTER TABLE event_slots ADD COLUMN IF NOT EXISTS booked_count INTEGER DEFAULT 0;
+ALTER TABLE event_slots ADD COLUMN IF NOT EXISTS active BOOLEAN DEFAULT TRUE;
+ALTER TABLE event_slots ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW();
+ALTER TABLE event_rsvps ADD COLUMN IF NOT EXISTS event_id UUID;
+ALTER TABLE event_rsvps ADD COLUMN IF NOT EXISTS phone TEXT;
+ALTER TABLE event_rsvps ADD COLUMN IF NOT EXISTS email TEXT;
+ALTER TABLE event_rsvps ADD COLUMN IF NOT EXISTS status TEXT DEFAULT 'new';
+ALTER TABLE event_rsvps ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW();
+ALTER TABLE event_rsvps ADD COLUMN IF NOT EXISTS next_follow_up_at TIMESTAMPTZ DEFAULT NOW();
+
 -- Preserve historical duplicate contacts; application idempotency prevents new duplicate submissions.
 CREATE INDEX IF NOT EXISTS event_rsvps_phone_lookup_idx ON event_rsvps(event_id, phone);
 CREATE INDEX IF NOT EXISTS event_rsvps_email_lookup_idx ON event_rsvps(event_id, lower(email)) WHERE email IS NOT NULL AND email <> '';
