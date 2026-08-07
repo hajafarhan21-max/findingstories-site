@@ -77,9 +77,10 @@ test('legacy duplicate event contacts do not make additive schema initialization
   }
 });
 
-test('runtime schema initialization enables UUID support before creating tables', async () => {
+test('runtime schema initialization uses the PostgreSQL 17 core UUID generator without extensions', async () => {
   const source = await readFile('api/_lib/db.js', 'utf8');
-  assert.ok(source.indexOf('CREATE EXTENSION IF NOT EXISTS pgcrypto') < source.indexOf('CREATE TABLE IF NOT EXISTS leads'));
+  assert.match(source, /DEFAULT pg_catalog\.gen_random_uuid\(\)/);
+  assert.doesNotMatch(source, /CREATE EXTENSION|to_regprocedure/);
 });
 
 test('database URL resolution returns undefined when configuration is missing', () => {
@@ -191,13 +192,41 @@ test('simultaneous initialization tolerates duplicate-object DDL races', async (
   assert.equal(raced, true);
 });
 
-test('missing pgcrypto permission is irrelevant when Neon provides gen_random_uuid', async () => {
+test('missing pgcrypto permission is irrelevant because initialization never creates extensions', async () => {
   const { initializeSchema } = await import('../api/_lib/db.js');
-  const fake = schemaSql({ uuidAvailable: true, fail: statement => {
+  const fake = schemaSql({ fail: statement => {
     if (statement.startsWith('CREATE EXTENSION')) return Object.assign(new Error('denied'), { code: '42501' });
   }});
   await initializeSchema(fake.sql);
   assert.equal(fake.statements.some(value => value.startsWith('CREATE EXTENSION')), false);
+});
+
+test('event seed avoids PostgreSQL 42883 from the unsupported time generate_series overload', async () => {
+  const undefinedFunction = statement => /generate_series\(TIME [^)]*INTERVAL/.test(statement)
+    ? Object.assign(new Error('function generate_series(time without time zone, time without time zone, interval) does not exist'), { code: '42883' })
+    : undefined;
+  const legacy = schemaSql({ fail: undefinedFunction });
+  await assert.rejects(
+    legacy.sql`SELECT * FROM generate_series(TIME '10:00', TIME '18:30', INTERVAL '30 minutes')`,
+    error => error.code === '42883'
+  );
+
+  const { initializeEventSchema } = await import('../api/_lib/db.js');
+  const fixed = schemaSql({ fail: undefinedFunction });
+  await initializeEventSchema(fixed.sql);
+  const seed = fixed.statements.find(value => value.startsWith('INSERT INTO event_slots'));
+  assert.match(seed, /generate_series\(0, 17\)/);
+  assert.doesNotMatch(seed, /generate_series\(TIME/);
+});
+
+test('event SQL has no extension-only or unresolved function references', async () => {
+  const runtime = await readFile('api/_lib/db.js', 'utf8');
+  const migration = await readFile('database/migrations/003_event_rsvp.sql', 'utf8');
+  for (const source of [runtime, migration]) {
+    assert.doesNotMatch(source, /CREATE EXTENSION|(?<!pg_catalog\.)gen_random_uuid\(/);
+    assert.doesNotMatch(source, /generate_series\(TIME/);
+    assert.match(source, /CREATE OR REPLACE FUNCTION confirm_event_slot/);
+  }
 });
 
 test('schema failures report safe SQLSTATE, phase and stable statement without raw errors', async () => {

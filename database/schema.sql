@@ -1,10 +1,5 @@
-DO $$ BEGIN
-  IF to_regprocedure('gen_random_uuid()') IS NULL THEN
-    EXECUTE 'CREATE EXTENSION IF NOT EXISTS pgcrypto';
-  END IF;
-END $$;
 CREATE TABLE IF NOT EXISTS leads (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(), submission_id UUID, name TEXT NOT NULL, phone TEXT NOT NULL, email TEXT,
+  id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(), submission_id UUID, name TEXT NOT NULL, phone TEXT NOT NULL, email TEXT,
   country_of_residence TEXT, purpose TEXT, budget TEXT, property_type TEXT, bedrooms TEXT,
   preferred_areas TEXT, payment_method TEXT, purchase_timeline TEXT, owns_uae_property TEXT,
   additional_requirements TEXT, consent BOOLEAN NOT NULL DEFAULT FALSE, source TEXT NOT NULL DEFAULT 'website',
