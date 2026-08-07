@@ -10,9 +10,9 @@ export default async function handler(req, res) {
       const sql = database();
       await sql`SELECT 1`;
       try { await ensureSchema(); }
-      catch (error) { throw Object.assign(error, { diagnostic: error?.code === '42501' ? 'permission_failed' : error?.code === '0A000' ? 'extension_failed' : 'schema_failed' }); }
+      catch (error) { throw Object.assign(error, { diagnostic: 'schema_failed' }); }
       try { await ensureEventSchema(); }
-      catch (error) { throw Object.assign(error, { diagnostic: error?.code === '42501' ? 'permission_failed' : error?.code === '0A000' ? 'extension_failed' : 'schema_failed' }); }
+      catch (error) { throw Object.assign(error, { diagnostic: 'schema_failed' }); }
       await sql`SELECT 1`;
     } });
   json(res, report.status === 'degraded' ? 503 : 200, report);

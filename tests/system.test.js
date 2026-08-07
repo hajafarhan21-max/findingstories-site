@@ -128,3 +128,88 @@ test('production verification is read-only and delegates deployment to Vercel Gi
   assert.match(smoke, /\/open-house/);
   assert.match(smoke, /\/event-admin\.html/);
 });
+
+function schemaSql({ uuidAvailable = true, fail } = {}) {
+  const statements = [];
+  const sql = async (strings, ...values) => {
+    const statement = String.raw({ raw: strings }, ...values).replace(/\s+/g, ' ').trim();
+    statements.push(statement);
+    const error = fail?.(statement, statements.length);
+    if (error) throw error;
+    if (statement.startsWith("SELECT to_regprocedure")) return [{ available: uuidAvailable }];
+    return [];
+  };
+  return { sql, statements };
+}
+
+test('empty Neon-compatible schema runs every additive initialization phase', async () => {
+  const { initializeSchema, initializeEventSchema } = await import('../api/_lib/db.js');
+  const fake = schemaSql();
+  await initializeSchema(fake.sql);
+  await initializeEventSchema(fake.sql);
+  assert.ok(fake.statements.some(value => value.startsWith('CREATE TABLE IF NOT EXISTS leads')));
+  assert.ok(fake.statements.some(value => value.startsWith('CREATE TABLE IF NOT EXISTS event_rsvps')));
+  assert.ok(fake.statements.some(value => value.startsWith('CREATE OR REPLACE FUNCTION confirm_event_slot')));
+});
+
+test('legacy and partially completed event tables receive referenced columns before indexes', async () => {
+  const { initializeEventSchema } = await import('../api/_lib/db.js');
+  const fake = schemaSql();
+  await initializeEventSchema(fake.sql);
+  const column = fake.statements.findIndex(value => value.includes('event_rsvps ADD COLUMN IF NOT EXISTS event_id'));
+  const index = fake.statements.findIndex(value => value.includes('event_rsvps_phone_lookup_idx'));
+  assert.ok(column >= 0 && index > column);
+});
+
+test('duplicate phone and email records are supported by non-unique lookup indexes', async () => {
+  const { initializeEventSchema } = await import('../api/_lib/db.js');
+  const fake = schemaSql();
+  await initializeEventSchema(fake.sql);
+  const contacts = fake.statements.filter(value => /event_rsvps_(phone|email)_lookup_idx/.test(value));
+  assert.equal(contacts.length, 2);
+  assert.ok(contacts.every(value => !value.startsWith('CREATE UNIQUE INDEX')));
+});
+
+test('schema initialization is repeatable after a completed migration', async () => {
+  const { initializeSchema, initializeEventSchema } = await import('../api/_lib/db.js');
+  const fake = schemaSql();
+  await initializeSchema(fake.sql); await initializeEventSchema(fake.sql);
+  await initializeSchema(fake.sql); await initializeEventSchema(fake.sql);
+  assert.ok(fake.statements.length > 100);
+});
+
+test('simultaneous initialization tolerates duplicate-object DDL races', async () => {
+  const { initializeEventSchema } = await import('../api/_lib/db.js');
+  let raced = false;
+  const fake = schemaSql({ fail: statement => {
+    if (!raced && statement.includes('event_rsvps_phone_lookup_idx')) {
+      raced = true;
+      return Object.assign(new Error('unsafe raw database detail'), { code: '42P07' });
+    }
+  }});
+  await Promise.all([initializeEventSchema(fake.sql), initializeEventSchema(fake.sql)]);
+  assert.equal(raced, true);
+});
+
+test('missing pgcrypto permission is irrelevant when Neon provides gen_random_uuid', async () => {
+  const { initializeSchema } = await import('../api/_lib/db.js');
+  const fake = schemaSql({ uuidAvailable: true, fail: statement => {
+    if (statement.startsWith('CREATE EXTENSION')) return Object.assign(new Error('denied'), { code: '42501' });
+  }});
+  await initializeSchema(fake.sql);
+  assert.equal(fake.statements.some(value => value.startsWith('CREATE EXTENSION')), false);
+});
+
+test('schema failures report safe SQLSTATE, phase and stable statement without raw errors', async () => {
+  const { initializeEventSchema } = await import('../api/_lib/db.js');
+  const fake = schemaSql({ fail: statement => statement.includes('event_rsvps_pipeline_idx')
+    ? Object.assign(new Error('hostname password customer@example.com SELECT secret'), { code: '42703' }) : undefined });
+  let failure;
+  try { await initializeEventSchema(fake.sql); } catch (error) { failure = error; }
+  const report = await healthReport({ databaseConfigured: true, openaiConfigured: true,
+    checkDatabase: async () => { throw failure; }, log: () => {} });
+  assert.equal(report.checks.databaseSqlState, '42703');
+  assert.equal(report.checks.databasePhase, 'events');
+  assert.equal(report.checks.databaseStatement, 'create_event_indexes');
+  assert.doesNotMatch(JSON.stringify(report), /hostname|password|customer|SELECT secret/);
+});
