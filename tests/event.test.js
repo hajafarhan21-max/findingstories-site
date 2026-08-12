@@ -39,3 +39,26 @@ test('event admin operations share one Hobby-plan-compatible function',async()=>
  const frontend=await readFile('public/event-admin.js','utf8');
  assert.doesNotMatch(frontend,/api\/admin\/events\/(update|import|export)/);
 });
+
+test('RSVP capture checks normalized contact duplicates before inserting',async()=>{
+ const source=await readFile('api/events/rsvp.js','utf8');
+ assert.match(source,/NOT EXISTS \(SELECT 1 FROM event_rsvps/);
+ assert.match(source,/x\.phone=\$\{phone\}/);
+});
+
+test('meeting confirmation cannot consume capacity from another event',async()=>{
+ for(const file of ['api/_lib/db.js','database/migrations/003_event_rsvp.sql']){
+  const source=await readFile(file,'utf8');
+  assert.match(source,/SELECT confirmed_slot,event_id INTO old_slot,rsvp_event/);
+  assert.match(source,/id=p_slot AND event_id=rsvp_event AND active/);
+ }
+});
+
+test('event dashboard exposes operational counts, requested demand and CSV meeting fields',async()=>{
+ const api=await readFile('api/admin/events.js','utf8');
+ for(const field of ['saturday','sunday','pending_confirmation','qualified','requested_count','confirmed_meeting']) assert.match(api,new RegExp(field));
+ const frontend=await readFile('public/event-admin.js','utf8');
+ assert.match(frontend,/High-intent \/ qualified/);
+ assert.match(frontend,/capacity remaining/);
+ assert.match(frontend,/function csvCells/);
+});
