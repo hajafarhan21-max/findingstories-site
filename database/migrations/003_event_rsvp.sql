@@ -80,12 +80,12 @@ WHERE e.slug='dubai-open-house-august-2026' ON CONFLICT(event_id,starts_at) DO N
 -- The row lock and conditional increment make confirmation safe under concurrent requests.
 CREATE OR REPLACE FUNCTION confirm_event_slot(p_rsvp UUID, p_slot UUID, p_actor TEXT DEFAULT 'admin') RETURNS BOOLEAN
 LANGUAGE plpgsql AS $$
-DECLARE old_slot UUID; available BOOLEAN;
+DECLARE old_slot UUID; rsvp_event UUID; available BOOLEAN;
 BEGIN
-  SELECT confirmed_slot INTO old_slot FROM event_rsvps WHERE id=p_rsvp FOR UPDATE;
+  SELECT confirmed_slot,event_id INTO old_slot,rsvp_event FROM event_rsvps WHERE id=p_rsvp FOR UPDATE;
   IF NOT FOUND THEN RETURN FALSE; END IF;
   IF old_slot=p_slot THEN RETURN TRUE; END IF;
-  UPDATE event_slots SET booked_count=booked_count+1 WHERE id=p_slot AND active AND booked_count < capacity RETURNING TRUE INTO available;
+  UPDATE event_slots SET booked_count=booked_count+1 WHERE id=p_slot AND event_id=rsvp_event AND active AND booked_count < capacity RETURNING TRUE INTO available;
   IF NOT COALESCE(available,FALSE) THEN RETURN FALSE; END IF;
   IF old_slot IS NOT NULL THEN UPDATE event_slots SET booked_count=GREATEST(0,booked_count-1) WHERE id=old_slot; END IF;
   UPDATE event_rsvps SET confirmed_slot=p_slot,status='confirmed',updated_at=NOW(),

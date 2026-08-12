@@ -16,9 +16,15 @@ async function listEvent(sql, res) {
       LEFT JOIN event_slots cs ON cs.id=r.confirmed_slot
       JOIN events e ON e.id=r.event_id WHERE e.slug=${eventSlug}
       ORDER BY r.created_at DESC LIMIT 1000`,
-    sql`SELECT s.id,s.starts_at,s.ends_at,s.capacity,s.booked_count,s.capacity-s.booked_count remaining
-      FROM event_slots s JOIN events e ON e.id=s.event_id WHERE e.slug=${eventSlug} ORDER BY s.starts_at`,
+    sql`SELECT s.id,s.starts_at,s.ends_at,s.capacity,s.booked_count,s.capacity-s.booked_count remaining,
+      COUNT(r.id)::int requested_count FROM event_slots s JOIN events e ON e.id=s.event_id
+      LEFT JOIN event_rsvps r ON r.preferred_slot=s.id WHERE e.slug=${eventSlug}
+      GROUP BY s.id ORDER BY s.starts_at`,
     sql`SELECT COUNT(*)::int total, COUNT(*) FILTER(WHERE r.status='new')::int new,
+      COUNT(*) FILTER(WHERE r.preferred_event_date='2026-08-08')::int saturday,
+      COUNT(*) FILTER(WHERE r.preferred_event_date='2026-08-09')::int sunday,
+      COUNT(*) FILTER(WHERE r.confirmed_slot IS NULL AND r.status NOT IN ('lost','booked'))::int pending_confirmation,
+      COUNT(*) FILTER(WHERE r.temperature='Hot' OR r.lead_score>=75)::int qualified,
       COUNT(*) FILTER(WHERE r.status='contact_pending')::int contact_pending,
       COUNT(*) FILTER(WHERE r.status='confirmed')::int confirmed,
       COUNT(*) FILTER(WHERE r.status='confirmed' AND (s.starts_at AT TIME ZONE 'Asia/Dubai')::date='2026-08-08')::int confirmed_8,
@@ -35,12 +41,15 @@ async function listEvent(sql, res) {
 }
 
 async function exportEvent(sql, res) {
-  const rows = await sql`SELECT full_name,phone,email,purpose,budget,property_type,preferred_area,
-    purchase_timeline,preferred_event_date,status,assigned_to,lead_score,temperature,source,
-    utm_source,utm_medium,utm_campaign,created_at FROM event_rsvps r JOIN events e ON e.id=r.event_id
+  const rows = await sql`SELECT r.full_name,r.phone,r.email,r.purpose,r.budget,r.property_type,r.preferred_area,
+    r.purchase_timeline,r.preferred_event_date,ps.starts_at AS requested_slot,cs.starts_at AS confirmed_meeting,
+    r.status,r.assigned_to,r.lead_score,r.temperature,r.qualification_status,r.last_contacted_at,r.next_follow_up_at,
+    r.source,r.utm_source,r.utm_medium,r.utm_campaign,r.created_at FROM event_rsvps r JOIN events e ON e.id=r.event_id
+    LEFT JOIN event_slots ps ON ps.id=r.preferred_slot LEFT JOIN event_slots cs ON cs.id=r.confirmed_slot
     WHERE e.slug=${eventSlug} ORDER BY r.created_at DESC`;
   const headers = ['full_name','phone','email','purpose','budget','property_type','preferred_area','purchase_timeline',
-    'preferred_event_date','status','assigned_to','lead_score','temperature','source','utm_source','utm_medium','utm_campaign','created_at'];
+    'preferred_event_date','requested_slot','confirmed_meeting','status','assigned_to','lead_score','temperature',
+    'qualification_status','last_contacted_at','next_follow_up_at','source','utm_source','utm_medium','utm_campaign','created_at'];
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/csv; charset=utf-8');
   res.setHeader('Content-Disposition', 'attachment; filename="finding-stories-open-house-rsvps.csv"');
