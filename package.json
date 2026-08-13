@@ -10,7 +10,8 @@
     "test": "node --test",
     "build": "node scripts/build.mjs",
     "db:init": "node scripts/init-production-db.mjs",
-    "smoke:production": "node scripts/production-smoke.mjs"
+    "smoke:production": "node scripts/production-smoke.mjs",
+    "acceptance:rsvp": "node scripts/acceptance-rsvp.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",

@@ -40,10 +40,28 @@ test('event admin operations share one Hobby-plan-compatible function',async()=>
  assert.doesNotMatch(frontend,/api\/admin\/events\/(update|import|export)/);
 });
 
-test('RSVP capture checks normalized contact duplicates before inserting',async()=>{
+test('RSVP capture checks normalized contact duplicates and idempotency before reserving',async()=>{
  const source=await readFile('api/events/rsvp.js','utf8');
- assert.match(source,/NOT EXISTS \(SELECT 1 FROM event_rsvps/);
+ assert.match(source,/contact_duplicate AS/);
+ assert.match(source,/NOT EXISTS\(SELECT 1 FROM retry\)/);
  assert.match(source,/x\.phone=\$\{phone\}/);
+});
+
+test('RSVP persistence is one Neon-compatible statement and does not await AI',async()=>{
+ const source=await readFile('api/events/rsvp.js','utf8');
+ assert.match(source,/WITH selected AS/);
+ assert.match(source,/UPDATE event_slots slot SET booked_count=slot\.booked_count\+1/);
+ assert.match(source,/INSERT INTO leads\(submission_id/);
+ assert.match(source,/if\(!saved\.duplicate\)scheduleQualification/);
+ assert.doesNotMatch(source,/await scheduleQualification/);
+ assert.doesNotMatch(source,/ensureEventSchema/);
+});
+
+test('RSVP failures have safe codes and browser/server timeouts',async()=>{
+ const api=await readFile('api/events/rsvp.js','utf8'),frontend=await readFile('public/open-house.js','utf8'),ai=await readFile('api/_lib/event-qualify.js','utf8');
+ for(const code of ['VALIDATION_ERROR','INVALID_PHONE','SLOT_UNAVAILABLE','CONTACT_DUPLICATE','PERSISTENCE_UNAVAILABLE'])assert.match(api,new RegExp(code));
+ assert.match(frontend,/AbortController/);assert.match(frontend,/12000/);assert.match(ai,/AbortSignal\.timeout\(timeoutMs\)/);
+ assert.doesNotMatch(api,/request body|full_name.*console|phone.*console|email.*console/i);
 });
 
 test('meeting confirmation cannot consume capacity from another event',async()=>{
