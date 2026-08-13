@@ -218,6 +218,15 @@ export async function initializeEventSchema(sql) {
       await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS default_slot_capacity INTEGER DEFAULT 4`;
       await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS active BOOLEAN DEFAULT TRUE`;
       await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ DEFAULT NOW()`;
+      await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS address TEXT NOT NULL DEFAULT ''`;
+      await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS opening_time TIME NOT NULL DEFAULT TIME '10:00'`;
+      await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS closing_time TIME NOT NULL DEFAULT TIME '19:00'`;
+      await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS slot_duration_minutes INTEGER NOT NULL DEFAULT 30`;
+      await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'OPEN'`;
+      await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS developers_projects TEXT NOT NULL DEFAULT ''`;
+      await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS public_description TEXT NOT NULL DEFAULT ''`;
+      await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS is_test BOOLEAN NOT NULL DEFAULT FALSE`;
+      await sql`ALTER TABLE events ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()`;
       await sql`ALTER TABLE event_slots ADD COLUMN IF NOT EXISTS event_id UUID`;
       await sql`ALTER TABLE event_slots ADD COLUMN IF NOT EXISTS starts_at TIMESTAMPTZ`;
       await sql`ALTER TABLE event_slots ADD COLUMN IF NOT EXISTS ends_at TIMESTAMPTZ`;
@@ -266,6 +275,8 @@ export async function initializeEventSchema(sql) {
       await sql`ALTER TABLE event_rsvps ADD COLUMN IF NOT EXISTS next_follow_up_at TIMESTAMPTZ NOT NULL DEFAULT NOW()`;
       await sql`ALTER TABLE event_rsvps ADD COLUMN IF NOT EXISTS created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()`;
       await sql`ALTER TABLE event_rsvps ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()`;
+      await sql`ALTER TABLE event_rsvps ADD COLUMN IF NOT EXISTS is_test BOOLEAN NOT NULL DEFAULT FALSE`;
+      await sql`ALTER TABLE event_rsvps ADD COLUMN IF NOT EXISTS archived_at TIMESTAMPTZ`;
       // Historical imports can legitimately contain duplicate contact details.
       // Lookup indexes preserve every row and avoid making startup depend on
       // retroactively enforcing uniqueness. New submissions deduplicate in the
@@ -276,6 +287,8 @@ export async function initializeEventSchema(sql) {
       await sql`CREATE INDEX IF NOT EXISTS event_rsvps_email_lookup_idx ON event_rsvps(event_id, lower(email)) WHERE email IS NOT NULL AND email <> ''`;
       await sql`CREATE INDEX IF NOT EXISTS event_rsvps_pipeline_idx ON event_rsvps(event_id,status,created_at DESC)`;
       await sql`CREATE INDEX IF NOT EXISTS event_rsvps_followup_idx ON event_rsvps(next_follow_up_at)`;
+      await sql`CREATE INDEX IF NOT EXISTS events_public_lookup_idx ON events(active,ends_on,status)`;
+      await sql`CREATE INDEX IF NOT EXISTS event_rsvps_test_lookup_idx ON event_rsvps(event_id,is_test,archived_at)`;
   }, { tolerateConcurrentDdl: true });
   await runPhase('events', 'create_event_tables', async () => {
       await sql`CREATE TABLE IF NOT EXISTS event_rsvp_activity (
@@ -290,15 +303,20 @@ export async function initializeEventSchema(sql) {
       )`;
   });
   await runPhase('events', 'seed_event_data', async () => {
-      await sql`INSERT INTO events(slug,name,venue,starts_on,ends_on,default_slot_capacity)
-        VALUES('dubai-open-house-august-2026','Finding Stories Dubai Open House','Shangri-La Hotel, near Financial Centre Metro Station, Dubai','2026-08-08','2026-08-09',4)
-        ON CONFLICT(slug) DO UPDATE SET name=EXCLUDED.name, venue=EXCLUDED.venue`;
+      await sql`INSERT INTO events(slug,name,venue,address,timezone,starts_on,ends_on,opening_time,closing_time,
+        slot_duration_minutes,default_slot_capacity,status,active,is_test,developers_projects,public_description)
+        SELECT 'finding-stories-system-test-event','Finding Stories System Test Event','Finding Stories Test Venue','Dubai, UAE',
+        'Asia/Dubai',dubai_today+1,dubai_today+2,TIME '10:00',TIME '19:00',30,5,'TEST',TRUE,TRUE,
+        'Test developer / test project','TEST MODE — synthetic RSVP workflow validation only.'
+        FROM (SELECT (NOW() AT TIME ZONE 'Asia/Dubai')::date dubai_today) clock
+        WHERE NOT EXISTS (SELECT 1 FROM events WHERE is_test OR slug='finding-stories-system-test-event')
+        ON CONFLICT(slug) DO NOTHING`;
       await sql`INSERT INTO event_slots(event_id,starts_at,ends_at,capacity)
-        SELECT e.id, (d + t)::timestamp AT TIME ZONE 'Asia/Dubai', (d + t + interval '30 minutes')::timestamp AT TIME ZONE 'Asia/Dubai', e.default_slot_capacity
-        FROM events e CROSS JOIN (VALUES(DATE '2026-08-08'),(DATE '2026-08-09')) dates(d)
-        CROSS JOIN generate_series(0, 17) times(slot_number)
-        CROSS JOIN LATERAL (VALUES (TIME '10:00' + slot_number * INTERVAL '30 minutes')) slot_times(t)
-        WHERE e.slug='dubai-open-house-august-2026' ON CONFLICT(event_id,starts_at) DO NOTHING`;
+        SELECT e.id,(e.starts_on+day_number+e.opening_time+n*make_interval(mins=>e.slot_duration_minutes))::timestamp AT TIME ZONE e.timezone,
+        (e.starts_on+day_number+e.opening_time+(n+1)*make_interval(mins=>e.slot_duration_minutes))::timestamp AT TIME ZONE e.timezone,e.default_slot_capacity
+        FROM events e CROSS JOIN LATERAL generate_series(0,e.ends_on-e.starts_on) event_days(day_number)
+        CROSS JOIN LATERAL generate_series(0,GREATEST(0,FLOOR(EXTRACT(EPOCH FROM (e.closing_time-e.opening_time))/60/e.slot_duration_minutes)::int-1)) numbers(n)
+        WHERE e.is_test ON CONFLICT(event_id,starts_at) DO NOTHING`;
   });
       await runPhase('events', 'create_confirm_event_slot_function', () => sql`CREATE OR REPLACE FUNCTION confirm_event_slot(p_rsvp UUID, p_slot UUID, p_actor TEXT DEFAULT 'admin') RETURNS BOOLEAN
         LANGUAGE plpgsql AS $$
@@ -307,7 +325,7 @@ export async function initializeEventSchema(sql) {
           SELECT confirmed_slot,event_id INTO old_slot,rsvp_event FROM event_rsvps WHERE id=p_rsvp FOR UPDATE;
           IF NOT FOUND THEN RETURN FALSE; END IF;
           IF old_slot=p_slot THEN RETURN TRUE; END IF;
-          UPDATE event_slots SET booked_count=booked_count+1 WHERE id=p_slot AND event_id=rsvp_event AND active AND booked_count < capacity RETURNING TRUE INTO available;
+          UPDATE event_slots SET booked_count=booked_count+1 WHERE id=p_slot AND event_id=rsvp_event AND active AND starts_at>NOW() AND booked_count < capacity RETURNING TRUE INTO available;
           IF NOT COALESCE(available,FALSE) THEN RETURN FALSE; END IF;
           IF old_slot IS NOT NULL THEN UPDATE event_slots SET booked_count=GREATEST(0,booked_count-1) WHERE id=old_slot; END IF;
           UPDATE event_rsvps SET confirmed_slot=p_slot,status='confirmed',updated_at=NOW(),

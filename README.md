@@ -88,20 +88,22 @@ Preview deployments must never receive production credentials. Production deploy
 6. **WhatsApp automation:** Use the official WhatsApp Business Platform, approved templates, opt-in/opt-out tracking, delivery webhooks and human handoff.
 7. **Daily reporting:** Email/WhatsApp a permission-controlled digest of funnel conversion, response SLA, lead source, overdue follow-ups and data quality—aggregated to avoid unnecessary PII.
 
-## Dubai Open House event system
+## Reusable event RSVP system
 
-The focused event landing page is available at `/open-house`, and the authenticated event CRM at `/admin/events`. Apply `database/migrations/003_event_rsvp.sql` with `psql "$DATABASE_URL" -f database/migrations/003_event_rsvp.sql` before exercising the routes. The migration is repeatable, preserves all lead records, seeds 36 half-hour Dubai-time slots (10:00–19:00 across 8–9 August 2026), and installs a row-locking appointment function that cannot exceed each slot's configurable capacity.
+The public event page is `/open-house` and the authenticated event CRM is `/event-admin.html`. Schema initialization applies the additive event definitions in `database/migrations/003_event_rsvp.sql` and `004_reusable_events.sql`; it never drops, truncates, or deletes historical event/client records.
 
-Public RSVP submission validates consent and fields, normalises UAE numbers, rate limits by visitor IP, deduplicates phone/email, and uses a UUID idempotency key. An RSVP is persisted before OpenAI qualification; deterministic scoring and complete copy-ready messages are used if AI is unavailable. Requested times are never bookings: an authenticated associate must confirm them, and capacity is rechecked transactionally in Postgres.
+The public API chooses an active `OPEN` or `TEST` database event with future capacity, returns its dates and slots dynamically, and rejects expired appointments server-side. If none exists, the form is disabled with “No upcoming event is currently open for RSVP.” Admins can create and configure future events (name, venue/address, dates, hours, duration, capacity, status, active state, developers/projects, description, and test status) without editing source code.
 
-The event CRM provides pipeline, list, slot calendar, associate performance and safe CSV preview/import views. Admin mutations require both the signed HttpOnly session and same-origin requests. Activity history covers notes, calls, WhatsApp, confirmation and rescheduling. `next_follow_up_at` is the internal, provider-free reminder queue: new/imported contacts are immediately due, and confirmed appointments become due 24 hours before their confirmed time. Staff use copy/open-WhatsApp actions; the system never sends externally on its own.
+On first initialization only when no test event exists, migration 004 creates **Finding Stories System Test Event** for the next two Dubai calendar days, from 10:00–19:00 in 30-minute slots with capacity 5. It and every RSVP captured against it carry `is_test=true` and are labelled TEST in both UIs and CSV exports. “Archive this event’s synthetic RSVPs” soft-archives only unarchived test records and recalculates their test-event occupancy; it cannot operate on a production event.
 
-### Preview smoke test
+Public RSVP submission validates consent and fields, normalises UAE numbers, rate limits by visitor IP, deduplicates within the selected event, and uses a UUID idempotency key. Requested times are not bookings: authenticated staff confirm/reschedule them through the transactionally capacity-safe Postgres function. Qualification uses OpenAI when configured and the deterministic fallback otherwise. CRM status, assignment, attendance, activity, reporting, CSV import, and CSV export remain available per selected event.
 
-1. Apply migration 003 to the Preview database, then open `/api/health` and confirm the database check is `ok` without any secret values.
-2. Open `/open-house?utm_source=smoke&utm_campaign=august-open-house`, select an available 8 August time, consent, and submit a unique test phone/email. Re-submit without changing the page to verify idempotency.
-3. Sign into `/admin/events`; confirm the RSVP, attribution, qualification/fallback messages, and immediate follow-up are visible.
-4. Confirm a slot, verify its remaining count decreases, reschedule it, and verify both slots' counts and the activity history behavior. Attempt a fifth concurrent confirmation against a capacity-four slot and expect HTTP 409.
-5. Mark the RSVP contacted, attended, no-show, follow-up, booked and lost as applicable; add note/call/WhatsApp activity and verify overdue reminders surface.
-6. Preview a CSV containing a duplicate and malformed number; verify accepted/rejected rows, then import and verify no existing record is overwritten.
-7. Download `/api/admin/events?action=export` while authenticated and confirm the CSV contains the test RSVP but no credentials.
+### Post-deployment synthetic workflow
+
+1. Confirm `/api/health` reports `api=ok` and `database=ok`, then open `/open-house?source=system-test&utm_campaign=reusable-event-e2e`.
+2. Confirm the TEST banner, next-two-day date options, half-hour times, and capacity 5. Submit a unique identity such as `FS SYSTEM TEST 2026-08-12 <random suffix>` with a reserved synthetic phone/email; never reuse a client identity.
+3. Sign into `/event-admin.html` using `ADMIN_PASSWORD`. The signed session also requires a production `SESSION_SECRET` of at least 32 characters.
+4. Select `[TEST] Finding Stories System Test Event`; verify the RSVP, requested slot, qualification, temperature, and `TEST RECORD` label.
+5. Assign an RM, confirm the requested slot, verify occupancy increments, reschedule to another future slot, and verify occupancy transfers.
+6. Exercise contacted/attended/no-show/follow-up/booked states as required, record an activity, and check the list, calendar, associate reporting, and event-specific CSV export.
+7. When finished, use **Event configuration → Archive this event’s synthetic RSVPs**. This soft-archives only `is_test=true` records for that test event; no production or historical records are deleted.

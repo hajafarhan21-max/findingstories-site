@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS event_analytics (
 );
 INSERT INTO events(slug,name,venue,starts_on,ends_on,default_slot_capacity)
 VALUES('dubai-open-house-august-2026','Finding Stories Dubai Open House','Shangri-La Hotel, near Financial Centre Metro Station, Dubai','2026-08-08','2026-08-09',4)
-ON CONFLICT(slug) DO UPDATE SET name=EXCLUDED.name, venue=EXCLUDED.venue;
+ON CONFLICT(slug) DO NOTHING;
 INSERT INTO event_slots(event_id,starts_at,ends_at,capacity)
 SELECT e.id, (d + t)::timestamp AT TIME ZONE 'Asia/Dubai', (d + t + interval '30 minutes')::timestamp AT TIME ZONE 'Asia/Dubai', e.default_slot_capacity
 FROM events e CROSS JOIN (VALUES(DATE '2026-08-08'),(DATE '2026-08-09')) dates(d)

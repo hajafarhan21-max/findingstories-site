@@ -215,7 +215,7 @@ test('event seed avoids PostgreSQL 42883 from the unsupported time generate_seri
   const fixed = schemaSql({ fail: undefinedFunction });
   await initializeEventSchema(fixed.sql);
   const seed = fixed.statements.find(value => value.startsWith('INSERT INTO event_slots'));
-  assert.match(seed, /generate_series\(0, 17\)/);
+  assert.match(seed, /generate_series\(0,GREATEST/);
   assert.doesNotMatch(seed, /generate_series\(TIME/);
 });
 
