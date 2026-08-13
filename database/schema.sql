@@ -46,3 +46,4 @@ CREATE INDEX IF NOT EXISTS leads_next_follow_up_at_idx ON leads (next_follow_up_
 
 -- Event RSVP schema is maintained by the non-destructive migration below.
 \ir migrations/003_event_rsvp.sql
+\ir migrations/004_reusable_events.sql
