@@ -68,7 +68,7 @@ export async function persistRsvp(sql, r, phone) {
         ${r.property_type||null},${r.preferred_area||null},${r.payment_method||null},${r.purchase_timeline||null},
         ${r.owns_uae_property||null},${safeText(r.additional_requirements)||null},TRUE,'event-rsvp','/open-house',
         ${r.referrer||null},${r.utm_source||null},${r.utm_medium||null},${r.utm_campaign||null},'pending'
-      FROM inserted i ON CONFLICT(submission_id) DO NOTHING RETURNING id
+      FROM inserted i ON CONFLICT (submission_id) WHERE submission_id IS NOT NULL DO NOTHING RETURNING id
     ), activity AS (
       INSERT INTO event_rsvp_activity(rsvp_id,activity_type,details)
       SELECT i.id,'rsvp_submitted',jsonb_build_object('preferred_slot',${r.preferred_slot},'is_test',i.is_test)

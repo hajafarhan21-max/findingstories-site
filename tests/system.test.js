@@ -117,10 +117,10 @@ test('Vercel deployment stays within the Hobby serverless function limit', async
   assert.ok(handlers.length <= 12);
 });
 
-test('production verification is read-only and delegates deployment to Vercel Git integration', async () => {
+test('production verification delegates deployment and gates it with synthetic writes', async () => {
   const workflow = await readFile('.github/workflows/production.yml', 'utf8');
   const smoke = await readFile('scripts/production-smoke.mjs', 'utf8');
-  for (const forbidden of ['VERCEL_TOKEN', 'VERCEL_ORG_ID', 'VERCEL_PROJECT_ID', 'PRODUCTION_DATABASE_URL', 'ADMIN_PASSWORD']) {
+  for (const forbidden of ['VERCEL_TOKEN', 'VERCEL_ORG_ID', 'VERCEL_PROJECT_ID', 'ADMIN_PASSWORD']) {
     assert.equal(workflow.includes(forbidden), false);
   }
   assert.doesNotMatch(workflow, /vercel(?:@latest)?\s+(?:deploy|pull|build)/i);
@@ -128,6 +128,8 @@ test('production verification is read-only and delegates deployment to Vercel Gi
   assert.match(smoke, /\/api\/health/);
   assert.match(smoke, /\/open-house/);
   assert.match(smoke, /\/event-admin\.html/);
+  assert.match(workflow, /npm run acceptance:rsvp/);
+  assert.match(workflow, /secrets\.PRODUCTION_DATABASE_URL/);
 });
 
 function schemaSql({ uuidAvailable = true, fail } = {}) {

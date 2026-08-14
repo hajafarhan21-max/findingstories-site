@@ -14,6 +14,10 @@ const request=async(path,options={},timeout=8000)=>{
 const submit=async(payload)=>request('/api/events/rsvp',{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':payload.idempotency_key},body:JSON.stringify(payload)});
 const synthetic=(event,slot,index,key=randomUUID())=>({full_name:`FS SYSTEM ACCEPTANCE ${Date.now()} ${index}`,phone:`050${String(Date.now()+index).slice(-7)}`,email:`fs-acceptance-${Date.now()}-${index}@example.com`,purpose:'Investment',budget:'Under AED 1M',property_type:'Apartment',preferred_area:'Dubai',purchase_timeline:'Immediate / ready',payment_method:'Cash',owns_uae_property:'No',event_id:event.id,preferred_event_date:new Intl.DateTimeFormat('en-CA',{timeZone:event.timezone,year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(slot.starts_at)),preferred_slot:slot.id,consent:true,idempotency_key:key,source:'system-acceptance'});
 
+const {response:healthResponse,data:health}=await request('/api/health');
+assert.equal(healthResponse.ok,true,'health endpoint failed');
+assert.equal(health?.checks?.api,'ok','production API health check failed');
+assert.equal(health?.checks?.database,'ok','production database health check failed');
 const {response:slotsResponse,data}=await request('/api/events/slots');
 assert.equal(slotsResponse.ok,true,'slots endpoint failed');
 assert.equal(data.event?.is_test,true,'acceptance is restricted to the active TEST event');
@@ -23,7 +27,7 @@ const before=await sql`SELECT booked_count FROM event_slots WHERE id=${slot.id} 
 assert.equal(before.length,1,'selected slot/event pair is not active and future');
 
 const first=synthetic(data.event,slot,1);const started=Date.now(),one=await submit(first);
-assert.equal(one.response.status,201,JSON.stringify(one.data));assert.ok(Date.now()-started<8000,'first RSVP exceeded 8 seconds');created.push(one.data.id);
+assert.equal(one.response.status,201,JSON.stringify(one.data));assert.ok(Date.now()-started<2000,'first RSVP exceeded 2 seconds');created.push(one.data.id);
 const persisted=await sql`SELECT r.id,r.event_id,r.confirmed_slot,r.qualification_status,l.id lead_id FROM event_rsvps r LEFT JOIN leads l ON l.submission_id=r.id WHERE r.id=${one.data.id} AND r.is_test AND r.archived_at IS NULL`;
 assert.equal(persisted.length,1,'RSVP is not visible to Event CRM');assert.ok(persisted[0].lead_id,'associated lead was not persisted');assert.equal(persisted[0].confirmed_slot,slot.id);
 const afterFirst=await sql`SELECT booked_count FROM event_slots WHERE id=${slot.id}`;assert.equal(Number(afterFirst[0].booked_count),Number(before[0].booked_count)+1,'capacity did not decrement exactly once');
