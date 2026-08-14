@@ -52,9 +52,19 @@ test('RSVP persistence is one Neon-compatible statement and does not await AI',a
  assert.match(source,/WITH selected AS/);
  assert.match(source,/UPDATE event_slots slot SET booked_count=slot\.booked_count\+1/);
  assert.match(source,/INSERT INTO leads\(submission_id/);
+ assert.match(source,/ON CONFLICT \(submission_id\) WHERE submission_id IS NOT NULL DO NOTHING/);
  assert.match(source,/if\(!saved\.duplicate\)scheduleQualification/);
  assert.doesNotMatch(source,/await scheduleQualification/);
  assert.doesNotMatch(source,/ensureEventSchema/);
+});
+
+test('production workflow performs write-path RSVP acceptance against Neon',async()=>{
+ const workflow=await readFile('.github/workflows/production.yml','utf8');
+ const acceptance=await readFile('scripts/acceptance-rsvp.mjs','utf8');
+ assert.match(workflow,/npm run acceptance:rsvp/);
+ assert.match(workflow,/secrets\.PRODUCTION_DATABASE_URL/);
+ for(const check of ['event_rsvps','leads','booked_count','duplicate'])assert.match(acceptance,new RegExp(check));
+ assert.match(acceptance,/checks\?\.api/);assert.match(acceptance,/checks\?\.database/);
 });
 
 test('RSVP failures have safe codes and browser/server timeouts',async()=>{
