@@ -49,7 +49,7 @@ export async function persistRsvp(sql, r, phone) {
       UPDATE event_slots slot SET booked_count=slot.booked_count+1 FROM selected s
       WHERE slot.id=s.slot_id AND slot.event_id=s.event_id AND slot.booked_count<slot.capacity
         AND NOT EXISTS(SELECT 1 FROM retry) AND NOT EXISTS(SELECT 1 FROM contact_duplicate)
-      RETURNING slot.id
+      RETURNING slot.id,slot.booked_count
     ), inserted AS (
       INSERT INTO event_rsvps(event_id,idempotency_key,full_name,phone,email,purpose,budget,property_type,preferred_area,
         purchase_timeline,owns_uae_property,payment_method,preferred_event_date,preferred_slot,confirmed_slot,
@@ -74,12 +74,18 @@ export async function persistRsvp(sql, r, phone) {
       SELECT i.id,'rsvp_submitted',jsonb_build_object('preferred_slot',${r.preferred_slot},'is_test',i.is_test)
       FROM inserted i RETURNING id
     )
-    SELECT i.id,i.is_test,FALSE duplicate,'saved' result,s.event_name,s.event_venue FROM inserted i,selected s
-    UNION ALL SELECT x.id,x.is_test,TRUE,'saved',s.event_name,s.event_venue FROM retry x,selected s
+    SELECT i.id,i.is_test,FALSE duplicate,'saved' result,s.event_name,s.event_venue,
+      TRUE rsvp_persisted,EXISTS(SELECT 1 FROM lead_created) lead_associated,
+      EXISTS(SELECT 1 FROM activity) activity_persisted,capacity.booked_count
+      FROM inserted i,selected s,reserved capacity
+    UNION ALL SELECT x.id,x.is_test,TRUE,'saved',s.event_name,s.event_venue,TRUE,
+      EXISTS(SELECT 1 FROM leads l WHERE l.submission_id=x.id),
+      EXISTS(SELECT 1 FROM event_rsvp_activity a WHERE a.rsvp_id=x.id AND a.activity_type='rsvp_submitted'),
+      capacity.booked_count FROM retry x,selected s JOIN event_slots capacity ON capacity.id=s.slot_id
     UNION ALL SELECT NULL,s.is_test,FALSE,CASE WHEN EXISTS(SELECT 1 FROM contact_duplicate) THEN 'contact_duplicate'
-      WHEN EXISTS(SELECT 1 FROM selected) THEN 'slot_unavailable' ELSE 'invalid_slot' END,s.event_name,s.event_venue
+      WHEN EXISTS(SELECT 1 FROM selected) THEN 'slot_unavailable' ELSE 'invalid_slot' END,s.event_name,s.event_venue,FALSE,FALSE,FALSE,NULL
       FROM selected s WHERE NOT EXISTS(SELECT 1 FROM inserted) AND NOT EXISTS(SELECT 1 FROM retry)
-    UNION ALL SELECT NULL,FALSE,FALSE,'invalid_slot',NULL,NULL WHERE NOT EXISTS(SELECT 1 FROM selected)`;
+    UNION ALL SELECT NULL,FALSE,FALSE,'invalid_slot',NULL,NULL,FALSE,FALSE,FALSE,NULL WHERE NOT EXISTS(SELECT 1 FROM selected)`;
   return rows[0];
 }
 
@@ -99,10 +105,11 @@ export default async function handler(req,res){
       return json(res,409,{ok:false,code:duplicate?'CONTACT_DUPLICATE':'SLOT_UNAVAILABLE',error:duplicate?'An RSVP for this contact already exists.':'That slot is no longer available. Please select another.'});
     }
     if(!saved.duplicate)scheduleQualification(sql,saved.id,{...r,phone,event_name:saved.event_name,event_venue:saved.event_venue});
+    const verification=saved.is_test?{rsvp_persisted:saved.rsvp_persisted,lead_associated:saved.lead_associated,activity_persisted:saved.activity_persisted,booked_count:Number(saved.booked_count)}:undefined;
     log('info',{event:'persisted',request_id:requestId,rsvp_id:saved.id,duplicate:saved.duplicate,is_test:saved.is_test,duration_ms:Date.now()-started});
-    return json(res,saved.duplicate?200:201,{ok:true,id:saved.id,duplicate:saved.duplicate,is_test:saved.is_test,code:saved.duplicate?'RSVP_ALREADY_SAVED':'RSVP_SAVED',message:saved.duplicate?'Your RSVP is already recorded.':`${saved.is_test?'TEST RSVP saved. ':''}Thank you. Your appointment is reserved.`});
+    return json(res,saved.duplicate?200:201,{ok:true,id:saved.id,duplicate:saved.duplicate,is_test:saved.is_test,code:saved.duplicate?'RSVP_ALREADY_SAVED':'RSVP_SAVED',message:saved.duplicate?'Your RSVP is already recorded.':`${saved.is_test?'TEST RSVP saved. ':''}Thank you. Your appointment is reserved.`,...(verification&&{verification})});
   }catch(error){
-    log('error',{event:'persistence_failed',request_id:requestId,code:error?.code||'unknown',duration_ms:Date.now()-started});
+    log('error',{event:'persistence_failed',request_id:requestId,stage:'transaction',category:'database',sqlstate:error?.code||'unknown',http_status:503,duration_ms:Date.now()-started});
     return json(res,503,{ok:false,code:'PERSISTENCE_UNAVAILABLE',error:'RSVP saving is temporarily unavailable. Please try again.'});
   }
 }
