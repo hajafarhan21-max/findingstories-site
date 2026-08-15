@@ -129,7 +129,7 @@ test('production verification delegates deployment and gates it with synthetic w
   assert.match(smoke, /\/open-house/);
   assert.match(smoke, /\/event-admin\.html/);
   assert.match(workflow, /npm run acceptance:rsvp/);
-  assert.match(workflow, /secrets\.PRODUCTION_DATABASE_URL/);
+  assert.doesNotMatch(workflow, /DATABASE_URL/);
 });
 
 function schemaSql({ uuidAvailable = true, fail } = {}) {
