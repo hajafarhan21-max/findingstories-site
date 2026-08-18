@@ -21,7 +21,6 @@ jobs:
       # Vercel's Git integration owns deployment and its runtime environment.
       PRODUCTION_URL: https://finding-stories.com
       ACCEPTANCE_BASE_URL: https://finding-stories.com
-      PRODUCTION_DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
       # Give the integration time to build/promote before polling the custom domain.
       SMOKE_INITIAL_WAIT_MS: 90000
     steps:
@@ -49,5 +48,5 @@ jobs:
           cat >> "$GITHUB_STEP_SUMMARY" <<'EOF'
           ### ❌ Production verification failed
 
-          Review the failed step and its diagnostics above. Vercel's Git integration is the only deployer. Production is accepted only when health and public routes pass and two isolated synthetic TEST RSVPs, their leads, and exact idempotent capacity accounting are verified against Neon.
+          Review the failed step and its diagnostics above. Vercel's Git integration is the only deployer. Production is accepted only when health and public routes pass and two isolated synthetic TEST RSVPs, their leads, activity, and exact idempotent capacity accounting are verified through the deployed transactional API.
           EOF

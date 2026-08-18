@@ -179,6 +179,27 @@ export async function ensureSchema() {
   return initialized;
 }
 
+export async function ensureTestEvent(sql = database()) {
+  await sql`INSERT INTO events(slug,name,venue,address,timezone,starts_on,ends_on,opening_time,closing_time,
+        slot_duration_minutes,default_slot_capacity,status,active,is_test,developers_projects,public_description)
+        SELECT 'finding-stories-system-test-'||to_char(dubai_today,'YYYYMMDD'),'Finding Stories System Test Event','Finding Stories Test Venue','Dubai, UAE',
+        'Asia/Dubai',dubai_today+1,dubai_today+2,TIME '10:00',TIME '19:00',30,5,'TEST',TRUE,TRUE,
+        'Test developer / test project','TEST MODE — synthetic RSVP workflow validation only.'
+        FROM (SELECT (NOW() AT TIME ZONE 'Asia/Dubai')::date dubai_today) clock
+        WHERE NOT EXISTS (SELECT 1 FROM events WHERE is_test AND active AND status='TEST'
+          AND ends_on>=dubai_today AND EXISTS (SELECT 1 FROM event_slots s WHERE s.event_id=events.id AND s.active
+            AND s.starts_at>NOW() AND s.booked_count<s.capacity))
+        ON CONFLICT(slug) DO NOTHING`;
+  await sql`INSERT INTO event_slots(event_id,starts_at,ends_at,capacity)
+        SELECT e.id,(e.starts_on+day_number+e.opening_time+n*make_interval(mins=>e.slot_duration_minutes))::timestamp AT TIME ZONE e.timezone,
+        (e.starts_on+day_number+e.opening_time+(n+1)*make_interval(mins=>e.slot_duration_minutes))::timestamp AT TIME ZONE e.timezone,e.default_slot_capacity
+        FROM events e CROSS JOIN LATERAL generate_series(0,e.ends_on-e.starts_on) event_days(day_number)
+        CROSS JOIN LATERAL generate_series(0,GREATEST(0,FLOOR(EXTRACT(EPOCH FROM (e.closing_time-e.opening_time))/60/e.slot_duration_minutes)::int-1)) numbers(n)
+        WHERE e.is_test AND e.active AND e.status='TEST'
+          AND e.ends_on >= (NOW() AT TIME ZONE e.timezone)::date
+        ON CONFLICT(event_id,starts_at) DO NOTHING`;
+}
+
 export async function initializeEventSchema(sql) {
   await runPhase('events', 'create_event_tables', async () => {
       await sql`CREATE TABLE IF NOT EXISTS events (
@@ -302,22 +323,7 @@ export async function initializeEventSchema(sql) {
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )`;
   });
-  await runPhase('events', 'seed_event_data', async () => {
-      await sql`INSERT INTO events(slug,name,venue,address,timezone,starts_on,ends_on,opening_time,closing_time,
-        slot_duration_minutes,default_slot_capacity,status,active,is_test,developers_projects,public_description)
-        SELECT 'finding-stories-system-test-event','Finding Stories System Test Event','Finding Stories Test Venue','Dubai, UAE',
-        'Asia/Dubai',dubai_today+1,dubai_today+2,TIME '10:00',TIME '19:00',30,5,'TEST',TRUE,TRUE,
-        'Test developer / test project','TEST MODE — synthetic RSVP workflow validation only.'
-        FROM (SELECT (NOW() AT TIME ZONE 'Asia/Dubai')::date dubai_today) clock
-        WHERE NOT EXISTS (SELECT 1 FROM events WHERE is_test OR slug='finding-stories-system-test-event')
-        ON CONFLICT(slug) DO NOTHING`;
-      await sql`INSERT INTO event_slots(event_id,starts_at,ends_at,capacity)
-        SELECT e.id,(e.starts_on+day_number+e.opening_time+n*make_interval(mins=>e.slot_duration_minutes))::timestamp AT TIME ZONE e.timezone,
-        (e.starts_on+day_number+e.opening_time+(n+1)*make_interval(mins=>e.slot_duration_minutes))::timestamp AT TIME ZONE e.timezone,e.default_slot_capacity
-        FROM events e CROSS JOIN LATERAL generate_series(0,e.ends_on-e.starts_on) event_days(day_number)
-        CROSS JOIN LATERAL generate_series(0,GREATEST(0,FLOOR(EXTRACT(EPOCH FROM (e.closing_time-e.opening_time))/60/e.slot_duration_minutes)::int-1)) numbers(n)
-        WHERE e.is_test ON CONFLICT(event_id,starts_at) DO NOTHING`;
-  });
+  await runPhase('events', 'seed_event_data', () => ensureTestEvent(sql));
       await runPhase('events', 'create_confirm_event_slot_function', () => sql`CREATE OR REPLACE FUNCTION confirm_event_slot(p_rsvp UUID, p_slot UUID, p_actor TEXT DEFAULT 'admin') RETURNS BOOLEAN
         LANGUAGE plpgsql AS $$
         DECLARE old_slot UUID; rsvp_event UUID; available BOOLEAN;

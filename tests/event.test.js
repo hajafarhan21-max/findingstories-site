@@ -58,12 +58,13 @@ test('RSVP persistence is one Neon-compatible statement and does not await AI',a
  assert.doesNotMatch(source,/ensureEventSchema/);
 });
 
-test('production workflow performs write-path RSVP acceptance against Neon',async()=>{
+test('production workflow performs write-path RSVP acceptance through the deployed API',async()=>{
  const workflow=await readFile('.github/workflows/production.yml','utf8');
  const acceptance=await readFile('scripts/acceptance-rsvp.mjs','utf8');
  assert.match(workflow,/npm run acceptance:rsvp/);
- assert.match(workflow,/secrets\.PRODUCTION_DATABASE_URL/);
- for(const check of ['event_rsvps','leads','booked_count','duplicate'])assert.match(acceptance,new RegExp(check));
+ assert.doesNotMatch(workflow,/DATABASE_URL/);
+ for(const check of ['rsvp_persisted','lead_associated','activity_persisted','booked_count','duplicate'])assert.match(acceptance,new RegExp(check));
+ assert.match(acceptance,/slots\?test=true/);
  assert.match(acceptance,/checks\?\.api/);assert.match(acceptance,/checks\?\.database/);
 });
 
@@ -96,11 +97,14 @@ test('reusable event migration is additive and seeds an isolated idempotent test
  for(const field of ['address','opening_time','closing_time','slot_duration_minutes','developers_projects','public_description','is_test','archived_at']) assert.match(sql,new RegExp(`ADD COLUMN IF NOT EXISTS ${field}`));
  assert.match(sql,/Finding Stories System Test Event/);assert.match(sql,/dubai_today \+ 1/);assert.match(sql,/dubai_today \+ 2/);
  assert.match(sql,/WHERE NOT EXISTS \(SELECT 1 FROM events WHERE is_test/);assert.doesNotMatch(sql,/DROP|TRUNCATE|DELETE FROM/i);
+ assert.match(sql,/finding-stories-system-test-' \|\| to_char\(dubai_today,'YYYYMMDD'\)/);
+ assert.match(sql,/ends_on >= dubai_today/);assert.match(sql,/s\.starts_at>NOW\(\)/);
 });
 
 test('public event endpoints select active database events and reject past slots',async()=>{
  const slots=await readFile('api/events/slots.js','utf8'),rsvp=await readFile('api/events/rsvp.js','utf8');
  assert.match(slots,/status IN \('OPEN','TEST'\)/);assert.match(slots,/No upcoming event is currently open for RSVP/);
+ assert.match(slots,/if\(testMode\)await ensureTestEvent\(sql\)/);
  assert.match(rsvp,/e\.id=\$\{r\.event_id\}/);assert.match(rsvp,/s\.starts_at>NOW\(\)/);assert.match(rsvp,/is_test/);
  for(const source of [slots,rsvp])assert.doesNotMatch(source,/dubai-open-house-august-2026/);
 });
