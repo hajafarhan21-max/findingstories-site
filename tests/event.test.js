@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { adminEventSchema, fallbackEvent, normalizeUaePhone, rsvpSchema } from '../api/_lib/event.js';
+import { persistRsvp } from '../api/events/rsvp.js';
 
 test('UAE phone numbers are normalized and invalid values rejected',()=>{
   assert.equal(normalizeUaePhone('050 123 4567'),'971501234567');
@@ -56,6 +57,29 @@ test('RSVP persistence is one Neon-compatible statement and does not await AI',a
  assert.match(source,/if\(!saved\.duplicate\)scheduleQualification/);
  assert.doesNotMatch(source,/await scheduleQualification/);
  assert.doesNotMatch(source,/ensureEventSchema/);
+});
+
+test('RSVP transaction explicitly types nullable email and schema-bound parameters',async()=>{
+ let query='';
+ const sql=async(strings,...values)=>{
+  query=strings.reduce((text,part,index)=>text+part+(index<values.length?`$${index+1}`:''),'');
+  return [{result:'saved'}];
+ };
+ await persistRsvp(sql,{
+  event_id:'0d9aa2cc-4ced-4be9-b4e2-f17fc17d1ad7',
+  preferred_slot:'9f0fef46-c1e1-4eca-b8f7-47e5593b0732',
+  preferred_event_date:'2026-08-21',
+  idempotency_key:'6a1d02ac-1f96-4f69-90cc-a16a30c3a4f7',
+  full_name:'Synthetic Guest',email:null
+ },'971501234567');
+
+ // PostgreSQL raises 42P18 for an untyped bind used only as `$n IS NOT NULL`.
+ // This mirrors the production no-email request while also guarding UUID/date/JSON inputs.
+ assert.doesNotMatch(query,/\$\d+ IS NOT NULL/);
+ assert.match(query,/\(\$\d+::text IS NOT NULL AND lower\(x\.email\)=lower\(\$\d+::text\)\)/);
+ assert.match(query,/s\.id=\$\d+::uuid AND e\.id=\$\d+::uuid/);
+ assert.match(query,/::date/);
+ assert.match(query,/jsonb_build_object\('preferred_slot',\$\d+::uuid/);
 });
 
 test('production workflow performs write-path RSVP acceptance through the deployed API',async()=>{
