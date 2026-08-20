@@ -97,11 +97,14 @@ test('reusable event migration is additive and seeds an isolated idempotent test
  for(const field of ['address','opening_time','closing_time','slot_duration_minutes','developers_projects','public_description','is_test','archived_at']) assert.match(sql,new RegExp(`ADD COLUMN IF NOT EXISTS ${field}`));
  assert.match(sql,/Finding Stories System Test Event/);assert.match(sql,/dubai_today \+ 1/);assert.match(sql,/dubai_today \+ 2/);
  assert.match(sql,/WHERE NOT EXISTS \(SELECT 1 FROM events WHERE is_test/);assert.doesNotMatch(sql,/DROP|TRUNCATE|DELETE FROM/i);
+ assert.match(sql,/finding-stories-system-test-' \|\| to_char\(dubai_today,'YYYYMMDD'\)/);
+ assert.match(sql,/ends_on >= dubai_today/);assert.match(sql,/s\.starts_at>NOW\(\)/);
 });
 
 test('public event endpoints select active database events and reject past slots',async()=>{
  const slots=await readFile('api/events/slots.js','utf8'),rsvp=await readFile('api/events/rsvp.js','utf8');
  assert.match(slots,/status IN \('OPEN','TEST'\)/);assert.match(slots,/No upcoming event is currently open for RSVP/);
+ assert.match(slots,/if\(testMode\)await ensureTestEvent\(sql\)/);
  assert.match(rsvp,/e\.id=\$\{r\.event_id\}/);assert.match(rsvp,/s\.starts_at>NOW\(\)/);assert.match(rsvp,/is_test/);
  for(const source of [slots,rsvp])assert.doesNotMatch(source,/dubai-open-house-august-2026/);
 });

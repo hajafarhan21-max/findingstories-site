@@ -16,11 +16,13 @@ CREATE INDEX IF NOT EXISTS event_rsvps_test_lookup_idx ON event_rsvps(event_id,i
 -- Deployment-safe test fixture. A pre-existing test event and all of its records are retained.
 INSERT INTO events(slug,name,venue,address,timezone,starts_on,ends_on,opening_time,closing_time,
   slot_duration_minutes,default_slot_capacity,status,active,is_test,developers_projects,public_description)
-SELECT 'finding-stories-system-test-event','Finding Stories System Test Event','Finding Stories Test Venue',
+SELECT 'finding-stories-system-test-' || to_char(dubai_today,'YYYYMMDD'),'Finding Stories System Test Event','Finding Stories Test Venue',
   'Dubai, UAE','Asia/Dubai',dubai_today + 1,dubai_today + 2,TIME '10:00',TIME '19:00',30,5,'TEST',TRUE,TRUE,
   'Test developer / test project','TEST MODE — synthetic RSVP workflow validation only.'
 FROM (SELECT (NOW() AT TIME ZONE 'Asia/Dubai')::date dubai_today) clock
-WHERE NOT EXISTS (SELECT 1 FROM events WHERE is_test OR slug='finding-stories-system-test-event')
+WHERE NOT EXISTS (SELECT 1 FROM events WHERE is_test AND active AND status='TEST'
+  AND ends_on >= dubai_today AND EXISTS (SELECT 1 FROM event_slots s WHERE s.event_id=events.id AND s.active
+    AND s.starts_at>NOW() AND s.booked_count<s.capacity))
 ON CONFLICT(slug) DO NOTHING;
 
 INSERT INTO event_slots(event_id,starts_at,ends_at,capacity)
@@ -30,7 +32,8 @@ SELECT e.id,(e.starts_on + day_number + e.opening_time + n * make_interval(mins=
 FROM events e
 CROSS JOIN LATERAL generate_series(0,e.ends_on-e.starts_on) event_days(day_number)
 CROSS JOIN LATERAL generate_series(0,GREATEST(0,FLOOR(EXTRACT(EPOCH FROM (e.closing_time-e.opening_time))/60/e.slot_duration_minutes)::int-1)) numbers(n)
-WHERE e.is_test
+WHERE e.is_test AND e.active AND e.status='TEST'
+  AND e.ends_on >= (NOW() AT TIME ZONE e.timezone)::date
 ON CONFLICT(event_id,starts_at) DO NOTHING;
 
 -- Confirmation/rescheduling is capacity-safe, event-scoped, and cannot use an expired appointment.
