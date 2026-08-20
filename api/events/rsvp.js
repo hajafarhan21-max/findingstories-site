@@ -34,17 +34,17 @@ export async function persistRsvp(sql, r, phone) {
   const rows=await sql`WITH selected AS (
       SELECT s.id slot_id,e.id event_id,e.name event_name,e.venue event_venue,e.is_test
       FROM event_slots s JOIN events e ON e.id=s.event_id
-      WHERE s.id=${r.preferred_slot} AND e.id=${r.event_id} AND e.active AND e.status IN ('OPEN','TEST')
+      WHERE s.id=${r.preferred_slot}::uuid AND e.id=${r.event_id}::uuid AND e.active AND e.status IN ('OPEN','TEST')
         AND e.ends_on >= (NOW() AT TIME ZONE e.timezone)::date
-        AND (s.starts_at AT TIME ZONE e.timezone)::date=${r.preferred_event_date}
+        AND (s.starts_at AT TIME ZONE e.timezone)::date=${r.preferred_event_date}::date
         AND s.active AND s.starts_at>NOW()
     ), retry AS (
       SELECT x.id,x.event_id,x.is_test FROM event_rsvps x JOIN selected s ON s.event_id=x.event_id
-      WHERE x.idempotency_key=${r.idempotency_key} AND x.archived_at IS NULL LIMIT 1
+      WHERE x.idempotency_key=${r.idempotency_key}::uuid AND x.archived_at IS NULL LIMIT 1
     ), contact_duplicate AS (
       SELECT x.id FROM event_rsvps x JOIN selected s ON s.event_id=x.event_id
-      WHERE x.archived_at IS NULL AND x.idempotency_key<>${r.idempotency_key}
-        AND (x.phone=${phone} OR (${r.email||null} IS NOT NULL AND lower(x.email)=lower(${r.email||null}))) LIMIT 1
+      WHERE x.archived_at IS NULL AND x.idempotency_key<>${r.idempotency_key}::uuid
+        AND (x.phone=${phone}::text OR (${r.email||null}::text IS NOT NULL AND lower(x.email)=lower(${r.email||null}::text))) LIMIT 1
     ), reserved AS (
       UPDATE event_slots slot SET booked_count=slot.booked_count+1 FROM selected s
       WHERE slot.id=s.slot_id AND slot.event_id=s.event_id AND slot.booked_count<slot.capacity
@@ -54,24 +54,24 @@ export async function persistRsvp(sql, r, phone) {
       INSERT INTO event_rsvps(event_id,idempotency_key,full_name,phone,email,purpose,budget,property_type,preferred_area,
         purchase_timeline,owns_uae_property,payment_method,preferred_event_date,preferred_slot,confirmed_slot,
         additional_requirements,consent,status,source,utm_source,utm_medium,utm_campaign,referrer,is_test)
-      SELECT s.event_id,${r.idempotency_key},${safeText(r.full_name,100)},${phone},${r.email||null},${r.purpose||null},
-        ${r.budget||null},${r.property_type||null},${r.preferred_area||null},${r.purchase_timeline||null},
-        ${r.owns_uae_property||null},${r.payment_method||null},${r.preferred_event_date},s.slot_id,s.slot_id,
-        ${safeText(r.additional_requirements)||null},TRUE,'confirmed',${r.source||'open-house'},${r.utm_source||null},
-        ${r.utm_medium||null},${r.utm_campaign||null},${r.referrer||null},s.is_test
+      SELECT s.event_id,${r.idempotency_key}::uuid,${safeText(r.full_name,100)}::text,${phone}::text,${r.email||null}::text,${r.purpose||null}::text,
+        ${r.budget||null}::text,${r.property_type||null}::text,${r.preferred_area||null}::text,${r.purchase_timeline||null}::text,
+        ${r.owns_uae_property||null}::text,${r.payment_method||null}::text,${r.preferred_event_date}::date,s.slot_id,s.slot_id,
+        ${safeText(r.additional_requirements)||null}::text,TRUE,'confirmed',${r.source||'open-house'}::text,${r.utm_source||null}::text,
+        ${r.utm_medium||null}::text,${r.utm_campaign||null}::text,${r.referrer||null}::text,s.is_test
       FROM selected s JOIN reserved capacity ON capacity.id=s.slot_id RETURNING id,event_id,is_test
     ), lead_created AS (
       INSERT INTO leads(submission_id,name,phone,email,purpose,budget,property_type,preferred_areas,payment_method,
         purchase_timeline,owns_uae_property,additional_requirements,consent,source,landing_page,referrer,
         utm_source,utm_medium,utm_campaign,qualification_status)
-      SELECT i.id,${safeText(r.full_name,100)},${phone},${r.email||null},${r.purpose||null},${r.budget||null},
-        ${r.property_type||null},${r.preferred_area||null},${r.payment_method||null},${r.purchase_timeline||null},
-        ${r.owns_uae_property||null},${safeText(r.additional_requirements)||null},TRUE,'event-rsvp','/open-house',
-        ${r.referrer||null},${r.utm_source||null},${r.utm_medium||null},${r.utm_campaign||null},'pending'
+      SELECT i.id,${safeText(r.full_name,100)}::text,${phone}::text,${r.email||null}::text,${r.purpose||null}::text,${r.budget||null}::text,
+        ${r.property_type||null}::text,${r.preferred_area||null}::text,${r.payment_method||null}::text,${r.purchase_timeline||null}::text,
+        ${r.owns_uae_property||null}::text,${safeText(r.additional_requirements)||null}::text,TRUE,'event-rsvp','/open-house',
+        ${r.referrer||null}::text,${r.utm_source||null}::text,${r.utm_medium||null}::text,${r.utm_campaign||null}::text,'pending'
       FROM inserted i ON CONFLICT (submission_id) WHERE submission_id IS NOT NULL DO NOTHING RETURNING id
     ), activity AS (
       INSERT INTO event_rsvp_activity(rsvp_id,activity_type,details)
-      SELECT i.id,'rsvp_submitted',jsonb_build_object('preferred_slot',${r.preferred_slot},'is_test',i.is_test)
+      SELECT i.id,'rsvp_submitted',jsonb_build_object('preferred_slot',${r.preferred_slot}::uuid,'is_test',i.is_test)
       FROM inserted i RETURNING id
     )
     SELECT i.id,i.is_test,FALSE duplicate,'saved' result,s.event_name,s.event_venue,
