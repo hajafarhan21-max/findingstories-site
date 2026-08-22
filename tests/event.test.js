@@ -85,7 +85,7 @@ test('RSVP transaction explicitly types nullable email and schema-bound paramete
 test('production workflow performs write-path RSVP acceptance through the deployed API',async()=>{
  const workflow=await readFile('.github/workflows/production.yml','utf8');
  const acceptance=await readFile('scripts/acceptance-rsvp.mjs','utf8');
- assert.match(workflow,/npm run acceptance:rsvp/);
+ assert.match(workflow,/npm run acceptance:production/);
  assert.doesNotMatch(workflow,/DATABASE_URL/);
  for(const check of ['rsvp_persisted','lead_associated','activity_persisted','booked_count','duplicate'])assert.match(acceptance,new RegExp(check));
  assert.match(acceptance,/slots\?test=true/);

@@ -11,7 +11,8 @@ const requiredFunctions = [
   'api/events/slots.js',
   'api/events/rsvp.js',
   'api/events/visit.js',
-  'api/admin/events.js'
+  'api/admin/events.js',
+  'api/acceptance/events.js'
 ];
 
 await rm('dist', { recursive: true, force: true });

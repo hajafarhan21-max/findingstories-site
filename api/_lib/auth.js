@@ -8,6 +8,13 @@ export function validPassword(input) {
   const actual = Buffer.from(String(input || ''));
   return expected.length > 15 && expected.length === actual.length && timingSafeEqual(expected, actual);
 }
+
+export function isAcceptance(req, env = process.env) {
+  const expected = Buffer.from(String(env.ACCEPTANCE_TEST_SECRET || ''));
+  const authorization = String(req.headers.authorization || '');
+  const actual = Buffer.from(authorization.startsWith('Bearer ') ? authorization.slice(7) : '');
+  return expected.length >= 32 && expected.length === actual.length && timingSafeEqual(expected, actual);
+}
 export function createSession() {
   const payload = encode(JSON.stringify({ role: 'admin', exp: Date.now() + 8 * 60 * 60 * 1000 }));
   return `${payload}.${signature(payload)}`;

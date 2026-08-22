@@ -113,7 +113,7 @@ test('frontend contains in-flight guards and stable submission IDs', async () =>
 test('Vercel deployment stays within the Hobby serverless function limit', async () => {
   const files = await readdir('api', { recursive: true });
   const handlers = files.filter(file => file.endsWith('.js') && !file.startsWith('_lib/'));
-  assert.equal(handlers.length, 10);
+  assert.equal(handlers.length, 11);
   assert.ok(handlers.length <= 12);
 });
 
@@ -128,7 +128,7 @@ test('production verification delegates deployment and gates it with synthetic w
   assert.match(smoke, /\/api\/health/);
   assert.match(smoke, /\/open-house/);
   assert.match(smoke, /\/event-admin\.html/);
-  assert.match(workflow, /npm run acceptance:rsvp/);
+  assert.match(workflow, /npm run acceptance:production/);
   assert.doesNotMatch(workflow, /DATABASE_URL/);
 });
 

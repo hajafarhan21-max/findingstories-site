@@ -21,6 +21,9 @@ jobs:
       # Vercel's Git integration owns deployment and its runtime environment.
       PRODUCTION_URL: https://finding-stories.com
       ACCEPTANCE_BASE_URL: https://finding-stories.com
+      # Dedicated machine credential: it cannot create an admin session and the
+      # server confines every operation to events and RSVPs marked is_test=true.
+      ACCEPTANCE_TEST_SECRET: ${{ secrets.ACCEPTANCE_TEST_SECRET }}
       # Give the integration time to build/promote before polling the custom domain.
       SMOKE_INITIAL_WAIT_MS: 90000
     steps:
@@ -41,7 +44,7 @@ jobs:
       - name: Wait for Vercel Git deployment and verify production
         run: npm run smoke:production
       - name: Persist and verify synthetic production RSVPs
-        run: npm run acceptance:rsvp
+        run: npm run acceptance:production
       - name: Report workflow failure
         if: failure()
         run: |
