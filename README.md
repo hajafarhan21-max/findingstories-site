@@ -26,6 +26,7 @@ Copy `.env.example` to `.env.local` for local development:
 | `OPENAI_MODEL` | No | Responses API model; defaults to `gpt-4.1-mini`. |
 | `ADMIN_PASSWORD` | Yes | CRM login password; must be at least 16 characters. |
 | `SESSION_SECRET` | Yes | Random secret of at least 32 characters used to sign sessions. Generate with `openssl rand -base64 48`. |
+| `ACCEPTANCE_TEST_SECRET` | Yes for automated production acceptance | A separate random bearer credential (at least 32 characters) accepted only by `/api/acceptance/events`. It cannot create or replace an administrator session. Generate and rotate it independently. |
 
 ## Database setup
 
@@ -99,6 +100,8 @@ On first initialization only when no test event exists, migration 004 creates **
 Public RSVP submission validates consent and fields, normalises UAE numbers, rate limits by visitor IP, deduplicates within the selected event, and uses a UUID idempotency key. Requested times are not bookings: authenticated staff confirm/reschedule them through the transactionally capacity-safe Postgres function. Qualification uses OpenAI when configured and the deterministic fallback otherwise. CRM status, assignment, attendance, activity, reporting, CSV import, and CSV export remain available per selected event.
 
 ### Post-deployment synthetic workflow
+
+Automated verification uses `npm run acceptance:production` with `ACCEPTANCE_TEST_SECRET`. The dedicated endpoint requires that credential and independently constrains every read, update, activity, report, export, and archive query to both a TEST event and an RSVP carrying `is_test=true`. It exposes no admin cookie or session, cannot manage events or import records, and archives only the synthetic RSVP created by that run. The human workflow below remains protected by the unchanged admin authentication.
 
 1. Confirm `/api/health` reports `api=ok` and `database=ok`, then open `/open-house?source=system-test&utm_campaign=reusable-event-e2e`.
 2. Confirm the TEST banner, next-two-day date options, half-hour times, and capacity 5. Submit a unique identity such as `FS SYSTEM TEST 2026-08-12 <random suffix>` with a reserved synthetic phone/email; never reuse a client identity.
