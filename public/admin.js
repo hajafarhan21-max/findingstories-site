@@ -5,6 +5,7 @@ const crm = document.querySelector('#crm');
 const errorBox = document.querySelector('#login-error');
 const list = document.querySelector('#leads');
 let leads = [];
+let actionQueue = [];
 let refreshTimer;
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
@@ -39,6 +40,34 @@ function render() {
     <div class="detail hidden"><div class="detail-copy"><p><b>Requirement</b>${escapeHtml(lead.requirement_summary || 'Qualification in progress')}</p><p><b>Qualification</b>${escapeHtml(lead.qualification_summary || 'Qualification in progress')}</p><p><b>Next action</b>${escapeHtml(lead.next_action || 'Not set')}</p><p><b>Property</b>${escapeHtml([lead.property_type, lead.bedrooms, lead.preferred_areas].filter(Boolean).join(' · ') || 'Not specified')}</p><p><b>Last contacted</b>${escapeHtml(formatDubaiDateTime(lead.last_contacted_at))}</p><p><b>Meeting / site visit</b>${escapeHtml(formatDubaiDateTime(lead.meeting_at))} / ${escapeHtml(formatDubaiDateTime(lead.site_visit_at))}</p></div>${controls(lead)}</div>
   </article>`).join('') || '<p class="empty">No leads match these filters.</p>';
 }
+
+function renderActionQueue(refreshing = 0) {
+  const target = document.querySelector('#ai-queue');
+  target.innerHTML = actionQueue.map(item => { const ai = item.ai_recommendation; return `<article class="ai-card ${item.ai_reviewed_at ? 'reviewed' : ''}" data-id="${item.id}">
+    <span class="ai-badge">AI-GENERATED</span><span class="ai-priority">${escapeHtml(ai.priority)} · ${Number(ai.score)}/100</span>
+    <h3>${escapeHtml(item.name)} <small>· ${escapeHtml(item.assigned_to || 'Unassigned')}</small></h3>
+    <p><b>Why:</b> ${escapeHtml(ai.score_reason)}</p><p><b>Next:</b> ${escapeHtml(ai.next_action)} · ${escapeHtml(ai.follow_up_timing)}</p>
+    ${ai.warning ? `<p class="due"><b>Warning:</b> ${escapeHtml(ai.warning)}</p>` : ''}${ai.escalation ? `<p><b>Escalation:</b> ${escapeHtml(ai.escalation)}</p>` : ''}
+    <p><b>Advisor talking points</b></p><ul>${ai.talking_points.map(point => `<li>${escapeHtml(point)}</li>`).join('')}</ul>
+    ${ai.missing_information.length ? `<p><b>Missing:</b> ${escapeHtml(ai.missing_information.join(', '))}</p>` : ''}
+    <div class="row-actions"><button data-ai-action="review">Review Lead</button><button class="secondary" data-ai-action="whatsapp" data-copy="${escapeHtml(ai.whatsapp_draft)}">Copy WhatsApp</button><button class="secondary" data-ai-action="call" data-copy="${escapeHtml(ai.call_opening)}">Copy Call Script</button><button class="secondary" data-ai-action="reviewed">Mark Reviewed</button><button class="danger" data-ai-action="dismissed">Dismiss Recommendation</button></div>
+  </article>`; }).join('') || `<p class="empty">${refreshing ? `AI is preparing ${refreshing} recommendation(s). Refresh shortly.` : 'No advisor actions currently require review.'}</p>`;
+}
+
+async function loadActionQueue() {
+  const response = await fetch('/api/admin/leads?view=revenue');
+  if (!response.ok) return;
+  const data = await response.json(); actionQueue = data.queue; renderActionQueue(data.refreshing);
+}
+
+document.querySelector('#ai-queue').addEventListener('click', async event => {
+  const button = event.target.closest('button'); if (!button) return;
+  const card = button.closest('.ai-card'); const id = card.dataset.id; const action = button.dataset.aiAction;
+  if (action === 'review') { const leadCard = document.querySelector(`.lead[data-id="${id}"]`); leadCard?.scrollIntoView({ behavior: 'smooth' }); const detail = leadCard?.querySelector('.detail'); detail?.classList.remove('hidden'); return; }
+  if (action === 'whatsapp' || action === 'call') { await window.navigator.clipboard.writeText(button.dataset.copy); button.textContent = 'Copied'; return; }
+  const response = await fetch('/api/admin/leads/update?view=revenue', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, action }) });
+  if (response.ok) { if (action === 'dismissed') actionQueue = actionQueue.filter(item => item.id !== id); else actionQueue.find(item => item.id === id).ai_reviewed_at = new Date().toISOString(); renderActionQueue(); }
+});
 
 async function update(payload) {
   const response = await fetch('/api/admin/leads/update', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
@@ -92,6 +121,7 @@ async function load() {
   const agent = document.querySelector('#agent'); const selected = agent.value;
   agent.innerHTML = '<option value="">All agents</option>' + [...new Set(leads.map(lead => lead.assigned_to).filter(Boolean))].sort().map(value => `<option>${escapeHtml(value)}</option>`).join(''); agent.value = selected;
   render();
+  loadActionQueue();
   if (data.counts.processing > 0) refreshTimer = setTimeout(load, 3000);
 }
 

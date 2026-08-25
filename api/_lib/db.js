@@ -101,6 +101,8 @@ export async function initializeSchema(sql) {
         assigned_to TEXT NOT NULL DEFAULT '', agent_notes TEXT NOT NULL DEFAULT '',
         last_contacted_at TIMESTAMPTZ, next_follow_up_at TIMESTAMPTZ, meeting_at TIMESTAMPTZ,
         site_visit_at TIMESTAMPTZ, lost_reason TEXT NOT NULL DEFAULT '', updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        is_test BOOLEAN NOT NULL DEFAULT FALSE, ai_recommendation JSONB, ai_recommendation_fingerprint TEXT,
+        ai_recommended_at TIMESTAMPTZ, ai_reviewed_at TIMESTAMPTZ, ai_dismissed_at TIMESTAMPTZ,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), captured_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
       )`, { tolerateConcurrentDdl: true });
   await runPhase('leads', 'alter_leads_columns', async () => {
@@ -153,6 +155,12 @@ export async function initializeSchema(sql) {
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS site_visit_at TIMESTAMPTZ`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS lost_reason TEXT NOT NULL DEFAULT ''`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS is_test BOOLEAN NOT NULL DEFAULT FALSE`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS ai_recommendation JSONB`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS ai_recommendation_fingerprint TEXT`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS ai_recommended_at TIMESTAMPTZ`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS ai_reviewed_at TIMESTAMPTZ`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS ai_dismissed_at TIMESTAMPTZ`;
     await sql`UPDATE leads SET next_follow_up_at=suggested_follow_up_date::timestamp AT TIME ZONE 'Asia/Dubai' WHERE next_follow_up_at IS NULL AND suggested_follow_up_date IS NOT NULL`;
     await sql`UPDATE leads SET captured_at=COALESCE(created_at, NOW()) WHERE captured_at IS NULL`;
     await sql`ALTER TABLE leads ALTER COLUMN captured_at SET DEFAULT NOW()`;
