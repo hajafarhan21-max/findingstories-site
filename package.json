@@ -16,13 +16,16 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
+    "@openai/agents": "^0.17.0",
     "@vercel/functions": "^2.2.12",
-    "zod": "^3.25.76"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.31.0",
     "eslint": "^9.31.0",
     "typescript": "^5.8.3"
   },
-  "engines": { "node": "22.x" }
+  "engines": {
+    "node": "22.x"
+  }
 }
