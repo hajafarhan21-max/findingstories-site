@@ -1,0 +1,74 @@
+name: Production Guardian
+
+on:
+  workflow_run:
+    workflows: [Production]
+    types: [completed]
+  workflow_dispatch:
+
+concurrency:
+  group: production-guardian
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  acceptance:
+    name: Guard production
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      PRODUCTION_URL: https://www.finding-stories.com
+      ACCEPTANCE_BASE_URL: https://www.finding-stories.com
+      ACCEPTANCE_TEST_SECRET: ${{ secrets.ACCEPTANCE_TEST_SECRET }}
+      SMOKE_MAX_ATTEMPTS: 3
+      SMOKE_INTERVAL_MS: 5000
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Verify production health and public routes
+        id: smoke
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm run smoke:production 2>&1 | tee guardian-smoke.log
+      - name: Run authenticated TEST-only acceptance
+        id: acceptance
+        if: steps.smoke.outcome == 'success'
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm run acceptance:production 2>&1 | tee guardian-acceptance.log
+      - name: Record skipped acceptance
+        if: steps.smoke.outcome != 'success'
+        run: echo 'Acceptance was not run because the health/public-route check failed.' > guardian-acceptance.log
+      - name: Upload guardian diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-guardian-${{ github.run_id }}
+          path: guardian-*.log
+          retention-days: 14
+      - name: Reconcile production incident
+        if: always()
+        env:
+          SMOKE_OUTCOME: ${{ steps.smoke.outcome }}
+          ACCEPTANCE_OUTCOME: ${{ steps.acceptance.outcome }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: node scripts/reconcile-production-incident.mjs
+      - name: Enforce guardian result
+        if: steps.smoke.outcome != 'success' || steps.acceptance.outcome != 'success'
+        run: |
+          echo 'Production Guardian failed; the incident issue contains the failing stage and diagnostics.'
+          exit 1
