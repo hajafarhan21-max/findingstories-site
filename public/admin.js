@@ -43,30 +43,48 @@ function render() {
 
 function renderActionQueue(refreshing = 0) {
   const target = document.querySelector('#ai-queue');
-  target.innerHTML = actionQueue.map(item => { const ai = item.ai_recommendation; return `<article class="ai-card ${item.ai_reviewed_at ? 'reviewed' : ''}" data-id="${item.id}">
+  target.innerHTML = actionQueue.map(item => { const ai = item.ai_recommendation; const email = `Subject: Your Finding Stories property enquiry\n\nHello ${item.name},\n\n${ai.next_action}\n\nWould you be available for a brief conversation?\n\nFinding Stories`; return `<article class="ai-card ${item.ai_reviewed_at ? 'reviewed' : ''}" data-id="${item.id}">
     <span class="ai-badge">AI-GENERATED</span><span class="ai-priority">${escapeHtml(ai.priority)} · ${Number(ai.score)}/100</span>
     <h3>${escapeHtml(item.name)} <small>· ${escapeHtml(item.assigned_to || 'Unassigned')}</small></h3>
     <p><b>Why:</b> ${escapeHtml(ai.score_reason)}</p><p><b>Next:</b> ${escapeHtml(ai.next_action)} · ${escapeHtml(ai.follow_up_timing)}</p>
-    ${ai.warning ? `<p class="due"><b>Warning:</b> ${escapeHtml(ai.warning)}</p>` : ''}${ai.escalation ? `<p><b>Escalation:</b> ${escapeHtml(ai.escalation)}</p>` : ''}
-    <p><b>Advisor talking points</b></p><ul>${ai.talking_points.map(point => `<li>${escapeHtml(point)}</li>`).join('')}</ul>
-    ${ai.missing_information.length ? `<p><b>Missing:</b> ${escapeHtml(ai.missing_information.join(', '))}</p>` : ''}
-    <div class="row-actions"><button data-ai-action="review">Review Lead</button><button class="secondary" data-ai-action="whatsapp" data-copy="${escapeHtml(ai.whatsapp_draft)}">Copy WhatsApp</button><button class="secondary" data-ai-action="call" data-copy="${escapeHtml(ai.call_opening)}">Copy Call Script</button><button class="secondary" data-ai-action="reviewed">Mark Reviewed</button><button class="danger" data-ai-action="dismissed">Dismiss Recommendation</button></div>
+    ${item.escalations?.length ? `<p class="escalations">Escalation: ${escapeHtml(item.escalations.map(statusLabel).join(' · '))}</p>` : ''}
+    <label>WhatsApp draft — edit before approval<textarea class="draft" data-draft="whatsapp">${escapeHtml(ai.whatsapp_draft)}</textarea></label>
+    <button data-ai-action="approve" data-type="whatsapp">Approve WhatsApp</button>
+    <label>Email draft — edit before approval<textarea class="draft" data-draft="email">${escapeHtml(email)}</textarea></label>
+    <button data-ai-action="approve" data-type="email">Approve Email</button>
+    <label>Call script<textarea class="draft" data-draft="call">${escapeHtml(ai.call_opening)}</textarea></label>
+    <div class="row-actions"><button data-ai-action="approve-copy" data-type="call">Approve & Copy Call Script</button><button class="secondary" data-ai-action="schedule" data-type="follow_up">Schedule Follow-up</button><button class="secondary" data-ai-action="schedule" data-type="meeting">Schedule Meeting</button><button class="secondary" data-ai-action="schedule" data-type="site_visit">Schedule Site Visit</button><button class="secondary" data-ai-action="snooze">Snooze</button><button class="danger" data-ai-action="dismiss">Dismiss with Reason</button></div>
+    ${(item.executions || []).filter(x => x.approval_status === 'approved' && x.execution_status !== 'completed').map(x => `<div class="execution"><b>Approved ${escapeHtml(statusLabel(x.action_type))}</b> · awaiting completion <button data-ai-action="complete" data-execution="${x.id}">Mark Completed</button>${['whatsapp','email'].includes(x.action_type) ? `<button class="secondary" data-copy-approved="${escapeHtml(x.advisor_edited_draft)}">Copy Approved Draft</button>` : ''}</div>`).join('')}
   </article>`; }).join('') || `<p class="empty">${refreshing ? `AI is preparing ${refreshing} recommendation(s). Refresh shortly.` : 'No advisor actions currently require review.'}</p>`;
 }
 
+function renderCommandCenter(data) {
+  const labels = { hot_now:'Hot leads requiring action now',due_today:'Follow-ups due today',overdue:'Overdue follow-ups',opportunities:'Meeting / site-visit opportunities',approved_awaiting:'Approved actions awaiting completion',completed_today:'Completed actions today',stalled:'Stalled qualified opportunities' };
+  document.querySelector('#command-center').innerHTML = Object.entries(labels).map(([key,label]) => `<div class="command-card"><b>${Number(data.command_center[key])}</b><span>${label}</span></div>`).join('');
+  document.querySelector('#productivity').innerHTML = Object.entries(data.metrics).map(([key,value]) => `<div class="command-card"><b>${Number(value)}</b><span>${statusLabel(key)}</span></div>`).join('');
+}
+
+async function revenueAction(payload) {
+  const response = await fetch('/api/admin/leads/update?view=revenue', { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+  const data = await response.json(); if (!response.ok) throw new Error(data.error || 'Action failed'); await loadActionQueue();
+}
+
 async function loadActionQueue() {
-  const response = await fetch('/api/admin/leads?view=revenue');
-  if (!response.ok) return;
-  const data = await response.json(); actionQueue = data.queue; renderActionQueue(data.refreshing);
+  const response = await fetch('/api/admin/leads?view=revenue'); if (!response.ok) return;
+  const data = await response.json(); actionQueue = data.queue; renderActionQueue(data.refreshing); renderCommandCenter(data);
 }
 
 document.querySelector('#ai-queue').addEventListener('click', async event => {
   const button = event.target.closest('button'); if (!button) return;
-  const card = button.closest('.ai-card'); const id = card.dataset.id; const action = button.dataset.aiAction;
-  if (action === 'review') { const leadCard = document.querySelector(`.lead[data-id="${id}"]`); leadCard?.scrollIntoView({ behavior: 'smooth' }); const detail = leadCard?.querySelector('.detail'); detail?.classList.remove('hidden'); return; }
-  if (action === 'whatsapp' || action === 'call') { await window.navigator.clipboard.writeText(button.dataset.copy); button.textContent = 'Copied'; return; }
-  const response = await fetch('/api/admin/leads/update?view=revenue', { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, action }) });
-  if (response.ok) { if (action === 'dismissed') actionQueue = actionQueue.filter(item => item.id !== id); else actionQueue.find(item => item.id === id).ai_reviewed_at = new Date().toISOString(); renderActionQueue(); }
+  if (button.dataset.copyApproved) { await window.navigator.clipboard.writeText(button.dataset.copyApproved); button.textContent='Copied — paste manually'; return; }
+  const card=button.closest('.ai-card'); const id=card.dataset.id; const action=button.dataset.aiAction;
+  try {
+    if (action === 'approve' || action === 'approve-copy') { const type=button.dataset.type; const draft=card.querySelector(`[data-draft="${type}"]`).value.trim(); await revenueAction({id,action:'approve',action_type:type,draft}); if(action==='approve-copy') await window.navigator.clipboard.writeText(draft); }
+    else if (action === 'schedule') { const scheduled_for=window.prompt('Schedule date/time (ISO 8601, including timezone):', new Date(Date.now()+864e5).toISOString()); if(scheduled_for) await revenueAction({id,action:'schedule',action_type:button.dataset.type,scheduled_for:new Date(scheduled_for).toISOString()}); }
+    else if (action === 'snooze') { const value=window.prompt('Snooze until (ISO 8601, including timezone):',new Date(Date.now()+864e5).toISOString()); if(value) await revenueAction({id,action:'snooze',snoozed_until:new Date(value).toISOString()}); }
+    else if (action === 'dismiss') { const reason=window.prompt('Reason for dismissal:'); if(reason?.trim()) await revenueAction({id,action:'dismiss',reason:reason.trim()}); }
+    else if (action === 'complete') { const outcome=window.prompt('Outcome (required):'); if(outcome?.trim()) await revenueAction({id,action:'complete',execution_id:button.dataset.execution,outcome:outcome.trim()}); }
+  } catch(error) { window.alert(error.message); }
 });
 
 async function update(payload) {
