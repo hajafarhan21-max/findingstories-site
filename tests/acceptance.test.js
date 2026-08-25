@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { isAcceptance } from '../api/_lib/auth.js';
 import { acceptanceQuerySchema, acceptanceUpdateSchema } from '../api/_lib/acceptance.js';
+import { requestWithTimeout } from '../scripts/acceptance-http.mjs';
 
 const request = token => ({ headers:{ authorization:token ? `Bearer ${token}` : '' } });
 
@@ -50,4 +51,27 @@ test('production acceptance uses no human admin credential and archives its one 
   assert.match(workflow,/npm run acceptance:production/);
   assert.match(workflow,/ACCEPTANCE_BASE_URL: https:\/\/www\.finding-stories\.com/);
   assert.match(script,/https:\/\/www\.finding-stories\.com/);
+  assert.match(script,/timeoutMs:60000/);
+  assert.match(script,/retries:options\.method\?0:2/);
+});
+
+test('acceptance requests tolerate cold starts and retry safe inspection failures',async()=>{
+  const calls=[];
+  const response={ok:true};
+  const result=await requestWithTimeout('https://test.invalid/inspect',{}, {
+    timeoutMs:60000,retries:2,backoffMs:10,sleep:async ms=>calls.push(['sleep',ms]),
+    fetchImpl:async (_url,options)=>{calls.push(['fetch',options.signal]);if(calls.filter(x=>x[0]==='fetch').length===1)throw new Error('cold start');return response;}
+  });
+  assert.equal(result,response);
+  assert.equal(calls.filter(x=>x[0]==='fetch').length,2);
+  assert.deepEqual(calls.find(x=>x[0]==='sleep'),['sleep',10]);
+});
+
+test('acceptance request reports timeout after exhausting its retry budget',async()=>{
+  let attempts=0;
+  await assert.rejects(requestWithTimeout('https://test.invalid/inspect',{}, {
+    timeoutMs:60000,retries:1,backoffMs:1,sleep:async()=>{},
+    fetchImpl:async()=>{attempts++;const error=new Error('timed out');error.name='TimeoutError';throw error;}
+  }),/GET request failed.*TimeoutError: timed out/);
+  assert.equal(attempts,2);
 });
