@@ -36,6 +36,7 @@ test('every acceptance data path is rooted in both TEST event and TEST RSVP pred
   assert.doesNotMatch(source,/FROM event_rsvps r(?![\s\S]{0,180}r\.is_test=TRUE)/);
   assert.doesNotMatch(source,/UPDATE event_rsvps r(?![\s\S]{0,500}r\.is_test=TRUE)/);
   assert.doesNotMatch(source,/FROM events WHERE id=\$\{eventId\}::uuid(?! AND is_test=TRUE)/);
+  assert.doesNotMatch(source,/ensureSchema|ensureEventSchema/);
   for(const operation of ['assign','status','meeting','site_visit','activity','archive'])assert.match(source,new RegExp(`value\\.action==='${operation}'`));
 });
 
@@ -44,6 +45,7 @@ test('production acceptance uses no human admin credential and archives its one 
   assert.doesNotMatch(script,/ADMIN_PASSWORD|\/api\/admin\/login|Cookie/);
   assert.match(script,/Authorization:`Bearer \$\{secret\}`/);
   assert.match(script,/action:'archive',rsvp_id:created\.data\.id/);
+  assert.match(script,/try\{[\s\S]+\}finally\{/);
   assert.match(workflow,/secrets\.ACCEPTANCE_TEST_SECRET/);
   assert.match(workflow,/npm run acceptance:production/);
   assert.match(workflow,/ACCEPTANCE_BASE_URL: https:\/\/www\.finding-stories\.com/);
