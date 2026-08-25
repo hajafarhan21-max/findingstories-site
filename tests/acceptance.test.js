@@ -46,4 +46,6 @@ test('production acceptance uses no human admin credential and archives its one 
   assert.match(script,/action:'archive',rsvp_id:created\.data\.id/);
   assert.match(workflow,/secrets\.ACCEPTANCE_TEST_SECRET/);
   assert.match(workflow,/npm run acceptance:production/);
+  assert.match(workflow,/ACCEPTANCE_BASE_URL: https:\/\/www\.finding-stories\.com/);
+  assert.match(script,/https:\/\/www\.finding-stories\.com/);
 });

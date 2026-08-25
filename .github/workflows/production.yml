@@ -19,8 +19,10 @@ jobs:
     timeout-minutes: 25
     env:
       # Vercel's Git integration owns deployment and its runtime environment.
-      PRODUCTION_URL: https://finding-stories.com
-      ACCEPTANCE_BASE_URL: https://finding-stories.com
+      # Use the canonical host directly. Fetch intentionally strips Authorization
+      # when following the apex-to-www redirect, which would break acceptance auth.
+      PRODUCTION_URL: https://www.finding-stories.com
+      ACCEPTANCE_BASE_URL: https://www.finding-stories.com
       # Dedicated machine credential: it cannot create an admin session and the
       # server confines every operation to events and RSVPs marked is_test=true.
       ACCEPTANCE_TEST_SECRET: ${{ secrets.ACCEPTANCE_TEST_SECRET }}

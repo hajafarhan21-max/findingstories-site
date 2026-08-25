@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 
-const base=(process.env.ACCEPTANCE_BASE_URL||'https://finding-stories.com').replace(/\/$/,'');
+const base=(process.env.ACCEPTANCE_BASE_URL||'https://www.finding-stories.com').replace(/\/$/,'');
 const secret=process.env.ACCEPTANCE_TEST_SECRET;
 assert.ok(secret?.length>=32,'ACCEPTANCE_TEST_SECRET must be configured for production acceptance');
 const api=async(path,options={})=>{

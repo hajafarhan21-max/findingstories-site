@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
 
-const base=(process.env.ACCEPTANCE_BASE_URL||'https://finding-stories.com').replace(/\/$/,'');
+const base=(process.env.ACCEPTANCE_BASE_URL||'https://www.finding-stories.com').replace(/\/$/,'');
 const created=[];
 const request=async(path,options={},timeout=8000)=>{
   const response=await fetch(base+path,{...options,signal:globalThis.AbortSignal.timeout(timeout)});
