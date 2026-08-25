@@ -75,3 +75,24 @@ test('acceptance request reports timeout after exhausting its retry budget',asyn
   }),/GET request failed.*TimeoutError: timed out/);
   assert.equal(attempts,2);
 });
+
+test('production guardian is deployment-triggered, TEST-constrained, and reconciles incidents',async()=>{
+  const [workflow,reconciler,operations]=await Promise.all([
+    readFile('.github/workflows/production-guardian.yml','utf8'),
+    readFile('scripts/reconcile-production-incident.mjs','utf8'),
+    readFile('docs/production-operations.md','utf8')
+  ]);
+  assert.match(workflow,/workflow_run:[\s\S]*workflows: \[Production\]/);
+  assert.match(workflow,/workflow_dispatch:/);
+  assert.match(workflow,/issues: write/);
+  assert.match(workflow,/ACCEPTANCE_TEST_SECRET: \$\{\{ secrets\.ACCEPTANCE_TEST_SECRET \}\}/);
+  assert.match(workflow,/npm run smoke:production/);
+  assert.match(workflow,/npm run acceptance:production/);
+  assert.match(workflow,/actions\/upload-artifact@v4/);
+  assert.doesNotMatch(workflow,/ADMIN_PASSWORD|DATABASE_URL|vercel deploy/);
+  assert.match(reconciler,/finding-stories-production-guardian/);
+  assert.match(reconciler,/issue','create/);
+  assert.match(reconciler,/issue','close/);
+  assert.match(reconciler,/issue','reopen/);
+  assert.match(operations,/Every read and mutation is constrained by both TEST-event and TEST-RSVP predicates/);
+});
