@@ -1,6 +1,6 @@
 import { isAcceptance } from '../_lib/auth.js';
 import { acceptanceQuerySchema, acceptanceUpdateSchema } from '../_lib/acceptance.js';
-import { database, ensureEventSchema, ensureSchema } from '../_lib/db.js';
+import { database } from '../_lib/db.js';
 import { json, method, parseJson } from '../_lib/http.js';
 
 const csv = value => `"${String(value ?? '').replaceAll('"', '""')}"`;
@@ -84,7 +84,11 @@ export default async function handler(req,res){
   if(!method(req,res,['GET','PATCH']))return;
   if(!isAcceptance(req))return denied(res);
   try{
-    await ensureSchema();await ensureEventSchema();const sql=database();
+    // Production schema initialization is owned by the normal application
+    // bootstrap/deployment path. Replaying every DDL migration in this isolated
+    // serverless function adds dozens of database round trips before a read and
+    // can exhaust the acceptance client's request deadline on a cold start.
+    const sql=database();
     if(req.method==='PATCH'){
       const parsed=acceptanceUpdateSchema.safeParse(parseJson(req));
       if(!parsed.success)return json(res,400,{error:'Invalid acceptance operation.'});
