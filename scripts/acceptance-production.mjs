@@ -1,19 +1,20 @@
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
+import { requestWithTimeout } from './acceptance-http.mjs';
 
 const base=(process.env.ACCEPTANCE_BASE_URL||'https://www.finding-stories.com').replace(/\/$/,'');
 const secret=process.env.ACCEPTANCE_TEST_SECRET;
 assert.ok(secret?.length>=32,'ACCEPTANCE_TEST_SECRET must be configured for production acceptance');
 const api=async(path,options={})=>{
-  const started=Date.now();
-  let response;
-  try{response=await fetch(base+path,{...options,headers:{Authorization:`Bearer ${secret}`,...options.headers},signal:globalThis.AbortSignal.timeout(12000)});}
-  catch(error){throw new Error(`${options.method||'GET'} ${path} failed after ${Date.now()-started}ms: ${error.name}: ${error.message}`,{cause:error});}
+  // The isolated acceptance function may need to establish both a serverless
+  // runtime and database connection on its first request. GETs are safe to
+  // retry; mutations are deliberately never retried here.
+  const response=await requestWithTimeout(base+path,{...options,headers:{Authorization:`Bearer ${secret}`,...options.headers}},{timeoutMs:60000,retries:options.method?0:2,backoffMs:1500});
   const contentType=response.headers.get('content-type')||'';
   return {response,data:contentType.includes('json')?await response.json():await response.text()};
 };
 const patch=(body)=>api('/api/acceptance/events',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-const publicRequest=async(path,options={})=>{const response=await fetch(base+path,{...options,signal:globalThis.AbortSignal.timeout(12000)});return{response,data:await response.json()};};
+const publicRequest=async(path,options={})=>{const response=await requestWithTimeout(base+path,options,{timeoutMs:30000,retries:options.method?0:1,backoffMs:1000});return{response,data:await response.json()};};
 
 const health=await publicRequest('/api/health');assert.equal(health.response.ok,true);assert.equal(health.data.checks?.database,'ok');
 const available=await publicRequest('/api/events/slots?test=true');assert.equal(available.data.event?.is_test,true);
