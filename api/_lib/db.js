@@ -207,6 +207,17 @@ export async function initializeSchema(sql) {
     await sql`CREATE INDEX IF NOT EXISTS property_inventory_match_idx ON property_inventory(status,is_test,emirate,property_type,bedrooms)`;
     await sql`CREATE INDEX IF NOT EXISTS property_recommendations_lead_idx ON property_recommendations(lead_id,created_at DESC)`;
   }, { tolerateConcurrentDdl: true });
+  await runPhase('acquisition', 'create_acquisition', async () => {
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS page_type TEXT`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS acquisition_area TEXT`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS acquisition_project TEXT`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS acquisition_developer TEXT`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS budget_intent TEXT`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS bedroom_intent TEXT`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS acquisition_signals JSONB NOT NULL DEFAULT '[]'`;
+    await sql`CREATE TABLE IF NOT EXISTS acquisition_events (id BIGSERIAL PRIMARY KEY,event_key UUID NOT NULL UNIQUE,visitor_id UUID NOT NULL,event_type TEXT NOT NULL CHECK(event_type IN ('page_view','repeated_visit','property_comparison','payment_plan_interest','whatsapp_click','meeting_request','site_visit_request')),page_url TEXT NOT NULL,page_type TEXT,area TEXT,project TEXT,developer TEXT,source TEXT,referrer TEXT,utm_source TEXT,utm_medium TEXT,utm_campaign TEXT,is_test BOOLEAN NOT NULL DEFAULT FALSE,created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+    await sql`CREATE INDEX IF NOT EXISTS acquisition_events_page_idx ON acquisition_events(is_test,page_url,created_at DESC)`;
+  }, { tolerateConcurrentDdl: true });
 }
 
 export async function ensureSchema() {

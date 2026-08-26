@@ -70,6 +70,12 @@ function metricsTable(title, rows, columns) {
   return `<h3>${escapeHtml(title)}</h3><table class="performance-table"><thead><tr>${columns.map(([,label])=>`<th>${escapeHtml(label)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${columns.map(([key])=>`<td>${escapeHtml(row[key] ?? 0)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
 }
 
+function renderAcquisition(acquisition) {
+  document.querySelector('#acquisition-totals').innerHTML=`<div class="command-card"><b>${Number(acquisition.totals.enquiries)}</b><span>Organic enquiries</span></div><div class="command-card"><b>${Number(acquisition.traffic_without_enquiries.reduce((sum,x)=>sum+x.traffic,0))}</b><span>Visits without enquiries</span></div>`;
+  const columns=[['name','Landing page'],['enquiries','Enquiries'],['qualified_rate','Qualified %'],['meeting_rate','Meeting %'],['site_visit_rate','Site visit %'],['booking_rate','Booking %']];
+  document.querySelector('#acquisition-performance').innerHTML=metricsTable('Landing-page performance',acquisition.by_page,columns)+metricsTable('Area performance',acquisition.by_area,columns)+metricsTable('Project performance',acquisition.by_project,columns)+metricsTable('Developer performance',acquisition.by_developer,columns)+metricsTable('Traffic with no enquiries',acquisition.traffic_without_enquiries,[['name','Landing page'],['traffic','Visits']]);
+}
+
 function renderRecovery(recovery) {
   const labels={total_recoverable_leads:'Recoverable leads',immediate_recovery_leads:'Immediate recovery',overdue_hot_warm:'Overdue HOT/WARM',meeting_recovery:'Meeting recovery',site_visit_recovery:'Site-visit recovery',stale_property_matches:'Stale property matches',unassigned_opportunities:'Unassigned opportunities',estimated_recoverable_pipeline:'Recoverable pipeline',recovery_attempts_approved:'Attempts approved',recovered_contacts:'Recovered contacts',meetings_recovered:'Meetings recovered',site_visits_recovered:'Site visits recovered',conversions_after_recovery:'Conversions after recovery'};
   document.querySelector('#recovery-metrics').innerHTML=Object.entries(labels).map(([key,label])=>`<div class="command-card"><b>${escapeHtml(recovery.metrics[key])}</b><span>${label}</span></div>`).join('');
@@ -113,7 +119,7 @@ async function revenueAction(payload) {
 
 async function loadActionQueue() {
   const response = await fetch('/api/admin/leads?view=revenue'); if (!response.ok) return;
-  const data = await response.json(); window.__recovery=data.recovery?.queue||[]; actionQueue = data.queue; propertyOpportunities=data.property_opportunities||[]; renderActionQueue(data.refreshing); renderPropertyOpportunities(data.inventory_count); renderCommandCenter(data); renderPipeline(data.pipeline); renderRecovery(data.recovery);
+  const data = await response.json(); window.__recovery=data.recovery?.queue||[]; actionQueue = data.queue; propertyOpportunities=data.property_opportunities||[]; renderActionQueue(data.refreshing); renderPropertyOpportunities(data.inventory_count); renderCommandCenter(data); renderAcquisition(data.acquisition); renderPipeline(data.pipeline); renderRecovery(data.recovery);
 }
 
 document.querySelector('#recovery-queue').addEventListener('click',async event=>{

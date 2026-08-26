@@ -13,6 +13,7 @@ const requiredFunctions = [
   'api/events/visit.js',
   'api/admin/events.js',
   'api/acceptance/events.js'
+  ,'api/acquisition.js'
 ];
 
 await rm('dist', { recursive: true, force: true });
