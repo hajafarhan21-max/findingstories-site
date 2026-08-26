@@ -37,7 +37,7 @@ export function discoverOpportunities(inventory,now=new Date()) {
 }
 
 export function eligiblePage(path,inventory,now=new Date()){return discoverOpportunities(inventory,now).find(x=>x.path===path)||null;}
-export function canonicalUrl(path,origin='https://finding-stories.com'){const parsed=String(path||'').split('?')[0].split('#')[0];const cleanPath=`/${parsed.replace(/^\/+|\/+$/g,'')}`;return `${origin.replace(/\/$/,'')}${cleanPath==='/'?'':cleanPath}`;}
+export function canonicalUrl(path,origin='https://www.finding-stories.com'){const parsed=String(path||'').split('?')[0].split('#')[0];const cleanPath=`/${parsed.replace(/^\/+|\/+$/g,'')}`;return `${origin.replace(/\/$/,'')}${cleanPath==='/'?'':cleanPath}`;}
 
 export function safeProperty(item,now=new Date()) {
   if(!verified(item))return null;

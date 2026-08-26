@@ -4,7 +4,7 @@
   "outputDirectory": "dist",
   "cleanUrls": false,
   "trailingSlash": false,
-  "rewrites": [{ "source": "/open-house", "destination": "/open-house.html" }, { "source": "/admin/events", "destination": "/event-admin.html" }, { "source": "/sitemap.xml", "destination": "/api/acquisition?route=sitemap" }, { "source": "/dubai/:path*", "destination": "/api/acquisition?route=page&path=dubai/:path*" }, { "source": "/projects/:path*", "destination": "/api/acquisition?route=page&path=projects/:path*" }],
+  "rewrites": [{ "source": "/open-house", "destination": "/open-house.html" }, { "source": "/admin/events", "destination": "/event-admin.html" }, { "source": "/sitemap.xml", "destination": "/api/acquisition?route=sitemap" }, { "source": "/dubai/:path*", "destination": "/api/acquisition?route=page&path=dubai/:path*" }, { "source": "/developers/:path*", "destination": "/api/acquisition?route=page&path=developers/:path*" }, { "source": "/projects/:path*", "destination": "/api/acquisition?route=page&path=projects/:path*" }],
   "headers": [
     {
       "source": "/(.*)",
