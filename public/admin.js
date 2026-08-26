@@ -6,6 +6,7 @@ const errorBox = document.querySelector('#login-error');
 const list = document.querySelector('#leads');
 let leads = [];
 let actionQueue = [];
+let propertyOpportunities = [];
 let refreshTimer;
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
@@ -64,6 +65,23 @@ function renderCommandCenter(data) {
   document.querySelector('#productivity').innerHTML = Object.entries(data.metrics).map(([key,value]) => `<div class="command-card"><b>${Number(value)}</b><span>${statusLabel(key)}</span></div>`).join('');
 }
 
+function propertyCopy(item, kind) {
+  const top=item.matches.slice(0,3); const intro=`${item.name}: ${top.length} advisor-reviewed option(s) based only on stated requirements.`;
+  const options=top.map(x=>`${x.project} (${x.tier}, ${x.score}/100) — ${x.why.join(', ')}. ${x.data_quality==='verified'?'Pricing and availability still require current confirmation.':'Advisory project data only; pricing and availability must be verified.'}`).join('\n');
+  return kind==='call' ? `${intro}\nDiscuss: ${options}` : kind==='meeting' ? `${intro}\nMeeting pitch: compare trade-offs and validate missing requirements.\n${options}` : `${intro}\n${options}\nWould you like an advisor to verify availability and discuss these options?`;
+}
+function renderPropertyOpportunities(inventoryCount=0) {
+  const target=document.querySelector('#property-opportunities');
+  target.innerHTML=propertyOpportunities.map(item=>{const top=item.strongest_match; return `<article class="ai-card" data-property-id="${item.id}">
+    <span class="ai-badge">ADVISOR INTELLIGENCE</span><span class="ai-priority">${escapeHtml(item.temperature)} · ${item.match_count} match(es)</span><h3>${escapeHtml(item.name)}</h3>
+    <p><b>Requirement:</b> ${escapeHtml([item.requirement_profile.property_type,item.requirement_profile.bedrooms,item.requirement_profile.emirate,item.requirement_profile.preferred_areas.join(', ')].filter(Boolean).join(' · ')||'Incomplete')}</p>
+    ${item.missing_requirements.length?`<p class="escalations">Missing: ${escapeHtml(item.missing_requirements.join(' · '))}</p>`:''}
+    ${top?`<p><b>Strongest:</b> ${escapeHtml(top.project)} · ${top.score}/100 · ${top.tier}<br><span class="quality">${top.data_quality==='verified'?'VERIFIED INVENTORY':'ADVISORY / GENERIC PROJECT DATA'}</span></p>
+      ${item.matches.slice(0,3).map(x=>`<div class="property-match"><b>${escapeHtml(x.project)} · ${x.score}/100 · ${x.tier}</b><p>Why: ${escapeHtml(x.why.join(', '))}<br>Does not match: ${escapeHtml(x.does_not_match.join(', ')||'None known')}<br>Next: ${escapeHtml(x.recommended_next_action)}</p></div>`).join('')}`:'<p>No suitable match. Do not force-fit an option.</p>'}
+    <p><b>Readiness:</b> Meeting ${item.meeting_ready?'ready':'not ready'} · Site visit ${item.site_visit_ready?'ready':'not ready'}</p>
+    <div class="row-actions"><button data-property-action="reviewed">Review Match</button><button class="secondary" data-property-copy="whatsapp">Copy WhatsApp Recommendation</button><button class="secondary" data-property-copy="call">Copy Call Pitch</button><button class="secondary" data-property-copy="meeting">Copy Meeting Pitch</button><button data-property-action="interested">Mark Interested</button><button class="danger" data-property-action="not_suitable">Mark Not Suitable</button><button class="secondary" data-property-schedule="follow_up">Schedule Follow-up</button><button class="secondary" data-property-schedule="meeting">Schedule Meeting</button><button class="secondary" data-property-schedule="site_visit">Schedule Site Visit</button></div></article>`}).join('')||`<p class="empty">${inventoryCount?'No qualified property opportunities.':'No inventory has been loaded. The system will not invent live inventory.'}</p>`;
+}
+
 async function revenueAction(payload) {
   const response = await fetch('/api/admin/leads/update?view=revenue', { method:'PATCH', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
   const data = await response.json(); if (!response.ok) throw new Error(data.error || 'Action failed'); await loadActionQueue();
@@ -71,8 +89,15 @@ async function revenueAction(payload) {
 
 async function loadActionQueue() {
   const response = await fetch('/api/admin/leads?view=revenue'); if (!response.ok) return;
-  const data = await response.json(); actionQueue = data.queue; renderActionQueue(data.refreshing); renderCommandCenter(data);
+  const data = await response.json(); actionQueue = data.queue; propertyOpportunities=data.property_opportunities||[]; renderActionQueue(data.refreshing); renderPropertyOpportunities(data.inventory_count); renderCommandCenter(data);
 }
+
+document.querySelector('#property-opportunities').addEventListener('click',async event=>{
+  const button=event.target.closest('button'); if(!button)return; const card=button.closest('[data-property-id]'); const id=card.dataset.propertyId; const item=propertyOpportunities.find(x=>x.id===id);
+  try { if(button.dataset.propertyCopy){await window.navigator.clipboard.writeText(propertyCopy(item,button.dataset.propertyCopy));button.textContent='Copied — human review required';}
+    else if(button.dataset.propertyAction) await revenueAction({id,action:'property_status',status:button.dataset.propertyAction});
+    else if(button.dataset.propertySchedule){const value=window.prompt('Schedule date/time (ISO 8601, including timezone):',new Date(Date.now()+864e5).toISOString());if(value)await revenueAction({id,action:'schedule',action_type:button.dataset.propertySchedule,scheduled_for:new Date(value).toISOString()});}
+  } catch(error){window.alert(error.message);} });
 
 document.querySelector('#ai-queue').addEventListener('click', async event => {
   const button = event.target.closest('button'); if (!button) return;

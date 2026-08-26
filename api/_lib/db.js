@@ -190,6 +190,23 @@ export async function initializeSchema(sql) {
       WHERE execution_status NOT IN ('dismissed','completed')`;
     await sql`CREATE INDEX IF NOT EXISTS follow_up_execution_due_idx ON follow_up_executions(next_follow_up)`;
   }, { tolerateConcurrentDdl: true });
+  await runPhase('revenue', 'create_property_matching', async () => {
+    await sql`CREATE TABLE IF NOT EXISTS property_inventory (
+      id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(), developer TEXT NOT NULL, project TEXT NOT NULL,
+      emirate TEXT NOT NULL, area TEXT NOT NULL, property_type TEXT NOT NULL, bedrooms TEXT NOT NULL,
+      minimum_price NUMERIC, maximum_price NUMERIC, minimum_size NUMERIC, maximum_size NUMERIC, price_per_sqft NUMERIC,
+      handover DATE, payment_plan_summary TEXT, construction_status TEXT NOT NULL, suitability TEXT,
+      status TEXT NOT NULL DEFAULT 'active', source TEXT NOT NULL, data_quality TEXT NOT NULL CHECK (data_quality IN ('verified','advisory')),
+      last_updated TIMESTAMPTZ NOT NULL, is_test BOOLEAN NOT NULL DEFAULT FALSE, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+    await sql`CREATE TABLE IF NOT EXISTS property_recommendations (
+      id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(), lead_id UUID NOT NULL REFERENCES leads(id), fingerprint TEXT NOT NULL,
+      requirement_profile JSONB NOT NULL, ranked_matches JSONB NOT NULL, opportunity_flags JSONB NOT NULL DEFAULT '[]',
+      advisor_status TEXT NOT NULL DEFAULT 'pending', outcome TEXT NOT NULL DEFAULT '', reviewed_at TIMESTAMPTZ,
+      is_test BOOLEAN NOT NULL DEFAULT FALSE, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), UNIQUE(lead_id,fingerprint))`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS property_recommendation_fingerprint TEXT`;
+    await sql`CREATE INDEX IF NOT EXISTS property_inventory_match_idx ON property_inventory(status,is_test,emirate,property_type,bedrooms)`;
+    await sql`CREATE INDEX IF NOT EXISTS property_recommendations_lead_idx ON property_recommendations(lead_id,created_at DESC)`;
+  }, { tolerateConcurrentDdl: true });
 }
 
 export async function ensureSchema() {

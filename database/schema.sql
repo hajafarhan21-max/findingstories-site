@@ -56,3 +56,4 @@ CREATE INDEX IF NOT EXISTS leads_next_follow_up_at_idx ON leads (next_follow_up_
 \ir migrations/003_event_rsvp.sql
 \ir migrations/004_reusable_events.sql
 \ir migrations/005_revenue_execution.sql
+\ir migrations/006_property_matching.sql
