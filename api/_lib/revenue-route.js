@@ -5,6 +5,7 @@ import { json, method, parseJson } from './http.js';
 import { analyzeLeadWithAgent, needsRevenueAnalysis, recommendationFingerprint } from './revenue-agent.js';
 import { ACTION_TYPES, commandCenter, defaultEmailDraft, productivityMetrics, recommendationEscalations } from './revenue-execution.js';
 import { matchProperties, propertyFingerprint } from './property-matching.js';
+import { pipelineAnalytics } from './conversion-forecasting.js';
 import { z } from 'zod';
 
 const actionSchema = z.discriminatedUnion('action', [
@@ -84,6 +85,7 @@ export default async function handler(req, res) {
     const candidates=await sql`SELECT * FROM leads WHERE is_test=FALSE AND consent=TRUE ORDER BY updated_at DESC LIMIT 250`;
     const stale=candidates.filter(needsRevenueAnalysis); if (stale.length) waitUntil(refreshRecommendations(sql,stale));
     const executions=await sql`SELECT * FROM follow_up_executions WHERE is_test=FALSE ORDER BY updated_at DESC LIMIT 500`;
+    const recommendations=await sql`SELECT * FROM property_recommendations WHERE is_test=FALSE ORDER BY created_at DESC LIMIT 1000`;
     const inventory=await sql`SELECT * FROM property_inventory WHERE is_test=FALSE AND status='active' ORDER BY updated_at DESC`;
     const qualified=candidates.filter(lead=>lead.status==='qualified'&&!['booked','lost'].includes(lead.status));
     const propertyOpportunities=[];
@@ -110,6 +112,7 @@ export default async function handler(req, res) {
       property_recommendations_reviewed:propertyOpportunities.filter(x=>x.advisor_status!=='pending').length,meetings_from_recommendations:executions.filter(x=>x.action_type==='meeting'&&x.execution_status==='completed').length,
       site_visits_generated:executions.filter(x=>x.action_type==='site_visit'&&x.execution_status==='completed').length,interested_leads:propertyOpportunities.filter(x=>x.advisor_status==='interested').length,
       booked_conversion_outcomes:candidates.filter(x=>x.status==='booked').length });
-    return json(res,200,{ queue,property_opportunities:propertyOpportunities,inventory_count:inventory.length,refreshing:Math.min(stale.length,5),advisory_only:true,command_center:commandCenter(candidates,executions),metrics });
+    const pipeline=pipelineAnalytics(candidates,recommendations,executions);
+    return json(res,200,{ queue,property_opportunities:propertyOpportunities,inventory_count:inventory.length,refreshing:Math.min(stale.length,5),advisory_only:true,command_center:commandCenter(candidates,executions),metrics,pipeline });
   } catch { return json(res,500,{ error:'Could not load the Revenue Command Center.' }); }
 }
