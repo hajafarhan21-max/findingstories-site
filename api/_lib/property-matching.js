@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 
-export const PROPERTY_MATCH_VERSION = 'property-match-v1';
+export const PROPERTY_MATCH_VERSION = 'property-match-v2';
 export const INVENTORY_STALE_DAYS = 14;
 const critical = ['budget', 'property_type', 'bedrooms', 'emirate', 'purchase_timeline'];
 const terminal = new Set(['booked', 'lost']);
@@ -39,6 +39,18 @@ function includesText(haystack, needle) { return lower(haystack).includes(lower(
 function handoverMismatch(wanted, actual) { if (!wanted || !actual) return false; const w=Date.parse(wanted), a=Date.parse(actual); return Number.isFinite(w)&&Number.isFinite(a) ? a>w : knownMismatch(wanted,actual); }
 export function inventoryIsStale(item, now=new Date()) { return !item.last_updated || now-new Date(item.last_updated) > INVENTORY_STALE_DAYS*864e5; }
 
+function requestedSize(value) {
+  const values=[...lower(value).replaceAll(',','').matchAll(/\d+(?:\.\d+)?/g)].map(match=>Number(match[0])).filter(Number.isFinite);
+  if (!values.length) return { min:null,max:null };
+  return values.length > 1 ? { min:Math.min(...values),max:Math.max(...values) } : { min:values[0],max:null };
+}
+
+function inventoryState(item) {
+  return ['id','developer','project','emirate','area','property_type','bedrooms','minimum_price','maximum_price','minimum_size','maximum_size',
+    'price_per_sqft','handover','payment_plan_summary','construction_status','suitability','status','source','data_quality','last_updated','updated_at']
+    .map(key=>[key,item[key]??null]);
+}
+
 export function matchProperties(lead, inventory, now = new Date()) {
   if (inventory.some(item => Boolean(item.is_test) !== Boolean(lead.is_test))) throw new Error('TEST and production matching data cannot be mixed');
   if (terminal.has(lead.status)) return { profile:normalizeRequirements(lead), matches:[], flags:[] };
@@ -52,6 +64,7 @@ export function matchProperties(lead, inventory, now = new Date()) {
     if (knownMismatch(profile.emirate,item.emirate)) failures.push('emirate');
     if (knownMismatch(profile.construction_status,item.construction_status)) failures.push('ready/off-plan');
     if (handoverMismatch(profile.preferred_handover,item.handover)) failures.push('handover');
+    if (profile.developer_exclusions.some(x=>includesText(item.developer,x))) failures.push('excluded developer');
     if (failures.length) { rejected.push({item,failures}); continue; }
     let score=60; const why=[]; const misses=[]; const signals=[];
     if (profile.budget_max && item.minimum_price) { score+=8; why.push('Budget range overlaps'); signals.push('BUDGET_MATCH'); }
@@ -59,12 +72,19 @@ export function matchProperties(lead, inventory, now = new Date()) {
     else if (profile.preferred_areas.length) misses.push('Preferred area');
     if (profile.developer_preferences.some(x=>includesText(item.developer,x))) { score+=6; why.push('Preferred developer'); }
     if (profile.payment_plan_preference && item.payment_plan_summary && includesText(item.payment_plan_summary,profile.payment_plan_preference)) { score+=6; why.push('Payment-plan preference'); signals.push('PAYMENT_PLAN_MATCH'); }
+    else if (profile.payment_plan_preference) misses.push('Payment-plan preference is not confirmed');
+    const size=requestedSize(profile.size_requirement);
+    if (size.min && item.maximum_size && Number(item.maximum_size)<size.min) { score-=6; misses.push('Requested minimum size'); }
+    else if (size.min && item.minimum_size) { score+=4; why.push('Size range can accommodate the requirement'); }
+    if (profile.liquidity && item.payment_plan_summary) { score+=2; why.push('Payment plan is available for advisor liquidity review'); }
+    if (profile.expected_roi || profile.rental_income || profile.capital_appreciation) misses.push('Return objectives require advisor verification; no ROI is inferred');
     if (profile.objective && item.suitability && includesText(item.suitability,profile.objective)) { score+=5; why.push(`${profile.objective} suitability`); }
     if (profile.construction_status && /ready/i.test(profile.construction_status)) signals.push('READY_PROPERTY_MATCH');
     if (profile.preferred_handover && item.handover) signals.push('HANDOVER_MATCH');
     if (inventoryIsStale(item,now)) { score-=12; misses.push('Inventory is stale and must be re-verified'); signals.push('INVENTORY_STALE'); }
     score=Math.max(0,Math.min(100,score)); const tier=score>=80?'STRONG':score>=65?'GOOD':score>=50?'POSSIBLE':'WEAK';
-    matches.push({ inventory_id:item.id, project:item.project, developer:item.developer, data_quality:item.data_quality, score,tier,
+    matches.push({ inventory_id:item.id, project:item.project, developer:item.developer,
+      data_quality:item.data_quality==='verified'?'VERIFIED INVENTORY':'ADVISORY / GENERIC PROJECT DATA', inventory_last_updated:item.last_updated, score,tier,
       why:why.length?why:['Passes known hard requirements'], does_not_match:misses, missing_information:profile.missing_critical,
       advisor_talking_points:[`${item.project} passes the known hard requirements.`, item.data_quality==='verified'?'Confirm current unit availability before presenting.':'Advisory project data only; verify price and availability.'],
       recommended_next_action:tier==='STRONG'?'Human advisor to review and propose a shortlist meeting.':'Validate missing requirements before presenting.', signals });
@@ -80,7 +100,7 @@ export function matchProperties(lead, inventory, now = new Date()) {
 }
 
 export function propertyFingerprint(lead, inventory) {
-  const profile=normalizeRequirements(lead); const state=inventory.map(item=>[item.id,item.updated_at||item.last_updated,item.status]).sort();
+  const profile=normalizeRequirements(lead); const state=inventory.map(inventoryState).sort((a,b)=>String(a[0][1]).localeCompare(String(b[0][1])));
   return createHash('sha256').update(JSON.stringify([PROPERTY_MATCH_VERSION,profile,state])).digest('hex');
 }
 export function needsPropertyRecommendation(lead, inventory) { return !terminal.has(lead.status) && propertyFingerprint(lead,inventory)!==lead.property_recommendation_fingerprint; }
