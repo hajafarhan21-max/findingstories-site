@@ -15,7 +15,7 @@ export async function qualifyLead(lead) {
     method: 'POST', headers: { Authorization: `Bearer ${process.env.OPENAI_API_KEY}`, 'Content-Type': 'application/json' },
     body: JSON.stringify({
       model: process.env.OPENAI_MODEL || 'gpt-4.1-mini',
-      instructions: `You qualify UAE real-estate advisory leads. Base every statement only on supplied lead data. Never invent prices, inventory, discounts or availability; never guarantee ROI or appreciation. Score intent, completeness, budget readiness and timeline. Temperature must exactly follow score: Hot 75-100, Warm 45-74, Cold 0-44. Do not choose calendar dates; the server schedules follow-up. Draft concise, respectful follow-up with no unverified claims.`,
+      instructions: `You qualify UAE real-estate advisory leads. Base every statement only on supplied lead data. Never invent prices, inventory, discounts or availability; never guarantee ROI or appreciation. Score intent, completeness, budget readiness and timeline. Treat acquisition_signals as transparent observed intent (project/price enquiry, repeat visit, comparison, payment-plan interest, WhatsApp click, meeting or site-visit request), never as proof of ability to buy. Temperature must exactly follow score: Hot 75-100, Warm 45-74, Cold 0-44. Do not choose calendar dates; the server schedules follow-up. Draft concise, respectful follow-up with no unverified claims.`,
       input: JSON.stringify(lead), text: { format: { type: 'json_schema', name: 'lead_qualification', strict: true, schema } }
     })
   });
@@ -28,7 +28,8 @@ export async function qualifyLead(lead) {
 
 export function fallback(lead) {
   const filled = ['country_of_residence','purpose','budget','property_type','bedrooms','preferred_areas','payment_method','purchase_timeline','owns_uae_property'].filter(k => lead[k]);
-  const score = Math.min(70, 15 + filled.length * 5 + (/immediate|30 day/i.test(lead.purchase_timeline || '') ? 10 : 0));
+  const observed=new Set(lead.acquisition_signals||[]);const intent=Math.min(25,[['project_page_enquiry',6],['price_page_enquiry',5],['repeated_visit',3],['property_comparison',4],['payment_plan_interest',4],['whatsapp_click',5],['meeting_request',8],['site_visit_request',10]].reduce((sum,[key,points])=>sum+(observed.has(key)?points:0),0));
+  const score = Math.min(100, 15 + filled.length * 5 + (/immediate|30 day/i.test(lead.purchase_timeline || '') ? 10 : 0)+intent);
   const missing = ['email','country_of_residence','budget','preferred_areas','payment_method','purchase_timeline'].filter(k => !lead[k]);
   return { lead_score: score, temperature: score >= 45 ? 'Warm' : 'Cold', qualification_summary: 'Deterministic fallback qualification; AI review was unavailable.', requirement_summary: [lead.purpose, lead.property_type, lead.budget].filter(Boolean).join(' · ') || 'Initial enquiry', missing_information: missing, next_action: 'Review the captured requirement and contact the lead with consent.', whatsapp_follow_up_draft: `Hello ${lead.name}, thank you for contacting Finding Stories. May we arrange a brief call to understand your UAE property requirement?`, call_opener: `Hello ${lead.name}, this is Finding Stories following up on your property enquiry.` };
 }

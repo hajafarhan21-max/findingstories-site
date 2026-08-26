@@ -12,6 +12,8 @@ export const leadSchema = z.object({
   consent: z.union([z.boolean(), z.literal('true'), z.literal('on')]).transform(Boolean),
   source: clean(120), landing_page: clean(1000), referrer: clean(1000),
   utm_source: clean(200), utm_medium: clean(200), utm_campaign: clean(200), content_source: clean(300),
+  page_type: clean(80), acquisition_area: clean(150), acquisition_project: clean(200), acquisition_developer: clean(200),
+  budget_intent: clean(100), bedroom_intent: clean(50), acquisition_signals: z.array(z.enum(['project_page_enquiry','price_page_enquiry','repeated_visit','property_comparison','payment_plan_interest','whatsapp_click','meeting_request','site_visit_request'])).max(8).optional().default([]),
   submission_id: z.string().uuid().optional(),
   website: clean(200)
 }).strict();

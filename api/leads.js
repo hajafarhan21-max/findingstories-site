@@ -22,14 +22,16 @@ async function persistLead(sql, lead) {
   const rows = await sql`
     INSERT INTO leads (submission_id, name, phone, email, country_of_residence, purpose, budget, property_type,
       bedrooms, preferred_areas, payment_method, purchase_timeline, owns_uae_property, additional_requirements,
-      consent, source, landing_page, referrer, utm_source, utm_medium, utm_campaign, content_source)
+      consent, source, landing_page, referrer, utm_source, utm_medium, utm_campaign, content_source,
+      page_type, acquisition_area, acquisition_project, acquisition_developer, budget_intent, bedroom_intent, acquisition_signals)
     VALUES (${lead.submission_id || null}, ${safeText(lead.name,100)}, ${lead.phone}, ${lead.email || null},
       ${lead.country_of_residence || null}, ${lead.purpose || null}, ${lead.budget || null},
       ${lead.property_type || null}, ${lead.bedrooms || null}, ${lead.preferred_areas || null},
       ${lead.payment_method || null}, ${lead.purchase_timeline || null}, ${lead.owns_uae_property || null},
       ${safeText(lead.additional_requirements) || null}, ${lead.consent}, ${lead.source || 'website'},
       ${lead.landing_page || null}, ${lead.referrer || null}, ${lead.utm_source || null}, ${lead.utm_medium || null},
-      ${lead.utm_campaign || null}, ${lead.content_source || null})
+      ${lead.utm_campaign || null}, ${lead.content_source || null},${lead.page_type||null},${lead.acquisition_area||null},
+      ${lead.acquisition_project||null},${lead.acquisition_developer||null},${lead.budget_intent||null},${lead.bedroom_intent||null},${JSON.stringify(lead.acquisition_signals||[])})
     ON CONFLICT (submission_id) WHERE submission_id IS NOT NULL DO NOTHING
     RETURNING id, captured_at`;
   if (rows[0]) return { ...rows[0], duplicate: false };

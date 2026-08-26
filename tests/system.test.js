@@ -113,7 +113,7 @@ test('frontend contains in-flight guards and stable submission IDs', async () =>
 test('Vercel deployment stays within the Hobby serverless function limit', async () => {
   const files = await readdir('api', { recursive: true });
   const handlers = files.filter(file => file.endsWith('.js') && !file.startsWith('_lib/'));
-  assert.equal(handlers.length, 11);
+  assert.equal(handlers.length, 12);
   assert.ok(handlers.length <= 12);
 });
 

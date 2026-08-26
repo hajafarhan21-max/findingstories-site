@@ -7,6 +7,7 @@ import { ACTION_TYPES, commandCenter, defaultEmailDraft, productivityMetrics, re
 import { matchProperties, propertyFingerprint } from './property-matching.js';
 import { pipelineAnalytics } from './conversion-forecasting.js';
 import { recoveryAnalytics, recoveryEligibility, recoveryFingerprint } from './revenue-recovery.js';
+import { acquisitionMetrics } from './acquisition.js';
 import { z } from 'zod';
 
 const actionSchema = z.discriminatedUnion('action', [
@@ -91,6 +92,7 @@ export default async function handler(req, res) {
     const executions=await sql`SELECT * FROM follow_up_executions WHERE is_test=FALSE ORDER BY updated_at DESC LIMIT 500`;
     const recommendations=await sql`SELECT * FROM property_recommendations WHERE is_test=FALSE ORDER BY created_at DESC LIMIT 1000`;
     const inventory=await sql`SELECT * FROM property_inventory WHERE is_test=FALSE AND status='active' ORDER BY updated_at DESC`;
+    const acquisitionEvents=await sql`SELECT event_type,page_url,is_test FROM acquisition_events WHERE is_test=FALSE AND created_at>NOW()-INTERVAL '90 days' ORDER BY created_at DESC LIMIT 10000`;
     const qualified=candidates.filter(lead=>lead.status==='qualified'&&!['booked','lost'].includes(lead.status));
     const propertyOpportunities=[];
     for (const lead of qualified) {
@@ -118,6 +120,6 @@ export default async function handler(req, res) {
       booked_conversion_outcomes:candidates.filter(x=>x.status==='booked').length });
     const pipeline=pipelineAnalytics(candidates,recommendations,executions);
     const recovery=recoveryAnalytics(candidates,recommendations,executions);
-    return json(res,200,{ queue,property_opportunities:propertyOpportunities,inventory_count:inventory.length,refreshing:Math.min(stale.length,5),advisory_only:true,command_center:commandCenter(candidates,executions),metrics,pipeline,recovery });
+    return json(res,200,{ queue,property_opportunities:propertyOpportunities,inventory_count:inventory.length,refreshing:Math.min(stale.length,5),advisory_only:true,command_center:commandCenter(candidates,executions),metrics,pipeline,recovery,acquisition:acquisitionMetrics(candidates,acquisitionEvents) });
   } catch { return json(res,500,{ error:'Could not load the Revenue Command Center.' }); }
 }
