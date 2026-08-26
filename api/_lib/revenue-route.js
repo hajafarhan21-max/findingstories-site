@@ -6,6 +6,7 @@ import { analyzeLeadWithAgent, needsRevenueAnalysis, recommendationFingerprint }
 import { ACTION_TYPES, commandCenter, defaultEmailDraft, productivityMetrics, recommendationEscalations } from './revenue-execution.js';
 import { matchProperties, propertyFingerprint } from './property-matching.js';
 import { pipelineAnalytics } from './conversion-forecasting.js';
+import { recoveryAnalytics, recoveryEligibility, recoveryFingerprint } from './revenue-recovery.js';
 import { z } from 'zod';
 
 const actionSchema = z.discriminatedUnion('action', [
@@ -13,9 +14,9 @@ const actionSchema = z.discriminatedUnion('action', [
   z.object({ id:z.string().uuid(), action:z.literal('reviewed') }),
   z.object({ id:z.string().uuid(), action:z.literal('approve'), action_type:z.enum(ACTION_TYPES), draft:z.string().max(4000).optional() }),
   z.object({ id:z.string().uuid(), action:z.literal('complete'), execution_id:z.string().uuid(), outcome:z.string().min(1).max(1000), next_follow_up:z.string().datetime().nullable().optional() }),
-  z.object({ id:z.string().uuid(), action:z.literal('schedule'), action_type:z.enum(['follow_up','meeting','site_visit']), scheduled_for:z.string().datetime() }),
-  z.object({ id:z.string().uuid(), action:z.literal('snooze'), snoozed_until:z.string().datetime() }),
-  z.object({ id:z.string().uuid(), action:z.literal('dismiss'), reason:z.string().min(2).max(500) })
+  z.object({ id:z.string().uuid(), action:z.literal('schedule'), action_type:z.enum(['follow_up','meeting','site_visit']), scheduled_for:z.string().datetime(), recovery:z.boolean().optional() }),
+  z.object({ id:z.string().uuid(), action:z.literal('snooze'), snoozed_until:z.string().datetime(), recovery:z.boolean().optional() }),
+  z.object({ id:z.string().uuid(), action:z.literal('dismiss'), reason:z.string().min(2).max(500), recovery:z.boolean().optional() })
 ]);
 
 async function refreshRecommendations(sql, candidates) {
@@ -42,13 +43,16 @@ async function mutate(sql, input) {
       WHERE id=(SELECT id FROM property_recommendations WHERE lead_id=${input.id} AND is_test=FALSE ORDER BY created_at DESC LIMIT 1) RETURNING id`;
     return result[0] ? { status:200,body:{ok:true} } : { status:404,body:{error:'Property recommendation not found.'} };
   }
-  const rows = await sql`SELECT * FROM leads WHERE id=${input.id} AND is_test=FALSE AND consent=TRUE AND status NOT IN ('booked','lost') AND ai_recommendation IS NOT NULL`;
-  const lead = rows[0]; if (!lead) return { status:404, body:{ error:'Active recommendation not found.' } };
-  const recommendationId = lead.ai_recommendation_fingerprint || recommendationFingerprint(lead);
+  const rows = await sql`SELECT * FROM leads WHERE id=${input.id} AND is_test=FALSE AND consent=TRUE AND status NOT IN ('booked','converted')`;
+  const lead = rows[0]; if (!lead) return { status:404, body:{ error:'Eligible lead not found.' } };
+  const isRecovery=['schedule','snooze','dismiss'].includes(input.action)&&input.recovery===true;
+  if (isRecovery&&!recoveryEligibility(lead).eligible) return { status:409,body:{error:'Lead is suppressed from re-engagement.'} };
+  if (!isRecovery&&!lead.ai_recommendation) return { status:404,body:{error:'Active recommendation not found.'} };
+  const recommendationId = isRecovery ? recoveryFingerprint(lead) : lead.ai_recommendation_fingerprint || recommendationFingerprint(lead);
   if (input.action === 'reviewed') {
     await sql`UPDATE leads SET ai_reviewed_at=COALESCE(ai_reviewed_at,NOW()) WHERE id=${lead.id}`;
   } else if (input.action === 'approve' || input.action === 'schedule') {
-    const type = input.action_type; const original = originalDraft(lead, type); const edited = input.draft?.trim() || original;
+    const type = input.action_type; const original = isRecovery ? 'Advisor-approved recovery scheduling; no autonomous outreach.' : originalDraft(lead, type); const edited = input.draft?.trim() || original;
     const scheduled = input.action === 'schedule' ? input.scheduled_for : null;
     const result = await sql`INSERT INTO follow_up_executions (lead_id,recommendation_id,advisor,action_type,original_ai_draft,advisor_edited_draft,approval_status,approved_at,execution_status,next_follow_up,is_test)
       VALUES (${lead.id},${recommendationId},${lead.assigned_to || 'Unassigned'},${type},${original},${edited},'approved',NOW(),'approved',${scheduled},FALSE)
@@ -113,6 +117,7 @@ export default async function handler(req, res) {
       site_visits_generated:executions.filter(x=>x.action_type==='site_visit'&&x.execution_status==='completed').length,interested_leads:propertyOpportunities.filter(x=>x.advisor_status==='interested').length,
       booked_conversion_outcomes:candidates.filter(x=>x.status==='booked').length });
     const pipeline=pipelineAnalytics(candidates,recommendations,executions);
-    return json(res,200,{ queue,property_opportunities:propertyOpportunities,inventory_count:inventory.length,refreshing:Math.min(stale.length,5),advisory_only:true,command_center:commandCenter(candidates,executions),metrics,pipeline });
+    const recovery=recoveryAnalytics(candidates,recommendations,executions);
+    return json(res,200,{ queue,property_opportunities:propertyOpportunities,inventory_count:inventory.length,refreshing:Math.min(stale.length,5),advisory_only:true,command_center:commandCenter(candidates,executions),metrics,pipeline,recovery });
   } catch { return json(res,500,{ error:'Could not load the Revenue Command Center.' }); }
 }
