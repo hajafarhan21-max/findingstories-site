@@ -3,4 +3,4 @@ Allow: /
 Disallow: /admin.html
 Disallow: /admin/
 Disallow: /api/
-Sitemap: https://finding-stories.com/sitemap.xml
+Sitemap: https://www.finding-stories.com/sitemap.xml
