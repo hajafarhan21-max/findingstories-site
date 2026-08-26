@@ -70,8 +70,11 @@ function metricsTable(title, rows, columns) {
   return `<h3>${escapeHtml(title)}</h3><table class="performance-table"><thead><tr>${columns.map(([,label])=>`<th>${escapeHtml(label)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${columns.map(([key])=>`<td>${escapeHtml(row[key] ?? 0)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
 }
 
-function renderAcquisition(acquisition) {
-  document.querySelector('#acquisition-totals').innerHTML=`<div class="command-card"><b>${Number(acquisition.totals.enquiries)}</b><span>Organic enquiries</span></div><div class="command-card"><b>${Number(acquisition.traffic_without_enquiries.reduce((sum,x)=>sum+x.traffic,0))}</b><span>Visits without enquiries</span></div>`;
+function renderAcquisition(acquisition, coverage) {
+  document.querySelector('#acquisition-totals').innerHTML=`<div class="command-card"><b>${Number(acquisition.totals.enquiries)}</b><span>Organic enquiries</span></div><div class="command-card"><b>${Number(acquisition.totals.qualified)}</b><span>Qualified leads</span></div><div class="command-card"><b>${Number(acquisition.totals.meetings)}</b><span>Meetings</span></div><div class="command-card"><b>${Number(acquisition.totals.site_visits)}</b><span>Site visits</span></div><div class="command-card"><b>${Number(acquisition.traffic_without_enquiries.reduce((sum,x)=>sum+x.traffic,0))}</b><span>Visits without enquiries</span></div>`;
+  const summary={verified_inventory_coverage_percentage:coverage.verified_inventory_coverage_percentage,...coverage.pages,area_coverage:coverage.coverage.area.percentage,developer_coverage:coverage.coverage.developer.percentage,project_coverage:coverage.coverage.project.percentage,bedroom_coverage:coverage.coverage.bedroom.percentage,budget_bands:`${coverage.coverage.budget_band.covered}/${coverage.coverage.budget_band.total}`};
+  document.querySelector('#acquisition-coverage').innerHTML=Object.entries(summary).map(([key,value])=>`<div class="command-card"><b>${escapeHtml(value)}</b><span>${escapeHtml(statusLabel(key))}${key.includes('coverage')?' %':''}</span></div>`).join('');
+  document.querySelector('#acquisition-refresh').innerHTML=metricsTable('SEO refresh and expansion queue',coverage.queue.slice(0,30),[['intent','Intent'],['state','State'],['verified_count','Verified inventory'],['path','Canonical path'],['reasons','Remediation']]);
   const columns=[['name','Landing page'],['enquiries','Enquiries'],['qualified_rate','Qualified %'],['meeting_rate','Meeting %'],['site_visit_rate','Site visit %'],['booking_rate','Booking %']];
   document.querySelector('#acquisition-performance').innerHTML=metricsTable('Landing-page performance',acquisition.by_page,columns)+metricsTable('Area performance',acquisition.by_area,columns)+metricsTable('Project performance',acquisition.by_project,columns)+metricsTable('Developer performance',acquisition.by_developer,columns)+metricsTable('Traffic with no enquiries',acquisition.traffic_without_enquiries,[['name','Landing page'],['traffic','Visits']]);
 }
@@ -119,7 +122,7 @@ async function revenueAction(payload) {
 
 async function loadActionQueue() {
   const response = await fetch('/api/admin/leads?view=revenue'); if (!response.ok) return;
-  const data = await response.json(); window.__recovery=data.recovery?.queue||[]; actionQueue = data.queue; propertyOpportunities=data.property_opportunities||[]; renderActionQueue(data.refreshing); renderPropertyOpportunities(data.inventory_count); renderCommandCenter(data); renderAcquisition(data.acquisition); renderPipeline(data.pipeline); renderRecovery(data.recovery);
+  const data = await response.json(); window.__recovery=data.recovery?.queue||[]; actionQueue = data.queue; propertyOpportunities=data.property_opportunities||[]; renderActionQueue(data.refreshing); renderPropertyOpportunities(data.inventory_count); renderCommandCenter(data); renderAcquisition(data.acquisition,data.acquisition_coverage); renderPipeline(data.pipeline); renderRecovery(data.recovery);
 }
 
 document.querySelector('#recovery-queue').addEventListener('click',async event=>{
