@@ -65,6 +65,24 @@ function renderCommandCenter(data) {
   document.querySelector('#productivity').innerHTML = Object.entries(data.metrics).map(([key,value]) => `<div class="command-card"><b>${Number(value)}</b><span>${statusLabel(key)}</span></div>`).join('');
 }
 
+function metricsTable(title, rows, columns) {
+  if (!rows?.length) return `<h3>${escapeHtml(title)}</h3><p class="empty">No attributable ${escapeHtml(title.toLowerCase())} data exists.</p>`;
+  return `<h3>${escapeHtml(title)}</h3><table class="performance-table"><thead><tr>${columns.map(([,label])=>`<th>${escapeHtml(label)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${columns.map(([key])=>`<td>${escapeHtml(row[key] ?? 0)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+}
+
+function renderPipeline(pipeline) {
+  const overviewLabels={total_active_leads:'Active leads',qualified_leads:'Qualified',property_matched_leads:'Property matched',meetings_scheduled:'Meetings scheduled',meetings_completed:'Meetings done',site_visits_scheduled:'Site visits scheduled',site_visits_completed:'Site visits done',active_booking_opportunities:'Booking opportunities',converted_leads:'Converted',lost_leads:'Lost',weighted_pipeline:'Weighted pipeline',conversion_rate:'Conversion rate %'};
+  document.querySelector('#pipeline-overview').innerHTML=Object.entries(overviewLabels).map(([key,label])=>`<div class="command-card"><b>${escapeHtml(pipeline.overview[key])}</b><span>${label}</span></div>`).join('');
+  document.querySelector('#pipeline-funnel').innerHTML=Object.entries(pipeline.overview.funnel).map(([stage,count])=>`<div class="funnel-step"><b>${Number(count)}</b><span>${escapeHtml(stage)}</span></div>`).join('');
+  const forecast={...pipeline.forecasts,likely_meetings:pipeline.likely_meetings,likely_site_visits:pipeline.likely_site_visits,likely_bookings:pipeline.likely_bookings,immediate_intervention:pipeline.immediate_intervention};
+  document.querySelector('#pipeline-forecasts').innerHTML=Object.entries(forecast).map(([key,value])=>`<div class="command-card"><b>${Number(value)}</b><span>${escapeHtml(statusLabel(key))}</span></div>`).join('');
+  document.querySelector('#revenue-priority').innerHTML=pipeline.priority_queue.map(item=>`<article class="ai-card priority-card" data-priority-id="${item.id}"><span class="ai-badge">${escapeHtml(item.probability_band)}</span><span class="ai-priority">${item.expected_conversion_probability}% · ${escapeHtml(item.temperature)}</span><h3>${escapeHtml(item.name)} <small>· ${escapeHtml(item.stage)}</small></h3><p><b>Property:</b> ${escapeHtml(item.property_match_state)} · <b>Close:</b> ${escapeHtml(item.projected_close_window)}${item.overdue?' · <span class="escalations">OVERDUE</span>':''}</p><p><b>Next:</b> ${escapeHtml(item.next_action)}</p><p><b>Value:</b> ${escapeHtml(item.expected_gross_transaction_value)} · weighted ${escapeHtml(item.weighted_pipeline_value)}</p><div class="row-actions"><button data-priority-action="lead">Review Lead</button><button data-priority-action="property">Review Property Match</button><button data-priority-action="ai">Review AI Recommendation</button><button data-priority-action="whatsapp">Copy WhatsApp Draft</button><button data-priority-action="call">Copy Call Script</button><button data-priority-action="follow_up">Schedule Follow-up</button><button data-priority-action="meeting">Schedule Meeting</button><button data-priority-action="site_visit">Schedule Site Visit</button><button data-priority-action="interested">Mark Interested</button><button class="danger" data-priority-action="lost">Mark Lost</button></div></article>`).join('')||'<p class="empty">No active revenue opportunities.</p>';
+  const advisorColumns=[['advisor','Advisor'],['leads_assigned','Assigned'],['contacted','Contacted'],['qualified','Qualified'],['meetings','Meetings'],['site_visits','Site visits'],['bookings','Bookings'],['conversions','Conversions'],['overdue_follow_ups','Overdue'],['conversion_rate','Conversion %'],['active_pipeline_count','Active']];
+  document.querySelector('#advisor-performance').innerHTML=metricsTable('Advisor performance',pipeline.advisor_metrics,advisorColumns);
+  const projectColumns=[['name','Name'],['recommendations','Recommendations'],['interested_leads','Interested'],['meetings_generated','Meetings'],['site_visits_generated','Site visits'],['conversions','Conversions']];
+  document.querySelector('#project-performance').innerHTML=['project','developer','area'].map(key=>metricsTable(`${statusLabel(key)} performance`,pipeline.project_metrics[key],projectColumns)).join('');
+}
+
 function propertyCopy(item, kind) {
   const top=item.matches.slice(0,3); const intro=`${item.name}: ${top.length} advisor-reviewed option(s) based only on stated requirements.`;
   const options=top.map((x,index)=>`${index+1}. ${x.project} (${x.tier}, ${x.score}/100) — ${x.why.join(', ')}. Trade-offs: ${x.does_not_match.join(', ')||'none known'}. ${x.data_quality==='VERIFIED INVENTORY'?'Inventory record is verified, but current pricing and unit availability still require confirmation.':'Advisory project data only; pricing and availability must be verified.'}`).join('\n');
@@ -89,8 +107,21 @@ async function revenueAction(payload) {
 
 async function loadActionQueue() {
   const response = await fetch('/api/admin/leads?view=revenue'); if (!response.ok) return;
-  const data = await response.json(); actionQueue = data.queue; propertyOpportunities=data.property_opportunities||[]; renderActionQueue(data.refreshing); renderPropertyOpportunities(data.inventory_count); renderCommandCenter(data);
+  const data = await response.json(); actionQueue = data.queue; propertyOpportunities=data.property_opportunities||[]; renderActionQueue(data.refreshing); renderPropertyOpportunities(data.inventory_count); renderCommandCenter(data); renderPipeline(data.pipeline);
 }
+
+document.querySelector('#revenue-priority').addEventListener('click',async event=>{
+  const button=event.target.closest('button'); if(!button)return; const id=button.closest('[data-priority-id]').dataset.priorityId; const action=button.dataset.priorityAction;
+  try {
+    if(action==='lead'){const card=document.querySelector(`.lead[data-id="${id}"]`); card?.scrollIntoView({behavior:'smooth'}); card?.querySelector('[data-action="expand"]')?.click();}
+    else if(action==='property') document.querySelector(`[data-property-id="${id}"]`)?.scrollIntoView({behavior:'smooth'});
+    else if(action==='ai') document.querySelector(`.ai-card[data-id="${id}"]`)?.scrollIntoView({behavior:'smooth'});
+    else if(['whatsapp','call'].includes(action)){const item=actionQueue.find(x=>x.id===id); const draft=action==='whatsapp'?item?.ai_recommendation?.whatsapp_draft:item?.ai_recommendation?.call_opening;if(!draft)throw new Error('No AI draft exists. Nothing was fabricated.');await window.navigator.clipboard.writeText(draft);button.textContent='Copied — review before use';}
+    else if(['follow_up','meeting','site_visit'].includes(action)){const value=window.prompt('Schedule date/time (ISO 8601, including timezone):',new Date(Date.now()+864e5).toISOString());if(value)await revenueAction({id,action:'schedule',action_type:action,scheduled_for:new Date(value).toISOString()});}
+    else if(action==='interested') await revenueAction({id,action:'property_status',status:'interested'});
+    else if(action==='lost'){const reason=window.prompt('Lost reason (required):');if(reason?.trim()){await update({id,action:'lost',lost_reason:reason.trim()});await load();}}
+  } catch(error){window.alert(error.message);}
+});
 
 document.querySelector('#property-opportunities').addEventListener('click',async event=>{
   const button=event.target.closest('button'); if(!button)return; const card=button.closest('[data-property-id]'); const id=card.dataset.propertyId; const item=propertyOpportunities.find(x=>x.id===id);
