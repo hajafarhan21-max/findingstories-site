@@ -4,9 +4,11 @@ import { database, ensureSchema } from './db.js';
 import { json, method, parseJson } from './http.js';
 import { analyzeLeadWithAgent, needsRevenueAnalysis, recommendationFingerprint } from './revenue-agent.js';
 import { ACTION_TYPES, commandCenter, defaultEmailDraft, productivityMetrics, recommendationEscalations } from './revenue-execution.js';
+import { matchProperties, propertyFingerprint } from './property-matching.js';
 import { z } from 'zod';
 
 const actionSchema = z.discriminatedUnion('action', [
+  z.object({ id:z.string().uuid(), action:z.literal('property_status'), status:z.enum(['reviewed','interested','not_suitable']) }),
   z.object({ id:z.string().uuid(), action:z.literal('reviewed') }),
   z.object({ id:z.string().uuid(), action:z.literal('approve'), action_type:z.enum(ACTION_TYPES), draft:z.string().max(4000).optional() }),
   z.object({ id:z.string().uuid(), action:z.literal('complete'), execution_id:z.string().uuid(), outcome:z.string().min(1).max(1000), next_follow_up:z.string().datetime().nullable().optional() }),
@@ -34,6 +36,11 @@ function originalDraft(lead, type) {
 }
 
 async function mutate(sql, input) {
+  if (input.action === 'property_status') {
+    const result=await sql`UPDATE property_recommendations SET advisor_status=${input.status},reviewed_at=COALESCE(reviewed_at,NOW()),updated_at=NOW()
+      WHERE id=(SELECT id FROM property_recommendations WHERE lead_id=${input.id} AND is_test=FALSE ORDER BY created_at DESC LIMIT 1) RETURNING id`;
+    return result[0] ? { status:200,body:{ok:true} } : { status:404,body:{error:'Property recommendation not found.'} };
+  }
   const rows = await sql`SELECT * FROM leads WHERE id=${input.id} AND is_test=FALSE AND consent=TRUE AND status NOT IN ('booked','lost') AND ai_recommendation IS NOT NULL`;
   const lead = rows[0]; if (!lead) return { status:404, body:{ error:'Active recommendation not found.' } };
   const recommendationId = lead.ai_recommendation_fingerprint || recommendationFingerprint(lead);
@@ -77,9 +84,32 @@ export default async function handler(req, res) {
     const candidates=await sql`SELECT * FROM leads WHERE is_test=FALSE AND consent=TRUE ORDER BY updated_at DESC LIMIT 250`;
     const stale=candidates.filter(needsRevenueAnalysis); if (stale.length) waitUntil(refreshRecommendations(sql,stale));
     const executions=await sql`SELECT * FROM follow_up_executions WHERE is_test=FALSE ORDER BY updated_at DESC LIMIT 500`;
+    const inventory=await sql`SELECT * FROM property_inventory WHERE is_test=FALSE AND status='active' ORDER BY updated_at DESC`;
+    const qualified=candidates.filter(lead=>lead.status==='qualified'&&!['booked','lost'].includes(lead.status));
+    const propertyOpportunities=[];
+    for (const lead of qualified) {
+      const fingerprint=propertyFingerprint(lead,inventory);
+      let stored=(await sql`SELECT * FROM property_recommendations WHERE lead_id=${lead.id} AND fingerprint=${fingerprint} AND is_test=FALSE LIMIT 1`)[0];
+      if (!stored) {
+        const result=matchProperties(lead,inventory);
+        stored=(await sql`INSERT INTO property_recommendations (lead_id,fingerprint,requirement_profile,ranked_matches,opportunity_flags,is_test)
+          VALUES (${lead.id},${fingerprint},${JSON.stringify(result.profile)},${JSON.stringify(result.matches)},${JSON.stringify(result.flags)},FALSE)
+          ON CONFLICT (lead_id,fingerprint) DO UPDATE SET updated_at=property_recommendations.updated_at RETURNING *`)[0];
+        await sql`UPDATE leads SET property_recommendation_fingerprint=${fingerprint} WHERE id=${lead.id}`;
+      }
+      const matches=stored.ranked_matches||[]; propertyOpportunities.push({ id:lead.id,name:lead.name,temperature:lead.temperature,
+        requirement_profile:stored.requirement_profile,missing_requirements:stored.requirement_profile.missing_critical||[],matches,
+        strongest_match:matches[0]||null,match_count:matches.length,flags:stored.opportunity_flags,advisor_status:stored.advisor_status,
+        meeting_ready:matches[0]?.tier==='STRONG'&&!lead.meeting_at,site_visit_ready:matches[0]?.tier==='STRONG'&&!lead.site_visit_at });
+    }
     const queue=candidates.filter(lead=>!['booked','lost'].includes(lead.status)&&lead.ai_recommendation&&!lead.ai_dismissed_at)
       .map(lead=>({ id:lead.id,name:lead.name,phone:lead.phone,email:lead.email,status:lead.status,assigned_to:lead.assigned_to,next_follow_up_at:lead.next_follow_up_at,last_contacted_at:lead.last_contacted_at,meeting_at:lead.meeting_at,site_visit_at:lead.site_visit_at,ai_recommendation:lead.ai_recommendation,ai_recommended_at:lead.ai_recommended_at,ai_reviewed_at:lead.ai_reviewed_at,recommendation_id:lead.ai_recommendation_fingerprint,escalations:recommendationEscalations(lead),executions:executions.filter(item=>item.lead_id===lead.id)}))
       .sort((a,b)=>b.ai_recommendation.score-a.ai_recommendation.score);
-    return json(res,200,{ queue,refreshing:Math.min(stale.length,5),advisory_only:true,command_center:commandCenter(candidates,executions),metrics:productivityMetrics(candidates,executions) });
+    const metrics=productivityMetrics(candidates,executions); Object.assign(metrics,{ qualified_leads_with_matches:propertyOpportunities.filter(x=>x.match_count).length,
+      leads_without_suitable_matches:propertyOpportunities.filter(x=>!x.match_count).length,strong_matches_today:propertyOpportunities.filter(x=>x.strongest_match?.tier==='STRONG').length,
+      property_recommendations_reviewed:propertyOpportunities.filter(x=>x.advisor_status!=='pending').length,meetings_from_recommendations:executions.filter(x=>x.action_type==='meeting'&&x.execution_status==='completed').length,
+      site_visits_generated:executions.filter(x=>x.action_type==='site_visit'&&x.execution_status==='completed').length,interested_leads:propertyOpportunities.filter(x=>x.advisor_status==='interested').length,
+      booked_conversion_outcomes:candidates.filter(x=>x.status==='booked').length });
+    return json(res,200,{ queue,property_opportunities:propertyOpportunities,inventory_count:inventory.length,refreshing:Math.min(stale.length,5),advisory_only:true,command_center:commandCenter(candidates,executions),metrics });
   } catch { return json(res,500,{ error:'Could not load the Revenue Command Center.' }); }
 }
