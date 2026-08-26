@@ -70,6 +70,12 @@ function metricsTable(title, rows, columns) {
   return `<h3>${escapeHtml(title)}</h3><table class="performance-table"><thead><tr>${columns.map(([,label])=>`<th>${escapeHtml(label)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${columns.map(([key])=>`<td>${escapeHtml(row[key] ?? 0)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
 }
 
+function renderRecovery(recovery) {
+  const labels={total_recoverable_leads:'Recoverable leads',immediate_recovery_leads:'Immediate recovery',overdue_hot_warm:'Overdue HOT/WARM',meeting_recovery:'Meeting recovery',site_visit_recovery:'Site-visit recovery',stale_property_matches:'Stale property matches',unassigned_opportunities:'Unassigned opportunities',estimated_recoverable_pipeline:'Recoverable pipeline',recovery_attempts_approved:'Attempts approved',recovered_contacts:'Recovered contacts',meetings_recovered:'Meetings recovered',site_visits_recovered:'Site visits recovered',conversions_after_recovery:'Conversions after recovery'};
+  document.querySelector('#recovery-metrics').innerHTML=Object.entries(labels).map(([key,label])=>`<div class="command-card"><b>${escapeHtml(recovery.metrics[key])}</b><span>${label}</span></div>`).join('');
+  document.querySelector('#recovery-queue').innerHTML=recovery.queue.map(item=>`<article class="ai-card priority-card" data-recovery-id="${item.id}"><span class="ai-badge">${escapeHtml(item.recovery_band)}</span><span class="ai-priority">${item.recovery_priority_score}/100 · ${escapeHtml(item.temperature)}</span><h3>${escapeHtml(item.name)} <small>· ${escapeHtml(item.owner)}</small></h3><p><b>Risk:</b> ${escapeHtml(item.why)} · ${escapeHtml(item.days_inactive)} days inactive</p><p><b>History:</b> ${escapeHtml(item.previous_engagement)} · <b>Property:</b> ${escapeHtml(item.property_match_status)} · <b>Pipeline:</b> ${item.pipeline_probability}%</p><p><b>Factors:</b> ${escapeHtml(item.score_factors.join(' · ')||'No positive factors')}</p><p><b>Recommendation:</b> ${escapeHtml(item.recommended_action)} ${escapeHtml(item.recommended_timing)}<br>${escapeHtml(item.suggested_angle)}</p><p><b>Objective:</b> ${escapeHtml(item.follow_up_objective)}</p><div class="row-actions"><button data-recovery-action="lead">Review Lead / History</button><button data-recovery-action="property">Review Property Match</button><button data-recovery-action="whatsapp">Copy WhatsApp Win-Back</button><button data-recovery-action="call">Copy Call Script</button><button data-recovery-action="follow_up">Schedule Follow-up</button><button data-recovery-action="meeting">Schedule Meeting</button><button data-recovery-action="site_visit">Schedule Site Visit</button><button class="secondary" data-recovery-action="snooze">Snooze</button><button class="danger" data-recovery-action="dismiss">Mark Not Recoverable</button><button class="danger" data-recovery-action="lost">Mark Lost</button></div></article>`).join('')||'<p class="empty">No recoverable leakage candidates outside the duplicate-contact cooldown.</p>';
+}
+
 function renderPipeline(pipeline) {
   const overviewLabels={total_active_leads:'Active leads',qualified_leads:'Qualified',property_matched_leads:'Property matched',meetings_scheduled:'Meetings scheduled',meetings_completed:'Meetings done',site_visits_scheduled:'Site visits scheduled',site_visits_completed:'Site visits done',active_booking_opportunities:'Booking opportunities',converted_leads:'Converted',lost_leads:'Lost',weighted_pipeline:'Weighted pipeline',conversion_rate:'Conversion rate %'};
   document.querySelector('#pipeline-overview').innerHTML=Object.entries(overviewLabels).map(([key,label])=>`<div class="command-card"><b>${escapeHtml(pipeline.overview[key])}</b><span>${label}</span></div>`).join('');
@@ -107,8 +113,20 @@ async function revenueAction(payload) {
 
 async function loadActionQueue() {
   const response = await fetch('/api/admin/leads?view=revenue'); if (!response.ok) return;
-  const data = await response.json(); actionQueue = data.queue; propertyOpportunities=data.property_opportunities||[]; renderActionQueue(data.refreshing); renderPropertyOpportunities(data.inventory_count); renderCommandCenter(data); renderPipeline(data.pipeline);
+  const data = await response.json(); window.__recovery=data.recovery?.queue||[]; actionQueue = data.queue; propertyOpportunities=data.property_opportunities||[]; renderActionQueue(data.refreshing); renderPropertyOpportunities(data.inventory_count); renderCommandCenter(data); renderPipeline(data.pipeline); renderRecovery(data.recovery);
 }
+
+document.querySelector('#recovery-queue').addEventListener('click',async event=>{
+  const button=event.target.closest('button'); if(!button)return; const card=button.closest('[data-recovery-id]'); const id=card.dataset.recoveryId; const item=window.__recovery?.find(x=>x.id===id); const action=button.dataset.recoveryAction;
+  try { if(action==='lead'){const lead=document.querySelector(`.lead[data-id="${id}"]`);lead?.scrollIntoView({behavior:'smooth'});lead?.querySelector('[data-action="expand"]')?.click();}
+    else if(action==='property')document.querySelector(`[data-property-id="${id}"]`)?.scrollIntoView({behavior:'smooth'});
+    else if(action==='whatsapp'||action==='call'){await window.navigator.clipboard.writeText(action==='whatsapp'?item.whatsapp_draft:item.call_opening);button.textContent='Copied — advisor review required';}
+    else if(['follow_up','meeting','site_visit'].includes(action)){const value=window.prompt('Schedule date/time (ISO 8601, including timezone):',new Date(Date.now()+864e5).toISOString());if(value)await revenueAction({id,action:'schedule',action_type:action,scheduled_for:new Date(value).toISOString(),recovery:true});}
+    else if(action==='snooze'){const value=window.prompt('Snooze until:',new Date(Date.now()+7*864e5).toISOString());if(value)await revenueAction({id,action:'snooze',snoozed_until:new Date(value).toISOString(),recovery:true});}
+    else if(action==='dismiss'){const reason=window.prompt('Why is this lead not recoverable?');if(reason?.trim())await revenueAction({id,action:'dismiss',reason:reason.trim(),recovery:true});}
+    else if(action==='lost'){const reason=window.prompt('Lost reason (required):');if(reason?.trim()){await update({id,action:'lost',lost_reason:reason.trim()});await load();}}
+  } catch(error){window.alert(error.message);}
+});
 
 document.querySelector('#revenue-priority').addEventListener('click',async event=>{
   const button=event.target.closest('button'); if(!button)return; const id=button.closest('[data-priority-id]').dataset.priorityId; const action=button.dataset.priorityAction;
