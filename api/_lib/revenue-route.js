@@ -7,7 +7,7 @@ import { ACTION_TYPES, commandCenter, defaultEmailDraft, productivityMetrics, re
 import { matchProperties, propertyFingerprint } from './property-matching.js';
 import { pipelineAnalytics } from './conversion-forecasting.js';
 import { recoveryAnalytics, recoveryEligibility, recoveryFingerprint } from './revenue-recovery.js';
-import { acquisitionMetrics } from './acquisition.js';
+import { acquisitionMetrics, coverageAudit } from './acquisition.js';
 import { z } from 'zod';
 
 const actionSchema = z.discriminatedUnion('action', [
@@ -120,6 +120,6 @@ export default async function handler(req, res) {
       booked_conversion_outcomes:candidates.filter(x=>x.status==='booked').length });
     const pipeline=pipelineAnalytics(candidates,recommendations,executions);
     const recovery=recoveryAnalytics(candidates,recommendations,executions);
-    return json(res,200,{ queue,property_opportunities:propertyOpportunities,inventory_count:inventory.length,refreshing:Math.min(stale.length,5),advisory_only:true,command_center:commandCenter(candidates,executions),metrics,pipeline,recovery,acquisition:acquisitionMetrics(candidates,acquisitionEvents) });
+    return json(res,200,{ queue,property_opportunities:propertyOpportunities,inventory_count:inventory.length,refreshing:Math.min(stale.length,5),advisory_only:true,command_center:commandCenter(candidates,executions),metrics,pipeline,recovery,acquisition:acquisitionMetrics(candidates,acquisitionEvents),acquisition_coverage:coverageAudit(inventory) });
   } catch { return json(res,500,{ error:'Could not load the Revenue Command Center.' }); }
 }
