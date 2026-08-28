@@ -58,3 +58,5 @@ CREATE INDEX IF NOT EXISTS leads_next_follow_up_at_idx ON leads (next_follow_up_
 \ir migrations/005_revenue_execution.sql
 \ir migrations/006_property_matching.sql
 \ir migrations/007_acquisition.sql
+\ir migrations/008_search_console.sql
+\ir migrations/009_binghatti_inventory_revenue.sql

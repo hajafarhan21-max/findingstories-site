@@ -23,6 +23,7 @@ function controls(lead) {
     <label>Next follow-up<input data-field="next_follow_up_at" type="datetime-local" value="${dateInput(lead.next_follow_up_at)}"></label>
     <label>Meeting<input data-field="meeting_at" type="datetime-local" value="${dateInput(lead.meeting_at)}"></label>
     <label>Site visit<input data-field="site_visit_at" type="datetime-local" value="${dateInput(lead.site_visit_at)}"></label>
+    <label>Attributed revenue (AED)<input data-field="attributed_revenue" type="number" min="0" step="0.01" value="${escapeHtml(lead.attributed_revenue ?? '')}" placeholder="Only after booking"></label>
     <label class="wide">Agent notes<textarea data-field="agent_notes" maxlength="5000">${escapeHtml(lead.agent_notes)}</textarea></label>
     <label class="wide">Lost reason<input data-field="lost_reason" maxlength="500" value="${escapeHtml(lead.lost_reason)}" placeholder="Required when marking lost"></label>
   </div><div class="actions"><button data-action="save">Save changes</button><button data-action="contacted" class="secondary">Mark contacted</button><button data-action="booked" class="secondary">Mark booked</button><button data-action="lost" class="danger">Mark lost</button><span class="save-message" role="status"></span></div>`;
@@ -68,6 +69,11 @@ function renderCommandCenter(data) {
 function metricsTable(title, rows, columns) {
   if (!rows?.length) return `<h3>${escapeHtml(title)}</h3><p class="empty">No attributable ${escapeHtml(title.toLowerCase())} data exists.</p>`;
   return `<h3>${escapeHtml(title)}</h3><table class="performance-table"><thead><tr>${columns.map(([,label])=>`<th>${escapeHtml(label)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${columns.map(([key])=>`<td>${escapeHtml(row[key] ?? 0)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+}
+
+function renderBinghattiAttribution(data) {
+  const labels={inventory_coverage:'Verified inventory',leads:'Binghatti / JVC leads',qualified:'Qualified',matched_leads:'Matched leads',meetings:'Meetings',site_visits:'Site visits',bookings:'Bookings',attributed_revenue:'Attributed revenue (AED)'};
+  document.querySelector('#binghatti-attribution').innerHTML=Object.entries(labels).map(([key,label])=>`<div class="command-card"><b>${escapeHtml(data?.[key] ?? 0)}</b><span>${label}</span></div>`).join('');
 }
 
 function renderAcquisition(acquisition, coverage) {
@@ -129,7 +135,7 @@ function renderSearchConsole(data){
 async function loadSearchConsole(){const response=await fetch('/api/acquisition?route=search-console');if(response.ok)renderSearchConsole(await response.json());}
 async function loadActionQueue() {
   const response = await fetch('/api/admin/leads?view=revenue'); if (!response.ok) return;
-  const data = await response.json(); window.__recovery=data.recovery?.queue||[]; actionQueue = data.queue; propertyOpportunities=data.property_opportunities||[]; renderActionQueue(data.refreshing); renderPropertyOpportunities(data.inventory_count); renderCommandCenter(data); renderAcquisition(data.acquisition,data.acquisition_coverage); renderPipeline(data.pipeline); renderRecovery(data.recovery); loadSearchConsole();
+  const data = await response.json(); window.__recovery=data.recovery?.queue||[]; actionQueue = data.queue; propertyOpportunities=data.property_opportunities||[]; renderActionQueue(data.refreshing); renderPropertyOpportunities(data.inventory_count); renderCommandCenter(data); renderAcquisition(data.acquisition,data.acquisition_coverage); renderBinghattiAttribution(data.binghatti_attribution); renderPipeline(data.pipeline); renderRecovery(data.recovery); loadSearchConsole();
 }
 
 document.querySelector('#seo-growth-queue').addEventListener('click',async event=>{const button=event.target.closest('button');if(!button)return;const item=seoOpportunities.find(x=>x.id===button.closest('[data-seo-id]').dataset.seoId);let snoozed_until=null;if(button.dataset.seoStatus==='snoozed'){snoozed_until=window.prompt('Snooze until (ISO 8601):',new Date(Date.now()+7*864e5).toISOString());if(!snoozed_until)return;}const response=await fetch('/api/acquisition?route=search-console',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({recommendation_id:item.id,status:button.dataset.seoStatus,action_type:item.recommendation,snoozed_until})});const data=await response.json();if(!response.ok)return window.alert(data.error);await loadSearchConsole();});
@@ -202,6 +208,8 @@ async function saveCard(card, shortcut) {
         const raw = card.querySelector(`[data-field="${field}"]`).value;
         await update({ action, id, [field]: field.endsWith('_at') ? isoOrNull(raw) : raw });
       }
+      const revenue=card.querySelector('[data-field="attributed_revenue"]').value;
+      if (card.querySelector('[data-field="status"]').value==='booked') await update({action:'revenue',id,attributed_revenue:revenue===''?null:Number(revenue),revenue_currency:'AED'});
       if (card.querySelector('[data-field="status"]').value === 'lost') await update({ action: 'lost', id, lost_reason: card.querySelector('[data-field="lost_reason"]').value.trim() });
     }
     render();

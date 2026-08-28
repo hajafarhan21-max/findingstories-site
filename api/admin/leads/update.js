@@ -24,6 +24,7 @@ export default async function handler(req, res) {
     if (value.action === 'site_visit') rows = await sql`UPDATE leads SET site_visit_at=${value.site_visit_at}, status=CASE WHEN ${value.site_visit_at} IS NULL THEN status ELSE 'site_visit_scheduled' END, updated_at=NOW() WHERE id=${value.id} RETURNING *`;
     if (value.action === 'contacted') rows = await sql`UPDATE leads SET last_contacted_at=NOW(), status='contacted', updated_at=NOW() WHERE id=${value.id} RETURNING *`;
     if (value.action === 'booked') rows = await sql`UPDATE leads SET status='booked', lost_reason='', updated_at=NOW() WHERE id=${value.id} RETURNING *`;
+    if (value.action === 'revenue') rows = await sql`UPDATE leads SET attributed_revenue=${value.attributed_revenue},revenue_currency=${value.revenue_currency},updated_at=NOW() WHERE id=${value.id} AND status IN ('booked','converted') RETURNING *`;
     if (value.action === 'lost') rows = await sql`UPDATE leads SET status='lost', lost_reason=${value.lost_reason}, updated_at=NOW() WHERE id=${value.id} RETURNING *`;
     if (!rows?.length) return json(res, 404, { error: 'Lead not found.' });
     return json(res, 200, { lead: rows[0] });

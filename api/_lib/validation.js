@@ -34,5 +34,6 @@ export const leadUpdateSchema = z.discriminatedUnion('action', [
   z.object({ action: z.literal('site_visit'), id: leadId, site_visit_at: nullableDateTime }).strict(),
   z.object({ action: z.literal('contacted'), id: leadId }).strict(),
   z.object({ action: z.literal('booked'), id: leadId }).strict(),
+  z.object({ action:z.literal('revenue'), id:leadId, attributed_revenue:z.number().nonnegative().nullable(), revenue_currency:z.literal('AED') }).strict(),
   z.object({ action: z.literal('lost'), id: leadId, lost_reason: z.string().trim().min(2).max(500) }).strict()
 ]);

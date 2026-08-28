@@ -11,6 +11,8 @@ test('workflow update validation accepts supported actions and rejects unknown f
   assert.equal(leadUpdateSchema.safeParse({ action: 'contacted', id: uuid }).success, true);
   assert.equal(leadUpdateSchema.safeParse({ action: 'lost', id: uuid, lost_reason: 'Budget changed' }).success, true);
   assert.equal(leadUpdateSchema.safeParse({ action: 'lost', id: uuid, lost_reason: '' }).success, false);
+  assert.equal(leadUpdateSchema.safeParse({ action:'revenue',id:uuid,attributed_revenue:50000,revenue_currency:'AED' }).success,true);
+  assert.equal(leadUpdateSchema.safeParse({ action:'revenue',id:uuid,attributed_revenue:-1,revenue_currency:'AED' }).success,false);
   assert.equal(leadUpdateSchema.safeParse({ action: 'status', id: uuid, status: 'deleted' }).success, false);
   assert.equal(leadUpdateSchema.safeParse({ action: 'notes', id: uuid, agent_notes: 'ok', admin_password: 'no' }).success, false);
 });
