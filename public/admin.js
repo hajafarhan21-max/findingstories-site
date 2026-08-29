@@ -76,6 +76,23 @@ function renderBinghattiAttribution(data) {
   document.querySelector('#binghatti-attribution').innerHTML=Object.entries(labels).map(([key,label])=>`<div class="command-card"><b>${escapeHtml(data?.[key] ?? 0)}</b><span>${label}</span></div>`).join('');
 }
 
+function renderBinghattiActivation(data) {
+  const target=document.querySelector('#binghatti-activation');
+  if(data.activated){target.innerHTML=data.verified?'<p class="ai-notice">Amberhall production inventory activated and verified. The one-time activation control is permanently disabled. Verify: <a href="/projects/binghatti-developers/binghatti-amberhall" target="_blank">Amberhall</a> · <a href="/dubai/property-for-sale/jumeirah-village-circle-jvc" target="_blank">JVC</a> · <a href="/dubai/1-bedroom-apartments/jumeirah-village-circle-jvc" target="_blank">JVC 1-bedroom</a> · <a href="/sitemap.xml" target="_blank">sitemap</a>. Property matching, Revenue Command Center, and attribution have been refreshed below.</p>':'<p class="error">Activation is permanently disabled, but inventory verification is not healthy. Do not reactivate; investigate the production records.</p>';return;}
+  const records=(data.records||[]).map(item=>`${escapeHtml(item.unit)}: ${escapeHtml(item.status)} / ${escapeHtml(item.data_quality)} / is_test=${escapeHtml(item.is_test)}`).join('<br>');
+  target.innerHTML=`<article class="ai-card"><span class="ai-badge">ONE-TIME PRODUCTION ACTIVATION</span><p>Imports only the two repository-verified Amberhall records inside the authenticated production runtime. It creates no leads, revenue, customers, conversions, or analytics.</p>${records?`<p>${records}</p>`:''}<button id="activate-binghatti">Activate and verify inventory</button><span id="activation-message" role="status"></span></article>`;
+  document.querySelector('#activate-binghatti').onclick=activateBinghatti;
+}
+
+async function loadBinghattiActivation(){const response=await fetch('/api/admin/leads/update?view=inventory-activation');if(response.ok)renderBinghattiActivation(await response.json());}
+async function activateBinghatti(){
+  if(!window.confirm('Activate exactly BAMH-1545 and BAMH-634 in production? This can run successfully only once.'))return;
+  const button=document.querySelector('#activate-binghatti'),message=document.querySelector('#activation-message');button.disabled=true;message.textContent=' Activating and verifying…';
+  const response=await fetch('/api/admin/leads/update?view=inventory-activation',{method:'POST'});const data=await response.json();
+  if(!response.ok){message.textContent=` ${data.error||'Activation failed safely.'}`;button.disabled=false;return;}
+  renderBinghattiActivation(data);await loadActionQueue();
+}
+
 function renderAcquisition(acquisition, coverage) {
   document.querySelector('#acquisition-totals').innerHTML=`<div class="command-card"><b>${Number(acquisition.totals.enquiries)}</b><span>Organic enquiries</span></div><div class="command-card"><b>${Number(acquisition.totals.qualified)}</b><span>Qualified leads</span></div><div class="command-card"><b>${Number(acquisition.totals.meetings)}</b><span>Meetings</span></div><div class="command-card"><b>${Number(acquisition.totals.site_visits)}</b><span>Site visits</span></div><div class="command-card"><b>${Number(acquisition.traffic_without_enquiries.reduce((sum,x)=>sum+x.traffic,0))}</b><span>Visits without enquiries</span></div>`;
   const summary={verified_inventory_coverage_percentage:coverage.verified_inventory_coverage_percentage,...coverage.pages,area_coverage:coverage.coverage.area.percentage,developer_coverage:coverage.coverage.developer.percentage,project_coverage:coverage.coverage.project.percentage,bedroom_coverage:coverage.coverage.bedroom.percentage,budget_bands:`${coverage.coverage.budget_band.covered}/${coverage.coverage.budget_band.total}`};
@@ -135,7 +152,7 @@ function renderSearchConsole(data){
 async function loadSearchConsole(){const response=await fetch('/api/acquisition?route=search-console');if(response.ok)renderSearchConsole(await response.json());}
 async function loadActionQueue() {
   const response = await fetch('/api/admin/leads?view=revenue'); if (!response.ok) return;
-  const data = await response.json(); window.__recovery=data.recovery?.queue||[]; actionQueue = data.queue; propertyOpportunities=data.property_opportunities||[]; renderActionQueue(data.refreshing); renderPropertyOpportunities(data.inventory_count); renderCommandCenter(data); renderAcquisition(data.acquisition,data.acquisition_coverage); renderBinghattiAttribution(data.binghatti_attribution); renderPipeline(data.pipeline); renderRecovery(data.recovery); loadSearchConsole();
+  const data = await response.json(); window.__recovery=data.recovery?.queue||[]; actionQueue = data.queue; propertyOpportunities=data.property_opportunities||[]; renderActionQueue(data.refreshing); renderPropertyOpportunities(data.inventory_count); renderCommandCenter(data); renderAcquisition(data.acquisition,data.acquisition_coverage); renderBinghattiAttribution(data.binghatti_attribution); renderPipeline(data.pipeline); renderRecovery(data.recovery); loadSearchConsole(); loadBinghattiActivation();
 }
 
 document.querySelector('#seo-growth-queue').addEventListener('click',async event=>{const button=event.target.closest('button');if(!button)return;const item=seoOpportunities.find(x=>x.id===button.closest('[data-seo-id]').dataset.seoId);let snoozed_until=null;if(button.dataset.seoStatus==='snoozed'){snoozed_until=window.prompt('Snooze until (ISO 8601):',new Date(Date.now()+7*864e5).toISOString());if(!snoozed_until)return;}const response=await fetch('/api/acquisition?route=search-console',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({recommendation_id:item.id,status:button.dataset.seoStatus,action_type:item.recommendation,snoozed_until})});const data=await response.json();if(!response.ok)return window.alert(data.error);await loadSearchConsole();});

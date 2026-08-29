@@ -62,3 +62,19 @@ test('update API requires auth and same-origin checks before parameterized updat
   assert.match(source, /leadUpdateSchema\.safeParse/);
   assert.doesNotMatch(source, /\$\{[^}]+\}.*(?:SELECT|UPDATE)|(?:SELECT|UPDATE).*\+\s*value/);
 });
+
+test('one-time inventory activation is admin-only, same-origin, and permanently disabled', async () => {
+  const [route, importer, update, client] = await Promise.all([
+    readFile('api/_lib/inventory-activation-route.js', 'utf8'), readFile('api/_lib/binghatti-import.js', 'utf8'),
+    readFile('api/admin/leads/update.js', 'utf8'), readFile('public/admin.js', 'utf8')
+  ]);
+  assert.ok(route.indexOf('isAdmin(req)') < route.indexOf('ensureSchema()'));
+  assert.ok(route.indexOf('isSameOrigin(req)') < route.indexOf('activateBinghattiInventory(sql)'));
+  assert.match(route, /return json\(res, 410/);
+  assert.doesNotMatch(route, /process\.env|connection|string/i);
+  assert.match(importer, /ON CONFLICT \(unit\) DO UPDATE/);
+  assert.match(importer, /production_activations/);
+  assert.match(importer, /is_test=FALSE/);
+  assert.match(update, /view === 'inventory-activation'/);
+  assert.match(client, /window\.confirm/);
+});

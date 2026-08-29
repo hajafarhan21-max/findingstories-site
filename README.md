@@ -38,6 +38,10 @@ Copy `.env.example` to `.env.local` for local development:
 
 The migration is safe to repeat and preserves existing records. It adds stable submission IDs, capture and qualification timestamps, qualification status/source, and supporting indexes. Existing qualified rows are marked as `completed` with source `legacy`; their original `created_at` is retained as `captured_at`. New rows progress from `pending` to `processing` and then `completed`, with source `openai` or `deterministic_fallback`.
 
+### One-time Binghatti production activation
+
+After the activation change reaches the Git-triggered Vercel Production deployment, an administrator signs in at `/admin.html`. The Binghatti/JVC panel exposes one confirmation button only while activation is incomplete. Its same-origin, session-authenticated server request runs the shared idempotent importer inside the Vercel function runtime, verifies exactly `BAMH-1545` and `BAMH-634`, and writes a completion marker. Once successful, later activation requests return `410 Gone` and the CRM permanently replaces the button with verified status. The response contains only unit identifiers and non-sensitive verification states; it never returns configuration or connection details.
+
 ## Local development and checks
 
 ```bash
