@@ -21,7 +21,8 @@ Copy `.env.example` to `.env.local` for local development:
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `DATABASE_URL` | Yes | Neon pooled Postgres connection string with SSL. |
+| `DATABASE_URL` | Preferred | Neon pooled Postgres connection string with SSL. |
+| `PRODUCTION_DATABASE_URL` | Production fallback | Server-only Neon connection string used only when `DATABASE_URL` is unavailable. |
 | `OPENAI_API_KEY` | Yes for AI scoring | Server-only OpenAI credential. Never prefix it with `VITE_`, `NEXT_PUBLIC_`, or expose it to client code. |
 | `OPENAI_MODEL` | No | Responses API model; defaults to `gpt-4.1-mini`. |
 | `ADMIN_PASSWORD` | Yes | CRM login password; must be at least 16 characters. |
@@ -31,8 +32,8 @@ Copy `.env.example` to `.env.local` for local development:
 ## Database setup
 
 1. Create a Neon project in the same region as the Vercel project where possible.
-2. Copy its **pooled** connection string into `DATABASE_URL`.
-3. Either run `psql "$DATABASE_URL" -f database/schema.sql`, or call `/api/health` once after deployment; the server performs the same idempotent setup.
+2. Configure its **pooled** connection string as `DATABASE_URL`. If the integration cannot expose that name to Production, configure `PRODUCTION_DATABASE_URL` instead; `DATABASE_URL` always takes priority when both exist.
+3. Run `npm run db:init`, or call `/api/health` once after deployment; both use the same resolver and perform idempotent setup.
 4. Use a dedicated database role and rotate credentials if exposed. Neon backups/retention should match the business privacy policy.
 
 The migration is safe to repeat and preserves existing records. It adds stable submission IDs, capture and qualification timestamps, qualification status/source, and supporting indexes. Existing qualified rows are marked as `completed` with source `legacy`; their original `created_at` is retained as `captured_at`. New rows progress from `pending` to `processing` and then `completed`, with source `openai` or `deterministic_fallback`.
