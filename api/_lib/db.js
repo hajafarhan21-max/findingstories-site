@@ -25,15 +25,15 @@ async function runPhase(phase, statementId, operation, { tolerateConcurrentDdl =
 }
 
 export function databaseUrl(env = process.env) {
-  const configured = env.VERCEL_ENV === 'production'
-    ? env.PRODUCTION_DATABASE_URL || env.DATABASE_URL
-    : env.DATABASE_URL || env.PRODUCTION_DATABASE_URL;
+  const configured = env.DATABASE_URL || env.PRODUCTION_DATABASE_URL;
   return configured?.trim();
 }
 
 export function neonConnectionUrl(env = process.env) {
   const configured = databaseUrl(env);
-  if (!configured) return undefined;
+  if (!configured) {
+    throw new Error('Database is not configured: set DATABASE_URL or PRODUCTION_DATABASE_URL');
+  }
 
   let parsed;
   try { parsed = new URL(configured); }
@@ -50,7 +50,6 @@ export function neonConnectionUrl(env = process.env) {
 
 export function database() {
   const connectionString = neonConnectionUrl();
-  if (!connectionString) throw new Error('Database is not configured');
   if (sqlClientUrl !== connectionString) {
     sqlClient = neon(connectionString);
     sqlClientUrl = connectionString;

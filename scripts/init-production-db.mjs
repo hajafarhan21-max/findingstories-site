@@ -9,7 +9,6 @@ const report = async message => {
 };
 
 try {
-  if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL is not configured');
   const sql = database();
   await sql`SELECT 1 AS connected`;
   await ensureSchema();

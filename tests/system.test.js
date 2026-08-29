@@ -48,8 +48,12 @@ test('database URL resolution falls back to PRODUCTION_DATABASE_URL', () => {
   assert.equal(databaseUrl({ PRODUCTION_DATABASE_URL: 'production' }), 'production');
 });
 
-test('production runtime prefers its explicitly scoped database URL and trims copy whitespace', () => {
-  assert.equal(databaseUrl({ VERCEL_ENV: 'production', DATABASE_URL: 'stale', PRODUCTION_DATABASE_URL: '  production\n' }), 'production');
+test('database URL priority remains stable in production and trims copy whitespace', () => {
+  assert.equal(databaseUrl({ VERCEL_ENV: 'production', DATABASE_URL: '  primary\n', PRODUCTION_DATABASE_URL: 'fallback' }), 'primary');
+});
+
+test('database consumers fail closed with actionable configuration guidance', () => {
+  assert.throws(() => neonConnectionUrl({}), /DATABASE_URL or PRODUCTION_DATABASE_URL/);
 });
 
 test('Neon connection setup requires TLS without changing endpoint type', () => {
