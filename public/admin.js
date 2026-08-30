@@ -88,9 +88,13 @@ async function loadBinghattiActivation(){const response=await fetch('/api/admin/
 async function activateBinghatti(){
   if(!window.confirm('Activate exactly BAMH-1545 and BAMH-634 in production? This can run successfully only once.'))return;
   const button=document.querySelector('#activate-binghatti'),message=document.querySelector('#activation-message');button.disabled=true;message.textContent=' Activating and verifying…';
-  const response=await fetch('/api/admin/leads/update?view=inventory-activation',{method:'POST'});const data=await response.json();
-  if(!response.ok){message.textContent=` ${data.error||'Activation failed safely.'}`;button.disabled=false;return;}
-  renderBinghattiActivation(data);await loadActionQueue();
+  try {
+    const response=await fetch('/api/admin/leads/update?view=inventory-activation',{method:'POST',signal:window.AbortSignal.timeout(30000)});const data=await response.json();
+    if(!response.ok){message.textContent=` ${data.error||'Activation failed safely.'}`;button.disabled=false;return;}
+    renderBinghattiActivation(data);await loadActionQueue();
+  } catch {
+    message.textContent=' Activation did not complete within 30 seconds. Refresh to verify status before trying again.';button.disabled=false;
+  }
 }
 
 function renderAcquisition(acquisition, coverage) {

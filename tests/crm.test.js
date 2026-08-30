@@ -68,8 +68,10 @@ test('one-time inventory activation is admin-only, same-origin, and permanently 
     readFile('api/_lib/inventory-activation-route.js', 'utf8'), readFile('api/_lib/binghatti-import.js', 'utf8'),
     readFile('api/admin/leads/update.js', 'utf8'), readFile('public/admin.js', 'utf8')
   ]);
-  assert.ok(route.indexOf('isAdmin(req)') < route.indexOf('ensureSchema()'));
+  assert.ok(route.indexOf('isAdmin(req)') < route.indexOf('database()'));
   assert.ok(route.indexOf('isSameOrigin(req)') < route.indexOf('activateBinghattiInventory(sql)'));
+  assert.doesNotMatch(route, /ensureSchema/);
+  assert.match(client, /window\.AbortSignal\.timeout\(30000\)/);
   assert.match(route, /return json\(res, 410/);
   assert.doesNotMatch(route, /process\.env|connection|string/i);
   assert.match(importer, /ON CONFLICT \(unit\) DO UPDATE/);

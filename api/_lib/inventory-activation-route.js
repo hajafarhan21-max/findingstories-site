@@ -1,6 +1,6 @@
 import { isAdmin, isSameOrigin } from './auth.js';
 import { activateBinghattiInventory, binghattiActivationStatus } from './binghatti-import.js';
-import { database, ensureSchema } from './db.js';
+import { database } from './db.js';
 import { json, method } from './http.js';
 
 const safeResult = result => ({ activated: result.activated, verified: result.verified, permanently_disabled: result.activated,
@@ -11,7 +11,9 @@ export default async function inventoryActivationHandler(req, res) {
   if (!isAdmin(req)) return json(res, 401, { error: 'Authentication required.' });
   if (req.method === 'POST' && !isSameOrigin(req)) return json(res, 403, { error: 'Same-origin request required.' });
   try {
-    await ensureSchema();
+    // The authenticated CRM has already initialized the schema while loading its
+    // lead/revenue data. Re-running the complete migration sequence here can
+    // exhaust a serverless request before the two idempotent upserts begin.
     const sql = database();
     const current = await binghattiActivationStatus(sql);
     if (req.method === 'GET') return json(res, 200, safeResult(current));
