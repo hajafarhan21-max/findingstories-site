@@ -1,4 +1,5 @@
 import { filterAndSortLeads, formatDubaiDate, formatDubaiDateTime, isOverdue } from './crm-utils.js';
+import { createAdminLogin } from './admin-login.js';
 
 const login = document.querySelector('#login');
 const crm = document.querySelector('#crm');
@@ -260,17 +261,16 @@ async function load() {
   const agent = document.querySelector('#agent'); const selected = agent.value;
   agent.innerHTML = '<option value="">All agents</option>' + [...new Set(leads.map(lead => lead.assigned_to).filter(Boolean))].sort().map(value => `<option>${escapeHtml(value)}</option>`).join(''); agent.value = selected;
   render();
-  loadActionQueue();
+  void loadActionQueue().catch(() => {});
   if (data.counts.processing > 0) refreshTimer = setTimeout(load, 3000);
 }
 
-document.querySelector('#login-form').addEventListener('submit', async event => {
-  event.preventDefault(); errorBox.textContent = '';
-  const password = new FormData(event.currentTarget).get('password');
-  const response = await fetch('/api/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({password}) });
-  const data = await response.json();
-  if (!response.ok) { errorBox.textContent = data.error; return; }
-  event.currentTarget.reset(); load();
-});
+function authenticatedShell() {
+  login.classList.add('hidden'); crm.classList.remove('hidden');
+  document.querySelector('#stats').innerHTML = '<p class="empty">Loading CRM data…</p>';
+  void load().catch(() => { errorBox.textContent = 'Signed in, but CRM data is still unavailable. Refresh to try loading it again.'; });
+}
+const loginForm = document.querySelector('#login-form');
+loginForm.addEventListener('submit', createAdminLogin({ form:loginForm, errorBox, onAuthenticated:authenticatedShell }));
 document.querySelector('#logout').onclick = async () => { clearTimeout(refreshTimer); await fetch('/api/admin/logout',{method:'POST'}); location.reload(); };
-load();
+fetch('/api/admin/login').then(response => { if (response.ok) authenticatedShell(); }).catch(() => {});

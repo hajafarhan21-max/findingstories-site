@@ -1,6 +1,6 @@
 import revenueHandler from '../_lib/revenue-route.js';
 import { isAdmin } from '../_lib/auth.js';
-import { database, ensureSchema } from '../_lib/db.js';
+import { database } from '../_lib/db.js';
 import { json, method } from '../_lib/http.js';
 
 export default async function handler(req, res) {
@@ -8,7 +8,6 @@ export default async function handler(req, res) {
   if (!method(req, res, ['GET'])) return;
   if (!isAdmin(req)) return json(res, 401, { error: 'Authentication required.' });
   try {
-    await ensureSchema();
     const sql = database();
     const [leads, counts] = await Promise.all([
       sql`SELECT id, name, phone, email, source, budget, requirement_summary, lead_score, temperature,
