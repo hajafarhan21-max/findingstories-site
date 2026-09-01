@@ -63,6 +63,11 @@ test('update API requires auth and same-origin checks before parameterized updat
   assert.doesNotMatch(source, /\$\{[^}]+\}.*(?:SELECT|UPDATE)|(?:SELECT|UPDATE).*\+\s*value/);
 });
 
+test('CRM list and headline counts exclude TEST leads', async () => {
+  const source = await readFile('api/admin/leads.js', 'utf8');
+  assert.equal((source.match(/FROM leads WHERE is_test=FALSE/g) || []).length, 2);
+});
+
 test('one-time inventory activation is admin-only, same-origin, and permanently disabled', async () => {
   const [route, importer, update, client] = await Promise.all([
     readFile('api/_lib/inventory-activation-route.js', 'utf8'), readFile('api/_lib/binghatti-import.js', 'utf8'),
