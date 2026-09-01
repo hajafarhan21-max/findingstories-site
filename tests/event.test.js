@@ -128,7 +128,7 @@ test('reusable event migration is additive and seeds an isolated idempotent test
 test('public event endpoints select active database events and reject past slots',async()=>{
  const slots=await readFile('api/events/slots.js','utf8'),rsvp=await readFile('api/events/rsvp.js','utf8');
  assert.match(slots,/status IN \('OPEN','TEST'\)/);assert.match(slots,/No upcoming event is currently open for RSVP/);
- assert.match(slots,/if\(testMode\)await ensureTestEvent\(sql\)/);
+ assert.doesNotMatch(slots,/ensureEventSchema|ensureTestEvent/);
  assert.match(rsvp,/e\.id=\$\{r\.event_id\}/);assert.match(rsvp,/s\.starts_at>NOW\(\)/);assert.match(rsvp,/is_test/);
  for(const source of [slots,rsvp])assert.doesNotMatch(source,/dubai-open-house-august-2026/);
 });

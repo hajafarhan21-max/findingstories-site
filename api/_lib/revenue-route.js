@@ -1,8 +1,7 @@
-import { waitUntil } from '@vercel/functions';
 import { isAdmin, isSameOrigin } from './auth.js';
 import { database, ensureSchema } from './db.js';
 import { json, method, parseJson } from './http.js';
-import { analyzeLeadWithAgent, needsRevenueAnalysis, recommendationFingerprint } from './revenue-agent.js';
+import { recommendationFingerprint } from './revenue-agent.js';
 import { ACTION_TYPES, commandCenter, defaultEmailDraft, productivityMetrics, recommendationEscalations } from './revenue-execution.js';
 import { matchProperties, propertyFingerprint } from './property-matching.js';
 import { pipelineAnalytics } from './conversion-forecasting.js';
@@ -20,17 +19,6 @@ const actionSchema = z.discriminatedUnion('action', [
   z.object({ id:z.string().uuid(), action:z.literal('snooze'), snoozed_until:z.string().datetime(), recovery:z.boolean().optional() }),
   z.object({ id:z.string().uuid(), action:z.literal('dismiss'), reason:z.string().min(2).max(500), recovery:z.boolean().optional() })
 ]);
-
-async function refreshRecommendations(sql, candidates) {
-  for (const lead of candidates.filter(needsRevenueAnalysis).slice(0, 5)) {
-    try {
-      const recommendation = await analyzeLeadWithAgent(lead); const fingerprint = recommendationFingerprint(lead);
-      await sql`UPDATE leads SET ai_recommendation=${JSON.stringify(recommendation)}, ai_recommendation_fingerprint=${fingerprint},
-        ai_recommended_at=NOW(), ai_reviewed_at=NULL, ai_dismissed_at=NULL
-        WHERE id=${lead.id} AND updated_at=${lead.updated_at} AND is_test=FALSE AND status NOT IN ('booked','lost')`;
-    } catch { /* Retry stale recommendations later without logging customer data. */ }
-  }
-}
 
 function originalDraft(lead, type) {
   if (type === 'whatsapp') return lead.ai_recommendation.whatsapp_draft;
@@ -86,10 +74,9 @@ export default async function handler(req, res) {
   if (!isAdmin(req)) return json(res,401,{ error:'Authentication required.' });
   if (req.method === 'PATCH' && !isSameOrigin(req)) return json(res,403,{ error:'Same-origin request required.' });
   try {
-    await ensureSchema(); const sql=database();
-    if (req.method === 'PATCH') { const parsed=actionSchema.safeParse(parseJson(req)); if (!parsed.success) return json(res,400,{ error:'Invalid action update.' }); const result=await mutate(sql,parsed.data); return json(res,result.status,result.body); }
+    const sql=database();
+    if (req.method === 'PATCH') { await ensureSchema(); const parsed=actionSchema.safeParse(parseJson(req)); if (!parsed.success) return json(res,400,{ error:'Invalid action update.' }); const result=await mutate(sql,parsed.data); return json(res,result.status,result.body); }
     const candidates=await sql`SELECT * FROM leads WHERE is_test=FALSE AND consent=TRUE ORDER BY updated_at DESC LIMIT 250`;
-    const stale=candidates.filter(needsRevenueAnalysis); if (stale.length) waitUntil(refreshRecommendations(sql,stale));
     const executions=await sql`SELECT * FROM follow_up_executions WHERE is_test=FALSE ORDER BY updated_at DESC LIMIT 500`;
     const recommendations=await sql`SELECT * FROM property_recommendations WHERE is_test=FALSE ORDER BY created_at DESC LIMIT 1000`;
     const inventory=await sql`SELECT * FROM property_inventory WHERE is_test=FALSE AND status='active' ORDER BY updated_at DESC`;
@@ -98,14 +85,8 @@ export default async function handler(req, res) {
     const propertyOpportunities=[];
     for (const lead of qualified) {
       const fingerprint=propertyFingerprint(lead,inventory);
-      let stored=(await sql`SELECT * FROM property_recommendations WHERE lead_id=${lead.id} AND fingerprint=${fingerprint} AND is_test=FALSE LIMIT 1`)[0];
-      if (!stored) {
-        const result=matchProperties(lead,inventory);
-        stored=(await sql`INSERT INTO property_recommendations (lead_id,fingerprint,requirement_profile,ranked_matches,opportunity_flags,is_test)
-          VALUES (${lead.id},${fingerprint},${JSON.stringify(result.profile)},${JSON.stringify(result.matches)},${JSON.stringify(result.flags)},FALSE)
-          ON CONFLICT (lead_id,fingerprint) DO UPDATE SET updated_at=property_recommendations.updated_at RETURNING *`)[0];
-        await sql`UPDATE leads SET property_recommendation_fingerprint=${fingerprint} WHERE id=${lead.id}`;
-      }
+      let stored=recommendations.find(item=>item.lead_id===lead.id&&item.fingerprint===fingerprint);
+      if (!stored) { const result=matchProperties(lead,inventory); stored={ fingerprint,requirement_profile:result.profile,ranked_matches:result.matches,opportunity_flags:result.flags,advisor_status:'pending' }; }
       const matches=stored.ranked_matches||[]; propertyOpportunities.push({ id:lead.id,name:lead.name,temperature:lead.temperature,
         requirement_profile:stored.requirement_profile,missing_requirements:stored.requirement_profile.missing_critical||[],matches,
         strongest_match:matches[0]||null,match_count:matches.length,flags:stored.opportunity_flags,advisor_status:stored.advisor_status,
@@ -121,6 +102,6 @@ export default async function handler(req, res) {
       booked_conversion_outcomes:candidates.filter(x=>x.status==='booked').length });
     const pipeline=pipelineAnalytics(candidates,recommendations,executions);
     const recovery=recoveryAnalytics(candidates,recommendations,executions);
-    return json(res,200,{ queue,property_opportunities:propertyOpportunities,inventory_count:inventory.length,refreshing:Math.min(stale.length,5),advisory_only:true,command_center:commandCenter(candidates,executions),metrics,pipeline,recovery,acquisition:acquisitionMetrics(candidates,acquisitionEvents),acquisition_coverage:coverageAudit(inventory),binghatti_attribution:binghattiRevenueAttribution(candidates,recommendations,inventory) });
+    return json(res,200,{ queue,property_opportunities:propertyOpportunities,inventory_count:inventory.length,refreshing:0,advisory_only:true,command_center:commandCenter(candidates,executions),metrics,pipeline,recovery,acquisition:acquisitionMetrics(candidates,acquisitionEvents),acquisition_coverage:coverageAudit(inventory),binghatti_attribution:binghattiRevenueAttribution(candidates,recommendations,inventory) });
   } catch { return json(res,500,{ error:'Could not load the Revenue Command Center.' }); }
 }
