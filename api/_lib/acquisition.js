@@ -60,10 +60,15 @@ export function classifyAcquisition({utmSource='',utmMedium='',referrer='',origi
   } catch { return {source:'unknown',medium:'unknown'}; }
 }
 
-export function coverageAudit(inventory,existingPages=[],now=new Date()) {
-  const opportunities=discoverOpportunities(inventory,now);const existing=new Map(existingPages.map(x=>[x.path,x]));const freshInventory=inventory.filter(x=>fresh(x,now));const verifiedInventory=inventory.filter(verified);const staleInventory=verifiedInventory.filter(x=>!fresh(x,now));
+export function coverageAudit(inventory,existingPages,now=new Date()) {
+  const opportunities=discoverOpportunities(inventory,now);
+  // Eligible opportunities are the publication source for the dynamic page
+  // renderer.  Treating an omitted, legacy "pages" table as the publication
+  // source made every live dynamic route appear to be missing in the admin.
+  const publishedPages=existingPages??opportunities.map(page=>({path:page.path,intent:page.intent,canonical_url:canonicalUrl(page.path),internal_links:internalLinks(page,opportunities)}));
+  const existing=new Map(publishedPages.map(x=>[x.path,x]));const freshInventory=inventory.filter(x=>fresh(x,now));const verifiedInventory=inventory.filter(verified);const staleInventory=verifiedInventory.filter(x=>!fresh(x,now));
   const queue=opportunities.map(page=>{const current=existing.get(page.path);const links=internalLinks(page,opportunities);const reasons=[];if(!current)reasons.push('missing_page');if(current?.updated_at&&now-new Date(current.updated_at)>90*DAY)reasons.push('stale_metadata');if(current&&Number(current.word_count||0)<250)reasons.push('low_content');if(current&&!current.canonical_url)reasons.push('invalid_canonical');if(current&&(!current.internal_links||current.internal_links.length===0))reasons.push('missing_internal_links');return {...page,state:current?'published':'eligible',indexable:true,reasons,internal_links:links};});
-  for(const page of existingPages.filter(x=>!opportunities.some(y=>y.path===x.path))){const linked=verifiedInventory.filter(x=>(!page.area||x.area===page.area)&&(!page.project||x.project===page.project));queue.push({id:id(page.path),path:page.path,intent:page.intent||page.path,state:linked.length?'stale':'awaiting_inventory',indexable:false,priority:linked.length?70:40,reasons:[linked.length?'outdated_inventory_claims':'insufficient_verified_inventory'],internal_links:[],inventory_ids:[]});}
+  for(const page of publishedPages.filter(x=>!opportunities.some(y=>y.path===x.path))){const linked=verifiedInventory.filter(x=>(!page.area||x.area===page.area)&&(!page.project||x.project===page.project));queue.push({id:id(page.path),path:page.path,intent:page.intent||page.path,state:linked.length?'stale':'awaiting_inventory',indexable:false,priority:linked.length?70:40,reasons:[linked.length?'outdated_inventory_claims':'insufficient_verified_inventory'],internal_links:[],inventory_ids:[]});}
   const duplicateGroups=Object.values(queue.reduce((out,x)=>{const key=slug(x.intent);(out[key]??=[]).push(x);return out;},{})).filter(x=>x.length>1);for(const group of duplicateGroups)for(const page of group.slice(1)){page.state='suppressed';page.indexable=false;page.reasons.push('duplicate_intent');}
   queue.sort((a,b)=>b.priority-a.priority||({stale:0,eligible:1,awaiting_inventory:2,suppressed:3}[a.state]??4)-({stale:0,eligible:1,awaiting_inventory:2,suppressed:3}[b.state]??4)||a.path.localeCompare(b.path));
   const coverage=key=>({covered:unique(freshInventory,key).length,total:unique(verifiedInventory,key).length,percentage:unique(verifiedInventory,key).length?Math.round(unique(freshInventory,key).length*100/unique(verifiedInventory,key).length):0});
