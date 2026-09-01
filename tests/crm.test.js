@@ -74,7 +74,7 @@ test('one-time inventory activation is admin-only, same-origin, and permanently 
   assert.match(client, /window\.AbortSignal\.timeout\(30000\)/);
   assert.match(route, /return json\(res, 410/);
   assert.doesNotMatch(route, /process\.env|connection|string/i);
-  assert.match(importer, /ON CONFLICT \(unit\) DO UPDATE/);
+  assert.match(importer, /ON CONFLICT \(unit\) WHERE unit IS NOT NULL DO UPDATE/);
   assert.match(importer, /production_activations/);
   assert.match(importer, /is_test=FALSE/);
   assert.match(update, /view === 'inventory-activation'/);
