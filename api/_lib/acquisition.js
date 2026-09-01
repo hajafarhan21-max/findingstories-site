@@ -48,6 +48,18 @@ export function safeProperty(item,now=new Date()) {
 
 export function internalLinks(page,pages){return pages.filter(x=>x.path!==page.path&&(x.area&&x.area===page.area||x.developer&&x.developer===page.developer||x.project&&x.project===page.project)).sort((a,b)=>b.priority-a.priority||a.path.localeCompare(b.path)).slice(0,8).map(x=>({path:x.path,label:x.intent}));}
 
+export function classifyAcquisition({utmSource='',utmMedium='',referrer='',origin='https://www.finding-stories.com'}={}) {
+  const campaignSource=clean(utmSource); const campaignMedium=clean(utmMedium);
+  if(campaignSource)return {source:'campaign',medium:campaignMedium||'unknown'};
+  if(!clean(referrer))return {source:'direct',medium:'none'};
+  try {
+    const referring=new URL(referrer); const site=new URL(origin);
+    if(referring.hostname===site.hostname||referring.hostname.endsWith(`.${site.hostname}`))return {source:'internal',medium:'referral'};
+    if(/(^|\.)(google|bing|yahoo|duckduckgo|ecosia)\./i.test(referring.hostname))return {source:'organic',medium:'organic'};
+    return {source:'referral',medium:'referral'};
+  } catch { return {source:'unknown',medium:'unknown'}; }
+}
+
 export function coverageAudit(inventory,existingPages=[],now=new Date()) {
   const opportunities=discoverOpportunities(inventory,now);const existing=new Map(existingPages.map(x=>[x.path,x]));const freshInventory=inventory.filter(x=>fresh(x,now));const verifiedInventory=inventory.filter(verified);const staleInventory=verifiedInventory.filter(x=>!fresh(x,now));
   const queue=opportunities.map(page=>{const current=existing.get(page.path);const links=internalLinks(page,opportunities);const reasons=[];if(!current)reasons.push('missing_page');if(current?.updated_at&&now-new Date(current.updated_at)>90*DAY)reasons.push('stale_metadata');if(current&&Number(current.word_count||0)<250)reasons.push('low_content');if(current&&!current.canonical_url)reasons.push('invalid_canonical');if(current&&(!current.internal_links||current.internal_links.length===0))reasons.push('missing_internal_links');return {...page,state:current?'published':'eligible',indexable:true,reasons,internal_links:links};});
@@ -58,7 +70,7 @@ export function coverageAudit(inventory,existingPages=[],now=new Date()) {
   return {generated_at:now.toISOString(),autopublish:false,verified_inventory_coverage_percentage:verifiedInventory.length?Math.round(freshInventory.length*100/verifiedInventory.length):0,inventory:{total:inventory.filter(x=>!x.is_test).length,verified:verifiedInventory.length,fresh:freshInventory.length,stale:staleInventory.length},pages:{eligible:queue.filter(x=>x.state==='eligible').length,published:queue.filter(x=>x.state==='published').length,suppressed:queue.filter(x=>x.state==='suppressed').length,stale:queue.filter(x=>x.state==='stale').length,awaiting_inventory:queue.filter(x=>x.state==='awaiting_inventory').length},coverage:{area:coverage('area'),developer:coverage('developer'),project:coverage('project'),bedroom:coverage('bedrooms'),budget_band:{covered:new Set(opportunities.filter(x=>x.budget_ceiling).map(x=>x.budget_ceiling)).size,total:budgetBands.length}},queue};
 }
 
-export function pageSchema(page,items,origin){const url=canonicalUrl(page.path,origin);const offers=items.map(x=>safeProperty(x)).filter(Boolean).map(item=>({'@type':'Offer',name:item.project,url,availability:'https://schema.org/InStock',...(item.minimum_price?{price:item.minimum_price,priceCurrency:'AED'}:{})}));return {'@context':'https://schema.org','@type':'CollectionPage',name:page.intent,url,breadcrumb:{'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Home',item:canonicalUrl('/',origin)},{'@type':'ListItem',position:2,name:page.intent,item:url}]},mainEntity:{'@type':'ItemList',numberOfItems:offers.length,itemListElement:offers}};}
+export function pageSchema(page,items,origin){const url=canonicalUrl(page.path,origin);const offers=items.map(x=>safeProperty(x)).filter(Boolean).map(item=>({'@type':'Offer',name:item.project,url,...(item.minimum_price?{price:item.minimum_price,priceCurrency:'AED'}:{})}));return {'@context':'https://schema.org','@type':'CollectionPage',name:page.intent,url,breadcrumb:{'@type':'BreadcrumbList',itemListElement:[{'@type':'ListItem',position:1,name:'Home',item:canonicalUrl('/',origin)},{'@type':'ListItem',position:2,name:page.intent,item:url}]},mainEntity:{'@type':'ItemList',numberOfItems:offers.length,itemListElement:offers}};}
 
 export const INTENT_WEIGHTS=Object.freeze({project_page_enquiry:20,price_page_enquiry:18,repeated_visit:8,property_comparison:12,payment_plan_interest:12,whatsapp_click:15,meeting_request:22,site_visit_request:25});
 export function acquisitionIntent(signals=[]){const uniqueSignals=[...new Set(signals.filter(x=>INTENT_WEIGHTS[x]))];return {signals:uniqueSignals,score:Math.min(100,uniqueSignals.reduce((sum,x)=>sum+INTENT_WEIGHTS[x],0)),factors:uniqueSignals.map(x=>({signal:x,points:INTENT_WEIGHTS[x]}))};}
