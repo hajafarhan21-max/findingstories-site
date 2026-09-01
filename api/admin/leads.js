@@ -14,12 +14,14 @@ export default async function handler(req, res) {
           qualification_summary, next_action, suggested_follow_up_date, captured_at, qualification_status,
           qualification_source, status, assigned_to, agent_notes, last_contacted_at, next_follow_up_at,
           meeting_at, site_visit_at, lost_reason, updated_at, preferred_areas, property_type,
-          bedrooms, purpose, purchase_timeline, attributed_revenue, revenue_currency FROM leads ORDER BY captured_at DESC LIMIT 500`,
+          bedrooms, purpose, purchase_timeline, attributed_revenue, revenue_currency
+          FROM leads WHERE is_test=FALSE ORDER BY captured_at DESC LIMIT 500`,
       sql`SELECT COUNT(*)::int total, COUNT(*) FILTER (WHERE status='new')::int new,
           COUNT(*) FILTER (WHERE temperature='Hot' AND qualification_status='completed')::int hot,
           COUNT(*) FILTER (WHERE temperature='Warm' AND qualification_status='completed')::int warm,
           COUNT(*) FILTER (WHERE temperature='Cold' AND qualification_status='completed')::int cold,
-          COUNT(*) FILTER (WHERE qualification_status IN ('pending','processing'))::int processing FROM leads`
+          COUNT(*) FILTER (WHERE qualification_status IN ('pending','processing'))::int processing
+          FROM leads WHERE is_test=FALSE`
     ]);
     json(res, 200, { leads, counts: counts[0] });
   } catch (error) {
