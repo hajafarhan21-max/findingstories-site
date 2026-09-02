@@ -1,5 +1,4 @@
-import { createHash } from 'node:crypto';
-import { createSign } from 'node:crypto';
+import { createHash,createPrivateKey,createSign } from 'node:crypto';
 import { z } from 'zod';
 
 export const SEARCH_ACTIONS=['improve_title_meta','strengthen_internal_links','refresh_verified_inventory','create_landing_page_candidate','improve_cta','consolidate_duplicate_intent','review_stale_page','request_inventory_verification'];
@@ -10,15 +9,33 @@ export const fingerprint=(r,b)=>createHash('sha256').update([b.environment,b.is_
 export function connectionState(env=process.env){const missing=['GOOGLE_SEARCH_CONSOLE_SITE_URL','GOOGLE_SEARCH_CONSOLE_CLIENT_EMAIL','GOOGLE_SEARCH_CONSOLE_PRIVATE_KEY'].filter(k=>!String(env[k]||'').trim());return {connected:missing.length===0,status:missing.length?'NOT CONNECTED':'CONNECTED',missing,required:['GOOGLE_SEARCH_CONSOLE_SITE_URL','GOOGLE_SEARCH_CONSOLE_CLIENT_EMAIL','GOOGLE_SEARCH_CONSOLE_PRIVATE_KEY'],message:missing.length?'Configure the listed environment variables in the production deployment; never paste secrets into the browser.':'Credentials are configured. Imported persisted data is reported separately.'};}
 
 const b64=value=>Buffer.from(typeof value==='string'?value:JSON.stringify(value)).toString('base64url');
+export class SearchConsoleError extends Error{
+ constructor(code,message,status=502,stage='unknown'){super(message);this.name='SearchConsoleError';this.code=code;this.status=status;this.stage=stage;}
+}
+const failure=(code,message,status,stage)=>new SearchConsoleError(code,message,status,stage);
+async function googleFailure(response,stage){
+ let payload={};try{payload=await response.json();}catch{/* An HTML or empty Google error response is classified by status only. */}
+ const reason=String(payload?.error?.status||payload?.error?.errors?.[0]?.reason||'').toLowerCase();
+ const message=String(payload?.error?.message||'').toLowerCase();
+ if(response.status===401)return failure('google_401','Google authentication was rejected. Check the production service-account credentials.',502,stage);
+ if(response.status===404)return failure('google_404','Google could not find the configured Search Console property. Verify the exact property identifier.',502,stage);
+ if(response.status===429||reason.includes('ratelimit')||reason.includes('quota')||message.includes('quota'))return failure('google_quota','Google Search Console quota or rate limit was reached. Retry later.',503,stage);
+ if(response.status===403&&(reason.includes('accessnotconfigured')||reason.includes('servicedisabled')||message.includes('has not been used')||message.includes('is disabled')))return failure('api_disabled','The Google Search Console API is disabled for the service-account project.',502,stage);
+ if(stage==='oauth_token_exchange')return failure('oauth_token_exchange_failed','Search Console authentication failed during Google token exchange.',502,stage);
+ if(response.status===403)return failure('property_permission_denied','Google rejected Search Console property access. Verify the service account has permission on the exact property.',403,stage);
+ return failure(stage==='oauth_token_exchange'?'oauth_token_exchange_failed':'google_api_failed',stage==='oauth_token_exchange'?'Search Console authentication failed during Google token exchange.':'Google Search Console rejected the report request.',502,stage);
+}
 export async function fetchSearchConsoleReport({startDate,endDate,env=process.env,fetchImpl=fetch}){
- const state=connectionState(env);if(!state.connected)throw Object.assign(new Error('Search Console is not configured.'),{code:'not_configured'});
+ const state=connectionState(env);if(!state.connected)throw failure('credentials_missing','Search Console credential configuration is incomplete.',503,'configuration');
+ const siteUrl=String(env.GOOGLE_SEARCH_CONSOLE_SITE_URL).trim();
+ if(!/^sc-domain:[a-z0-9.-]+$/i.test(siteUrl))throw failure('invalid_property_identifier','The Search Console Domain property identifier must use the exact sc-domain:example.com format.',503,'property_validation');
  const now=Math.floor(Date.now()/1000),header=b64({alg:'RS256',typ:'JWT'}),claims=b64({iss:env.GOOGLE_SEARCH_CONSOLE_CLIENT_EMAIL,scope:'https://www.googleapis.com/auth/webmasters.readonly',aud:'https://oauth2.googleapis.com/token',iat:now,exp:now+3600});
- const signer=createSign('RSA-SHA256');signer.update(`${header}.${claims}`);signer.end();
- const assertion=`${header}.${claims}.${signer.sign(String(env.GOOGLE_SEARCH_CONSOLE_PRIVATE_KEY).replace(/\\n/g,'\n'),'base64url')}`;
- const tokenResponse=await fetchImpl('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'urn:ietf:params:oauth:grant-type:jwt-bearer',assertion})});
- if(!tokenResponse.ok)throw Object.assign(new Error('Google service-account authentication failed.'),{code:'google_auth_failed'});const {access_token:token}=await tokenResponse.json();
- const reportResponse=await fetchImpl(`https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(env.GOOGLE_SEARCH_CONSOLE_SITE_URL)}/searchAnalytics/query`,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({startDate,endDate,dimensions:['date','query','page','device','country'],rowLimit:25000,dataState:'final'})});
- if(!reportResponse.ok)throw Object.assign(new Error('Google Search Console report request failed.'),{code:'google_report_failed'});const report=await reportResponse.json();
+ let key;try{key=createPrivateKey(String(env.GOOGLE_SEARCH_CONSOLE_PRIVATE_KEY).trim().replace(/\\n/g,'\n'));}catch{throw failure('malformed_private_key','The configured Search Console private key is malformed.',503,'private_key_parsing');}
+ let assertion;try{const signer=createSign('RSA-SHA256');signer.update(`${header}.${claims}`);signer.end();assertion=`${header}.${claims}.${signer.sign(key,'base64url')}`;}catch{throw failure('jwt_signing_failed','Could not sign the Google service-account assertion.',503,'jwt_signing');}
+ let tokenResponse;try{tokenResponse=await fetchImpl('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({grant_type:'urn:ietf:params:oauth:grant-type:jwt-bearer',assertion})});}catch{throw failure('oauth_token_exchange_failed','Search Console authentication failed during Google token exchange.',502,'oauth_token_exchange');}
+ if(!tokenResponse.ok)throw await googleFailure(tokenResponse,'oauth_token_exchange');let tokenPayload;try{tokenPayload=await tokenResponse.json();}catch{throw failure('oauth_token_exchange_failed','Google token exchange returned an invalid response.',502,'oauth_token_exchange');}const token=tokenPayload?.access_token;if(typeof token!=='string'||!token)throw failure('oauth_token_exchange_failed','Google token exchange did not return an access token.',502,'oauth_token_exchange');
+ let reportResponse;try{reportResponse=await fetchImpl(`https://searchconsole.googleapis.com/webmasters/v3/sites/${encodeURIComponent(siteUrl)}/searchAnalytics/query`,{method:'POST',headers:{Authorization:`Bearer ${token}`,'Content-Type':'application/json'},body:JSON.stringify({startDate,endDate,dimensions:['date','query','page','device','country'],rowLimit:25000,dataState:'final'})});}catch{throw failure('google_api_failed','Could not reach the Google Search Console API.',502,'search_analytics_request');}
+ if(!reportResponse.ok)throw await googleFailure(reportResponse,'search_analytics_request');let report;try{report=await reportResponse.json();}catch{throw failure('google_api_failed','Google Search Console returned an invalid report response.',502,'search_analytics_response');}
  return (report.rows||[]).map(row=>({date:row.keys[0],query:row.keys[1],page:row.keys[2],device:row.keys[3]||null,country:row.keys[4]||null,clicks:Math.round(row.clicks),impressions:Math.round(row.impressions),ctr:row.ctr,position:row.position}));
 }
 
