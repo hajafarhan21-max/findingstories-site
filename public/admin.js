@@ -14,6 +14,15 @@ let currentRole = null;
 let selectedLeadIds = new Set();
 let listedLeadIds = [];
 
+const sourceTypes={pdf:'application/pdf',csv:'text/csv',xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'};
+const fileBase64=file=>new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(new Error(`Could not read ${file.name}`));reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.readAsDataURL(file);});
+async function loadProjectIngestions(){
+  if(currentRole!=='SUPER_ADMIN')return; const response=await fetch('/api/admin/leads/update?view=project-ingestion'); if(!response.ok)return;
+  const {ingestions}=await response.json(),target=document.querySelector('#project-ingestion-list');
+  target.innerHTML=ingestions.map(x=>`<article class="ai-card" data-ingestion-id="${escapeHtml(x.id)}"><span class="ai-badge">${escapeHtml(statusLabel(x.status))}</span><span class="ai-priority">${escapeHtml(statusLabel(x.import_kind))}${x.is_test?' · TEST':''}</span><h3>${escapeHtml(x.developer)} · ${escapeHtml(x.project)}</h3><p>${Number(x.inventory_count)} inventory rows · ${Number(x.source_count)} sources</p>${x.issues?.length?`<p class="error">${escapeHtml(x.issues.map(i=>`${i.path?.join('.')}: ${i.message}`).join(' · '))}</p>`:''}${x.status==='needs_review'?'<div class="row-actions"><button data-ingestion-decision="approve">Approve &amp; publish</button><button class="danger" data-ingestion-decision="reject">Reject</button></div>':''}</article>`).join('')||'<p class="empty">No project imports yet.</p>';
+}
+async function reviewProjectIngestion(id,decision){const response=await fetch('/api/admin/leads/update?view=project-ingestion',{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,decision})});const data=await response.json();if(!response.ok)throw new Error(data.error||'Review failed.');await loadProjectIngestions();}
+
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
 const dateInput = value => value ? new Date(value).toISOString().slice(0, 16) : '';
 const isoOrNull = value => value ? new Date(value).toISOString() : null;
@@ -316,6 +325,7 @@ async function load() {
   if (!response.ok) { errorBox.textContent = data.error; return; }
   const identityResponse=await fetch('/api/admin/leads?crm=me');
   currentRole=identityResponse.ok?(await identityResponse.json()).user.role:null;
+  document.querySelector('#project-ingestion').classList.toggle('hidden',currentRole!=='SUPER_ADMIN');
   leads = data.leads; login.classList.add('hidden'); crm.classList.remove('hidden');
   const labels = [['total','Total leads'],['new','New leads'],['hot','Hot leads'],['warm','Warm leads'],['cold','Cold leads'],['processing','Processing']];
   document.querySelector('#stats').innerHTML = labels.map(([key,label]) => `<div class="stat"><b>${Number(data.counts[key])}</b><span>${label}</span></div>`).join('');
@@ -323,6 +333,7 @@ async function load() {
   agent.innerHTML = '<option value="">All agents</option>' + [...new Set(leads.map(lead => lead.assigned_to).filter(Boolean))].sort().map(value => `<option>${escapeHtml(value)}</option>`).join(''); agent.value = selected;
   render();
   void loadActionQueue().catch(() => {});
+  void loadProjectIngestions().catch(() => {});
   if (data.counts.processing > 0) refreshTimer = setTimeout(load, 3000);
 }
 
@@ -334,4 +345,6 @@ function authenticatedShell() {
 const loginForm = document.querySelector('#login-form');
 loginForm.addEventListener('submit', createAdminLogin({ form:loginForm, errorBox, onAuthenticated:authenticatedShell }));
 document.querySelector('#logout').onclick = async () => { clearTimeout(refreshTimer); await fetch('/api/admin/logout',{method:'POST'}); location.reload(); };
+document.querySelector('#project-ingestion-form').addEventListener('submit',async event=>{event.preventDefault();const form=event.currentTarget,message=document.querySelector('#project-ingestion-message');message.textContent='Reading and validating sources…';try{const data=new FormData(form),files=[...data.getAll('sources')].filter(x=>x.size);const sources=[];for(const file of files){if(file.size>10*1024*1024)throw new Error(`${file.name} exceeds 10 MB.`);const extension=file.name.split('.').pop().toLowerCase(),media_type=sourceTypes[extension];if(!media_type)throw new Error(`${file.name} is not PDF, CSV, or XLSX.`);sources.push({filename:file.name,media_type,base64:await fileBase64(file)});}const value=name=>String(data.get(name)||'').trim()||undefined;const response=await fetch('/api/admin/leads/update?view=project-ingestion',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({project:{developer:value('developer'),name:value('name'),emirate:value('emirate'),area:value('area'),construction_status:value('construction_status'),handover:value('handover'),payment_plan_summary:value('payment_plan_summary'),description:value('description'),attributes:{}},inventory:[],sources,is_test:data.get('is_test')==='on'})});const result=await response.json();if(!response.ok)throw new Error(result.issues?.map(x=>x.message).join(' · ')||result.error);message.textContent=`Imported ${result.ingestion.inventory_count} row(s). Review is required before publication.`;form.reset();await loadProjectIngestions();}catch(error){message.textContent=error.message;}});
+document.querySelector('#project-ingestion-list').addEventListener('click',event=>{const button=event.target.closest('[data-ingestion-decision]');if(!button)return;button.disabled=true;reviewProjectIngestion(button.closest('[data-ingestion-id]').dataset.ingestionId,button.dataset.ingestionDecision).catch(error=>{document.querySelector('#project-ingestion-message').textContent=error.message;button.disabled=false;});});
 fetch('/api/admin/login').then(response => { if (response.ok) authenticatedShell(); }).catch(() => {});
