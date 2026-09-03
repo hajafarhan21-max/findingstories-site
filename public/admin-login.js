@@ -10,8 +10,8 @@ export function createAdminLogin({ form, errorBox, fetchFn = fetch, onAuthentica
     pending = true; button.disabled = true; button.setAttribute('aria-busy', 'true'); button.textContent = 'Signing in…'; errorBox.textContent = '';
     const controller = new window.AbortController(); const timer = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const password = new FormData(form).get('password');
-      const response = await fetchFn('/api/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ password }), signal:controller.signal });
+      const values = new FormData(form); const email=values.get('email'); const password=values.get('password');
+      const response = await fetchFn('/api/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ email,password }), signal:controller.signal });
       const data = await response.json();
       if (!response.ok) { errorBox.textContent = data.error || 'Sign in failed.'; return false; }
       form.reset(); onAuthenticated(); return true;

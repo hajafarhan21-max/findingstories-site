@@ -1,0 +1,10 @@
+import { z } from 'zod'; import { authorize,ownerVisible } from '../crm-access.js'; import { json,method,parseJson } from '../http.js';
+const create=z.object({lead_id:z.string().uuid(),project_id:z.string().uuid().nullable().optional(),developer:z.string().trim().max(200).optional(),inventory_id:z.string().uuid().nullable().optional(),owner_id:z.string().uuid(),expected_value:z.number().nonnegative().nullable().optional(),stage:z.string().trim().min(2).max(60).default('discovery'),probability:z.number().int().min(0).max(100).default(10),expected_close_date:z.string().date().nullable().optional()}).strict();
+export default async function handler(req,res){
+ if(!method(req,res,['GET','POST']))return;const a=await authorize(req,res,'opportunities',req.method==='GET'?'view':'create',{mutation:req.method!=='GET'});if(!a)return;
+ if(req.method==='GET'){const rows=await a.sql`SELECT * FROM crm_opportunities WHERE is_test=FALSE ORDER BY updated_at DESC`;return json(res,200,{opportunities:rows.filter(x=>ownerVisible(a,x.owner_id))});}
+ const p=create.safeParse(parseJson(req));if(!p.success)return json(res,400,{error:'Invalid opportunity.',details:p.error.flatten().fieldErrors});const v=p.data;if(!ownerVisible(a,v.owner_id))return json(res,403,{error:'Owner is outside your hierarchy.'});
+ const lead=await a.sql`SELECT id,owner_id,is_test FROM leads WHERE id=${v.lead_id}`;if(!lead[0]||lead[0].is_test||!ownerVisible(a,lead[0].owner_id))return json(res,404,{error:'Lead not found.'});
+ const rows=await a.sql`INSERT INTO crm_opportunities(lead_id,project_id,developer,inventory_id,owner_id,expected_value,stage,probability,expected_close_date) VALUES(${v.lead_id},${v.project_id||null},${v.developer||null},${v.inventory_id||null},${v.owner_id},${v.expected_value||null},${v.stage},${v.probability},${v.expected_close_date||null}) RETURNING *`;
+ await a.sql`INSERT INTO crm_audit_logs(actor_id,action,entity_type,entity_id,after_value) VALUES(${a.identity.id},'create','opportunity',${rows[0].id},${JSON.stringify(rows[0])}::jsonb)`;json(res,201,{opportunity:rows[0]});
+}
