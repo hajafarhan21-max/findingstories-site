@@ -32,5 +32,8 @@ test('task and opportunity APIs enforce auth, permission, hierarchy and producti
 });
 
 test('read-only CRM requests contain no schema or data mutations',async()=>{
- for(const file of ['api/_lib/crm/me.js','api/_lib/crm/leads.js']){const source=await readFile(file,'utf8');assert.doesNotMatch(source,/ensureSchema|\b(?:INSERT|UPDATE|DELETE|ALTER|CREATE TABLE)\b/i);}
+ const me=await readFile('api/_lib/crm/me.js','utf8');assert.doesNotMatch(me,/ensureSchema|\b(?:INSERT|UPDATE|DELETE|ALTER|CREATE TABLE)\b/i);
+ const leads=await readFile('api/_lib/crm/leads.js','utf8');
+ const getBranch=leads.slice(leads.indexOf(" const a=await authorize(req,res,'leads','view')"));
+ assert.doesNotMatch(getBranch,/ensureSchema|\b(?:INSERT|UPDATE|DELETE|ALTER|CREATE TABLE)\b/i);
 });

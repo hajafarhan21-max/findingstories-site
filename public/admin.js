@@ -1,5 +1,6 @@
 import { filterAndSortLeads, formatDubaiDate, formatDubaiDateTime, isOverdue } from './crm-utils.js';
 import { createAdminLogin } from './admin-login.js';
+import { canDeleteLeads, selectedListedIds, toggleAllListed } from './crm-lead-selection.js';
 
 const login = document.querySelector('#login');
 const crm = document.querySelector('#crm');
@@ -9,6 +10,9 @@ let leads = [];
 let actionQueue = [];
 let propertyOpportunities = [];
 let refreshTimer;
+let currentRole = null;
+let selectedLeadIds = new Set();
+let listedLeadIds = [];
 
 const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
 const dateInput = value => value ? new Date(value).toISOString().slice(0, 16) : '';
@@ -27,21 +31,33 @@ function controls(lead) {
     <label>Attributed revenue (AED)<input data-field="attributed_revenue" type="number" min="0" step="0.01" value="${escapeHtml(lead.attributed_revenue ?? '')}" placeholder="Only after booking"></label>
     <label class="wide">Agent notes<textarea data-field="agent_notes" maxlength="5000">${escapeHtml(lead.agent_notes)}</textarea></label>
     <label class="wide">Lost reason<input data-field="lost_reason" maxlength="500" value="${escapeHtml(lead.lost_reason)}" placeholder="Required when marking lost"></label>
-  </div><div class="actions"><button data-action="save">Save changes</button><button data-action="contacted" class="secondary">Mark contacted</button><button data-action="booked" class="secondary">Mark booked</button><button data-action="lost" class="danger">Mark lost</button><span class="save-message" role="status"></span></div>`;
+  </div><div class="actions"><button data-action="save">Save changes</button><button data-action="contacted" class="secondary">Mark contacted</button><button data-action="booked" class="secondary">Mark booked</button><button data-action="lost" class="danger">Mark lost</button>${canDeleteLeads(currentRole) ? '<button data-action="delete" class="danger">Delete lead</button>' : ''}<span class="save-message" role="status"></span></div>`;
+}
+
+function renderSelection() {
+  const allowed=canDeleteLeads(currentRole),bar=document.querySelector('#lead-bulk-actions'),all=document.querySelector('#select-all-leads');
+  selectedLeadIds=selectedListedIds(selectedLeadIds,listedLeadIds);
+  const count=selectedLeadIds.size,selectedListed=listedLeadIds.filter(id=>selectedLeadIds.has(id)).length;
+  bar.classList.toggle('hidden',!allowed||count===0);
+  document.querySelector('#selected-lead-count').textContent=`${count} lead${count===1?'':'s'} selected`;
+  all.checked=listedLeadIds.length>0&&selectedListed===listedLeadIds.length;
+  all.indeterminate=selectedListed>0&&selectedListed<listedLeadIds.length;
 }
 
 function render() {
   const options = { query: document.querySelector('#search').value, temperature: document.querySelector('#temperature').value,
     status: document.querySelector('#status-filter').value, agent: document.querySelector('#agent').value, sort: document.querySelector('#sort').value };
   const shown = filterAndSortLeads([...leads], options);
+  listedLeadIds=shown.map(lead=>lead.id); selectedLeadIds=selectedListedIds(selectedLeadIds,listedLeadIds);
   list.innerHTML = shown.map(lead => `<article class="lead ${isOverdue(lead.next_follow_up_at) ? 'overdue' : ''}" data-id="${lead.id}">
-    <div class="lead-row"><div><span class="date">${escapeHtml(formatDubaiDateTime(lead.captured_at))} Dubai</span><h2>${escapeHtml(lead.name)}</h2><span>${escapeHtml(lead.phone)} · ${escapeHtml(lead.email || 'No email')}</span></div>
+    <div class="lead-row ${canDeleteLeads(currentRole)?'super-admin-row':''}">${canDeleteLeads(currentRole)?`<input class="lead-select" data-select-lead type="checkbox" aria-label="Select ${escapeHtml(lead.name)}" ${selectedLeadIds.has(lead.id)?'checked':''}>`:''}<div><span class="date">${escapeHtml(formatDubaiDateTime(lead.captured_at))} Dubai</span><h2>${escapeHtml(lead.name)}</h2><span>${escapeHtml(lead.phone)} · ${escapeHtml(lead.email || 'No email')}</span></div>
     <div><b class="score">${Number(lead.lead_score)}</b><span class="temp ${escapeHtml(lead.temperature)}">${escapeHtml(lead.temperature)}</span></div>
     <div><span class="pill">${escapeHtml(statusLabel(lead.status))}</span><small>${escapeHtml(lead.assigned_to || 'Unassigned')}</small></div>
     <div class="follow-up ${isOverdue(lead.next_follow_up_at) ? 'due' : ''}"><b>${escapeHtml(formatDubaiDate(lead.next_follow_up_at))}</b><small>${isOverdue(lead.next_follow_up_at) ? 'Overdue follow-up' : 'Follow-up'}</small></div>
     <div class="row-actions"><a class="whatsapp" href="${whatsappUrl(lead.phone)}" target="_blank" rel="noopener noreferrer">WhatsApp</a><button data-action="expand" aria-expanded="false">Details</button></div></div>
     <div class="detail hidden"><div class="detail-copy"><p><b>Requirement</b>${escapeHtml(lead.requirement_summary || 'Qualification in progress')}</p><p><b>Qualification</b>${escapeHtml(lead.qualification_summary || 'Qualification in progress')}</p><p><b>Next action</b>${escapeHtml(lead.next_action || 'Not set')}</p><p><b>Property</b>${escapeHtml([lead.property_type, lead.bedrooms, lead.preferred_areas].filter(Boolean).join(' · ') || 'Not specified')}</p><p><b>Last contacted</b>${escapeHtml(formatDubaiDateTime(lead.last_contacted_at))}</p><p><b>Meeting / site visit</b>${escapeHtml(formatDubaiDateTime(lead.meeting_at))} / ${escapeHtml(formatDubaiDateTime(lead.site_visit_at))}</p></div>${controls(lead)}</div>
   </article>`).join('') || '<p class="empty">No leads match these filters.</p>';
+  renderSelection();
 }
 
 function renderActionQueue(refreshing = 0) {
@@ -252,14 +268,43 @@ async function saveCard(card, shortcut) {
   } catch (error) { message.textContent = error.message; }
 }
 
+function confirmDeletion(ids) {
+  if(!canDeleteLeads(currentRole)||!ids.length)return;
+  const dialog=document.querySelector('#delete-leads-dialog');
+  dialog.dataset.ids=JSON.stringify(ids); document.querySelector('#delete-leads-error').textContent='';
+  document.querySelector('#delete-leads-message').textContent=`You are about to permanently delete ${ids.length} lead(s). This action cannot be undone.`;
+  dialog.showModal();
+}
+
+async function deleteConfirmedLeads() {
+  const dialog=document.querySelector('#delete-leads-dialog'),button=document.querySelector('#confirm-delete-leads');
+  const ids=JSON.parse(dialog.dataset.ids||'[]'); button.disabled=true; button.textContent='Deleting…';
+  try {
+    const response=await fetch('/api/admin/leads?crm=leads',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({ids,confirm:true})});
+    const data=await response.json(); if(!response.ok)throw new Error(data.error||'Deletion failed safely.');
+    for(const id of data.deletedIds)selectedLeadIds.delete(id);
+    dialog.close();
+    if(data.notDeleted.length)window.alert(`${data.deletedCount} lead(s) deleted. Could not delete: ${data.notDeleted.map(item=>`${item.id} (${item.reason})`).join(', ')}`);
+    await load();
+  } catch(error){document.querySelector('#delete-leads-error').textContent=error.message;}
+  finally{button.disabled=false;button.textContent='Permanently delete';}
+}
+
 list.addEventListener('click', event => {
   const button = event.target.closest('button');
   if (!button) return;
   const card = button.closest('.lead');
   if (button.dataset.action === 'expand') {
     const detail = card.querySelector('.detail'); detail.classList.toggle('hidden'); button.setAttribute('aria-expanded', String(!detail.classList.contains('hidden')));
-  } else saveCard(card, button.dataset.action);
+  } else if(button.dataset.action==='delete')confirmDeletion([card.dataset.id]);
+  else saveCard(card, button.dataset.action);
 });
+
+list.addEventListener('change',event=>{if(!event.target.matches('[data-select-lead]'))return;const id=event.target.closest('.lead').dataset.id;event.target.checked?selectedLeadIds.add(id):selectedLeadIds.delete(id);renderSelection();});
+document.querySelector('#select-all-leads').addEventListener('change',event=>{selectedLeadIds=toggleAllListed(selectedLeadIds,listedLeadIds,event.target.checked);render();});
+document.querySelector('#bulk-delete-leads').onclick=()=>confirmDeletion([...selectedLeadIds]);
+document.querySelector('#cancel-delete-leads').onclick=()=>document.querySelector('#delete-leads-dialog').close();
+document.querySelector('#confirm-delete-leads').onclick=deleteConfirmedLeads;
 
 for (const control of document.querySelectorAll('.filters input, .filters select')) control.addEventListener('input', render);
 
@@ -269,6 +314,8 @@ async function load() {
   if (response.status === 401) { login.classList.remove('hidden'); crm.classList.add('hidden'); return; }
   const data = await response.json();
   if (!response.ok) { errorBox.textContent = data.error; return; }
+  const identityResponse=await fetch('/api/admin/leads?crm=me');
+  currentRole=identityResponse.ok?(await identityResponse.json()).user.role:null;
   leads = data.leads; login.classList.add('hidden'); crm.classList.remove('hidden');
   const labels = [['total','Total leads'],['new','New leads'],['hot','Hot leads'],['warm','Warm leads'],['cold','Cold leads'],['processing','Processing']];
   document.querySelector('#stats').innerHTML = labels.map(([key,label]) => `<div class="stat"><b>${Number(data.counts[key])}</b><span>${label}</span></div>`).join('');
