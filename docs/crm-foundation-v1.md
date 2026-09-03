@@ -50,3 +50,14 @@ Remove the legacy `ADMIN_PASSWORD` environment variable after cutover. Keep `SES
 8. Add approved WhatsApp/email/SMS/telephony providers with consent, templates, delivery receipts and immutable communication events.
 9. Add automation versioning, approvals, idempotent job execution, dead-letter handling and operational observability.
 10. Complete accessibility, mobile workflows, database-level row security evaluation, retention controls, encryption/key rotation, security review and production load/restore drills.
+
+## Generic launch command center
+
+Migration `011_launch_command_center.sql` adds empty, project-agnostic campaign,
+project, attribution, EOI, and immutable funnel-history structures. Apply it with
+the same controlled production migration job used for `010`; it is additive and
+does not seed business records. The authenticated `GET
+/api/admin/leads?crm=launch` dashboard excludes TEST rows and applies CRM
+reporting hierarchy scope. EOI payment-link and payment-confirmation states are
+tracking fields only: the application does not process payments, send messages,
+or confirm financial actions automatically.
