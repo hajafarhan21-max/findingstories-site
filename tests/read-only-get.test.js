@@ -21,6 +21,12 @@ test('Search Console GET returns before schema initialization and writes', async
   assert.match(dashboard, /is_test=FALSE/g);
 });
 
+test('Launch command center GET contains production SELECTs only', async () => {
+  const source = await readFile('api/_lib/crm/launch.js', 'utf8');
+  assert.doesNotMatch(source, mutation);
+  assert.match(source, /is_test=FALSE/g);
+});
+
 test('Event CRM dashboard and export GET paths return before schema initialization', async () => {
   const source = await readFile('api/admin/events.js', 'utf8');
   assert.ok(source.indexOf("if(req.method==='GET'&&req.query?.action==='export')") < source.indexOf('await ensureEventSchema()'));
