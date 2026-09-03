@@ -10,6 +10,7 @@
     "test": "node --test",
     "build": "node scripts/build.mjs",
     "db:init": "node scripts/init-production-db.mjs",
+    "crm:user:create": "node scripts/create-crm-user.mjs",
     "inventory:binghatti": "node scripts/import-binghatti-amberhall.mjs",
     "smoke:production": "node scripts/production-smoke.mjs",
     "acceptance:rsvp": "node scripts/acceptance-rsvp.mjs",

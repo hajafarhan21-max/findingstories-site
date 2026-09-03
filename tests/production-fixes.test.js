@@ -4,7 +4,8 @@ import { readFile } from 'node:fs/promises';
 import { createAdminLogin } from '../public/admin-login.js';
 import { activateBinghattiInventory, binghattiActivationStatus } from '../api/_lib/binghatti-import.js';
 import { inventoryFailureCategory } from '../api/_lib/activation-diagnostics.js';
-import loginHandler from '../api/admin/login.js';
+import { hashPassword, verifyPassword } from '../api/_lib/password.js';
+import { createSession, isAdmin } from '../api/_lib/auth.js';
 
 function loginFixture(fetchFn, onAuthenticated = () => {}) {
   const attrs = new Set();
@@ -30,12 +31,13 @@ test('one click creates one login request, disables duplicate clicks, and reveal
   globalThis.window = OriginalWindow;
 });
 
-test('successful authentication creates the existing secure session cookie', () => {
-  process.env.ADMIN_PASSWORD = 'valid-password-value'; process.env.SESSION_SECRET = 'session-secret-at-least-thirty-two-characters';
-  const headers = {}; const req = { method:'POST', headers:{}, body:{ password:process.env.ADMIN_PASSWORD }, socket:{} };
-  const res = { setHeader:(key,value)=>{ headers[key]=value; }, end(){} };
-  loginHandler(req,res);
-  assert.equal(res.statusCode, 200); assert.match(headers['Set-Cookie'], /HttpOnly; Secure; SameSite=Strict/); assert.match(headers['Server-Timing'], /^auth;dur=/);
+test('individual authentication uses a password hash and signed secure session identity', async () => {
+  process.env.SESSION_SECRET = 'session-secret-at-least-thirty-two-characters';
+  const passwordHash=await hashPassword('valid-password-value');
+  assert.equal(await verifyPassword('valid-password-value',passwordHash),true);
+  assert.equal(await verifyPassword('incorrect-password',passwordHash),false);
+  const cookie=`fs_admin=${createSession({id:'user-1',role:'SUPER_ADMIN',display_name:'Admin'})}`;
+  assert.equal(isAdmin({headers:{cookie}}),true);
 });
 
 function inventorySql() {
