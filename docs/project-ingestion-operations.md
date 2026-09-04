@@ -13,6 +13,10 @@ Migration `014_pre_launch_projects.sql` is required before deploying this versio
 
 Use `PRE_LAUNCH` when physical inventory has not been released. Brochures, master plans, floor plans, price lists, payment plans, images, CSV, and XLSX sources may be submitted together. Record only source-supported facts in project fields and unit types. Leave unknown values empty. Every submission remains `needs_review`; only a SUPER_ADMIN can approve or reject it.
 
+Physical inventory and supporting files are both optional for the initial PRE_LAUNCH review submission. `LIVE_INVENTORY` still requires at least one physical unit with a developer unit/reference. Dates must use `YYYY-MM-DD`, monetary and area fields must be finite non-negative numbers, and unit types must be a JSON array matching the fields shown in the form.
+
+An unexpected failure shown to a SUPER_ADMIN includes a safe category and request ID. Search the server logs for the exact request ID; do not paste database URLs, cookies, source contents, or stack traces into tickets. `SCHEMA_MISMATCH` means migrations 013 and 014 should be verified before retrying, `DATA_VALIDATION` means the submitted constraints or references should be checked, and `PERSISTENCE_FAILURE` requires review of the matching sanitized server log event. A failed single-statement ingestion is atomic and does not leave a project, ingestion, source, unit type, or inventory row behind.
+
 The deterministic developer/name key plus environment flag attaches later payment plans and released inventory to the same project. Select `LIVE_INVENTORY` on the later submission and supply real developer unit references. TEST and production identities remain separate.
 
 Verified pre-launch unit types may be used for project/unit-type recommendations and factual SEO pages. They must always be labelled as project/unit-type matches and “unit inventory not released”; they are not evidence that a physical unit is available. The optional `launch_project_id` links an approved project to the existing launch campaign → leads → EOI funnel without creating campaign or EOI records automatically.
