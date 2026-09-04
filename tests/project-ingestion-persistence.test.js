@@ -16,7 +16,7 @@ async function database() {
   await db.exec(`CREATE TABLE crm_users(id uuid primary key default gen_random_uuid()); CREATE TABLE launch_projects(id uuid primary key default gen_random_uuid()); CREATE TABLE property_inventory(id uuid primary key default gen_random_uuid(),unit text,developer text,project text,emirate text,area text,property_type text,bedrooms text,minimum_price numeric,maximum_price numeric,minimum_size numeric,maximum_size numeric,price_per_sqft numeric,handover date,payment_plan_summary text,construction_status text,suitability text,status text,source text,data_quality text,last_updated timestamptz,is_test boolean,created_at timestamptz default now(),updated_at timestamptz default now());`);
   for(const migration of ['013_project_ingestion.sql','014_pre_launch_projects.sql'])await db.exec(await readFile(`database/migrations/${migration}`,'utf8'));
   const user=(await db.query('INSERT INTO crm_users DEFAULT VALUES RETURNING id')).rows[0];
-  const sql=async(strings,...values)=>{let query=strings[0];for(let i=0;i<values.length;i++)query+=`$${i+1}${strings[i+1]}`;return (await db.query(query,values)).rows;};
+  const sql=async(strings,...values)=>{let query=strings[0];for(let i=0;i<values.length;i++){query+=`$${i+1}${strings[i+1]}`;if(/^::jsonb/.test(strings[i+1])){assert.equal(typeof values[i],'string','JSONB parameters must not reach Neon as JavaScript arrays');assert.doesNotThrow(()=>JSON.parse(values[i]),'JSONB parameters must contain valid JSON before SQL execution');}}return (await db.query(query,values)).rows;};
   return {db,sql,user};
 }
 
