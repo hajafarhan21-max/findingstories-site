@@ -36,6 +36,18 @@ export function discoverOpportunities(inventory,now=new Date()) {
   return [...new Map(candidates.map(x=>[x.path,x])).values()].sort((a,b)=>b.priority-a.priority||a.path.localeCompare(b.path));
 }
 
+export function discoverPreLaunchOpportunities(projects,unitTypes) {
+  const verifiedProjects=projects.filter(x=>x.availability_mode==='PRE_LAUNCH'&&x.review_status==='verified'&&x.active&&!x.is_test);
+  const types=unitTypes.filter(x=>x.review_status==='verified'&&!x.is_test);
+  return verifiedProjects.flatMap(project=>{
+    const projectTypes=types.filter(x=>x.project_id===project.id);
+    if(!projectTypes.length||!project.area||!project.developer||!project.name)return [];
+    const base=`/projects/${slug(project.developer)}/${slug(project.name)}`;
+    return [{id:id(base),category:'PROJECT_RESEARCH',intent:`${project.name} by ${project.developer}`,path:base,priority:100,indexable:true,availability_claim:'UNIT INVENTORY NOT RELEASED',unit_type_ids:projectTypes.map(x=>x.id)},
+      ...projectTypes.map(type=>({id:id(`${base}/${slug(type.unit_type)}`),category:'COMMERCIAL_INVESTIGATION',intent:`${type.unit_type} at ${project.name}`,path:`${base}/${slug(type.unit_type)}`,priority:70,indexable:true,availability_claim:'PROJECT UNIT TYPE — NOT AN AVAILABLE UNIT',unit_type_ids:[type.id],...(type.starting_price!=null?{starting_price:type.starting_price,price_currency:type.price_currency||'AED'}:{})}))];
+  });
+}
+
 export function eligiblePage(path,inventory,now=new Date()){return discoverOpportunities(inventory,now).find(x=>x.path===path)||null;}
 export function canonicalUrl(path,origin='https://www.finding-stories.com'){const parsed=String(path||'').split('?')[0].split('#')[0];const cleanPath=`/${parsed.replace(/^\/+|\/+$/g,'')}`;return `${origin.replace(/\/$/,'')}${cleanPath==='/'?'':cleanPath}`;}
 

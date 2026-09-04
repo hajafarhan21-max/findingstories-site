@@ -13,10 +13,12 @@ export default async function projectIngestionHandler(req,res) {
   try {
     const sql=database();
     if(req.method==='GET') {
-      const rows=await sql`SELECT i.id,i.status,i.import_kind,i.is_test,i.issues,i.created_at,i.reviewed_at,p.developer,p.name AS project,p.emirate,p.area,p.construction_status,p.handover,p.active,
+      const rows=await sql`SELECT i.id,i.status,i.import_kind,i.is_test,i.issues,i.created_at,i.reviewed_at,p.developer,p.name AS project,p.availability_mode,p.emirate,p.area,p.construction_status,p.launch_date,p.handover,p.payment_plan_summary,p.eoi_amount,p.eoi_type,p.booking_amount,p.campaign_status,p.active,
         (SELECT COUNT(*)::int FROM property_inventory x WHERE x.ingestion_id=i.id) AS inventory_count,
+        (SELECT COUNT(*)::int FROM project_unit_types u WHERE u.ingestion_id=i.id) AS unit_type_count,
         (SELECT COUNT(*)::int FROM project_sources s WHERE s.ingestion_id=i.id) AS source_count,
-        COALESCE((SELECT jsonb_agg(jsonb_build_object('filename',s.filename,'media_type',s.media_type,'byte_size',s.byte_size) ORDER BY s.filename) FROM project_sources s WHERE s.ingestion_id=i.id),'[]'::jsonb) AS sources,
+        COALESCE((SELECT jsonb_agg(jsonb_build_object('filename',s.filename,'media_type',s.media_type,'source_kind',s.source_kind,'byte_size',s.byte_size) ORDER BY s.filename) FROM project_sources s WHERE s.ingestion_id=i.id),'[]'::jsonb) AS sources,
+        COALESCE((SELECT jsonb_agg(jsonb_build_object('unit_type',u.unit_type,'bedrooms',u.bedrooms,'property_type',u.property_type,'minimum_area',u.minimum_area,'maximum_area',u.maximum_area,'starting_price',u.starting_price,'price_currency',u.price_currency,'availability_status',u.availability_status,'review_status',u.review_status,'source_reference',u.source_reference) ORDER BY u.unit_type) FROM project_unit_types u WHERE u.ingestion_id=i.id),'[]'::jsonb) AS unit_types,
         COALESCE((SELECT jsonb_agg(jsonb_build_object('unit',x.unit,'property_type',x.property_type,'bedrooms',x.bedrooms,'minimum_price',x.minimum_price,'review_status',x.review_status) ORDER BY x.source_row) FROM property_inventory x WHERE x.ingestion_id=i.id),'[]'::jsonb) AS inventory
         FROM project_ingestions i JOIN projects p ON p.id=i.project_id ORDER BY i.created_at DESC LIMIT 100`;
       return json(res,200,{ingestions:rows});
