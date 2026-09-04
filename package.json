@@ -20,6 +20,7 @@
     "@neondatabase/serverless": "^1.0.1",
     "@openai/agents": "^0.17.0",
     "@vercel/functions": "^2.2.12",
+    "adm-zip": "^0.6.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {

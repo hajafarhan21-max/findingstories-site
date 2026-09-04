@@ -1,0 +1,25 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
+import { createSession } from '../api/_lib/auth.js';
+import handler from '../api/_lib/project-ingestion-route.js';
+import { projectKey, validateImport } from '../api/_lib/project-ingestion.js';
+import { matchProperties } from '../api/_lib/property-matching.js';
+import { discoverOpportunities } from '../api/_lib/acquisition.js';
+
+const project={developer:'TEST Developer',name:'TEST Marina Residence',emirate:'Dubai',area:'Dubai Marina',construction_status:'Off-plan',payment_plan_summary:'60/40',attributes:{tenure:'Freehold'}};
+const inventory={unit:'TEST-101',property_type:'Apartment',bedrooms:'2',minimum_price:1100000,maximum_price:1200000,minimum_size:900,maximum_size:950,payment_plan_summary:'60/40'};
+const payload=(extra={})=>({project,inventory:[inventory],sources:[],is_test:true,...extra});
+
+test('structured project and inventory facts normalize without fabrication',()=>{const result=validateImport(payload());assert.equal(result.success,true);assert.deepEqual(result.issues,[]);assert.equal(result.data.inventory[0].price_per_sqft,undefined);assert.equal(result.data.project.attributes.tenure,'Freehold');});
+test('project identity is deterministic across spacing and case',()=>assert.equal(projectKey(project),projectKey({...project,developer:' test  developer ',name:'test marina residence'})));
+test('duplicate units in one import are blocked from approval',()=>{const result=validateImport(payload({inventory:[inventory,{...inventory}]}));assert.match(result.issues[0].message,/Duplicate unit/);});
+test('malformed rows and unsafe files are rejected or flagged',()=>{const rows=validateImport(payload({inventory:[{...inventory,unit:'',minimum_price:2,maximum_price:1}]}));assert.ok(rows.issues.length>=2);const pdf=validateImport(payload({sources:[{filename:'fake.pdf',media_type:'application/pdf',base64:Buffer.from('not pdf').toString('base64')}]}));assert.equal(pdf.success,false);assert.match(pdf.issues[0].message,/Malformed PDF/);});
+test('CSV inventory is mapped into the same production inventory shape',()=>{const csv='Unit,Property Type,Bedrooms,Price,Area,Payment Plan\nTEST-202,Villa,3,2500000,2100,50/50\n';const result=validateImport(payload({inventory:[],sources:[{filename:'inventory.csv',media_type:'text/csv',base64:Buffer.from(csv).toString('base64')}]}));assert.equal(result.data.inventory[0].unit,'TEST-202');assert.equal(result.data.inventory[0].minimum_price,2500000);});
+test('missing project facts remain missing and create review issues',()=>{const result=validateImport(payload({project:{developer:'TEST Developer',name:'Incomplete',attributes:{}}}));assert.equal(result.data.project.area,undefined);assert.deepEqual(result.issues.map(x=>x.path.at(-1)),['emirate','area','construction_status']);});
+
+test('migration enforces inactive review gates, TEST separation and deterministic upsert without touching Amberhall',async()=>{const sql=await readFile('database/migrations/013_project_ingestion.sql','utf8');assert.match(sql,/CHECK \(NOT active OR review_status='verified'\)/);assert.match(sql,/UNIQUE\(project_key,is_test\)/);assert.match(sql,/property_inventory_import_identity_unique/);assert.match(sql,/review_status TEXT NOT NULL DEFAULT 'verified'/);assert.doesNotMatch(sql,/\bDELETE FROM|\bTRUNCATE|BAMH-1545|BAMH-634/i);});
+
+test('only SUPER_ADMIN can access ingestion and mutating requests require same origin',async()=>{process.env.SESSION_SECRET='s'.repeat(32);const response=()=>({headers:{},setHeader(k,v){this.headers[k]=v;},end(value){this.body=JSON.parse(value);}});for(const role of ['ADMIN','AGENT']){const res=response();await handler({method:'GET',headers:{cookie:`fs_admin=${createSession({id:'test',role,display_name:'Test'})}`}},res);assert.equal(res.statusCode,403);}const res=response();await handler({method:'POST',headers:{cookie:`fs_admin=${createSession()}`},body:payload()},res);assert.equal(res.statusCode,403);});
+
+test('approved inventory shape connects to matching and SEO while unverified inventory stays excluded',()=>{const item={id:'test-inventory',...inventory,developer:project.developer,project:project.name,emirate:project.emirate,area:project.area,construction_status:project.construction_status,status:'active',data_quality:'verified',source:'project_ingestion:test',last_updated:new Date().toISOString(),is_test:true};const lead={id:'test-lead',status:'qualified',budget:'AED 1m - 1.5m',property_type:'Apartment',bedrooms:'2',preferred_areas:'Dubai Marina',emirate:'Dubai',purchase_timeline:'1-3 months',is_test:true};assert.equal(matchProperties(lead,[item]).matches[0].project,project.name);const production={...item,id:'production-view',is_test:false};assert.ok(discoverOpportunities([production,{...production,id:'production-view-2',unit:'TEST-102'}]).some(x=>x.project===project.name));assert.equal(discoverOpportunities([{...production,data_quality:'advisory',status:'inactive'}]).length,0);});

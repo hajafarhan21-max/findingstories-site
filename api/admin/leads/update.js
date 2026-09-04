@@ -1,5 +1,6 @@
 import revenueHandler from '../../_lib/revenue-route.js';
 import inventoryActivationHandler from '../../_lib/inventory-activation-route.js';
+import projectIngestionHandler from '../../_lib/project-ingestion-route.js';
 import { isAdmin, isSameOrigin } from '../../_lib/auth.js';
 import { database, ensureSchema } from '../../_lib/db.js';
 import { json, method, parseJson } from '../../_lib/http.js';
@@ -8,6 +9,7 @@ import { leadUpdateSchema } from '../../_lib/validation.js';
 export default async function handler(req, res) {
   if (req.query?.view === 'revenue') return revenueHandler(req, res);
   if (req.query?.view === 'inventory-activation') return inventoryActivationHandler(req, res);
+  if (req.query?.view === 'project-ingestion') return projectIngestionHandler(req, res);
   if (!method(req, res, ['PATCH'])) return;
   if (!isAdmin(req)) return json(res, 401, { error: 'Authentication required.' });
   if (!isSameOrigin(req)) return json(res, 403, { error: 'Same-origin request required.' });
