@@ -4,7 +4,8 @@ import { z } from 'zod';
 
 const text = max => z.string().trim().min(1).max(max);
 const optionalText = max => z.preprocess(v => v === '' ? undefined : v, text(max).optional());
-const number = z.preprocess(v => v === '' || v == null ? undefined : Number(v), z.number().nonnegative().optional());
+const number = z.preprocess(v => v === '' || v == null ? undefined : Number(v), z.number().finite().nonnegative().optional());
+const date = z.preprocess(v => v === '' ? undefined : v, z.string().date().optional());
 export const inventoryRowSchema = z.object({
   unit: optionalText(120), property_type: text(100), bedrooms: text(40),
   minimum_price: number, maximum_price: number, minimum_size: number, maximum_size: number,
@@ -23,7 +24,7 @@ export const unitTypeSchema=z.object({
 }).strict().superRefine((v,ctx)=>{if(v.minimum_area!=null&&v.maximum_area!=null&&v.minimum_area>v.maximum_area)ctx.addIssue({code:'custom',path:['maximum_area'],message:'Maximum area must not be below minimum area.'});});
 const sourceSchema=z.object({filename:text(255),media_type:z.enum(['application/pdf','image/jpeg','image/png','text/csv','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']),source_kind:z.enum(['brochure','master_plan','floor_plan','price_list','payment_plan','inventory','other']).default('other'),base64:text(14_000_000)}).strict();
 export const projectPayloadSchema = z.object({
-  project: z.object({developer:text(200),name:text(200),availability_mode:z.enum(['PRE_LAUNCH','LIVE_INVENTORY','SOLD_OUT','ARCHIVED']).default('PRE_LAUNCH'),emirate:optionalText(100),area:optionalText(200),description:optionalText(10000),construction_status:optionalText(100),launch_date:optionalText(10),handover:optionalText(10),payment_plan_summary:optionalText(3000),eoi_amount:number,eoi_type:optionalText(100),booking_amount:number,campaign_status:optionalText(100),attributes:z.record(z.string(),z.union([z.string(),z.number(),z.boolean(),z.null()])).default({})}).strict(),
+  project: z.object({developer:text(200),name:text(200),availability_mode:z.enum(['PRE_LAUNCH','LIVE_INVENTORY','SOLD_OUT','ARCHIVED']).default('PRE_LAUNCH'),emirate:optionalText(100),area:optionalText(200),description:optionalText(10000),construction_status:optionalText(100),launch_date:date,handover:date,payment_plan_summary:optionalText(3000),eoi_amount:number,eoi_type:optionalText(100),booking_amount:number,campaign_status:optionalText(100),attributes:z.record(z.string(),z.union([z.string(),z.number(),z.boolean(),z.null()])).default({})}).strict(),
   inventory:z.array(inventoryRowSchema).max(5000).default([]), is_test:z.boolean().default(false),
   unit_types:z.array(unitTypeSchema).max(250).default([]),sources:z.array(sourceSchema).max(8).default([])
 }).strict();

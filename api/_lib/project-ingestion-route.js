@@ -4,6 +4,15 @@ import { database } from './db.js';
 import { json, method, parseJson } from './http.js';
 import { ingestProject, reviewIngestion } from './project-ingestion.js';
 
+const validationCodes=new Set(['22P02','22003','22007','22008','23502','23503','23505','23514']);
+export function ingestionErrorCategory(error) {
+  if(error?.name==='ZodError')return 'INVALID_JSON';
+  if(validationCodes.has(error?.code))return 'DATA_VALIDATION';
+  if(error?.code==='42P01'||error?.code==='42703')return 'SCHEMA_MISMATCH';
+  if(String(error?.message||'').includes('Database is not configured'))return 'DATABASE_CONFIGURATION';
+  return 'PERSISTENCE_FAILURE';
+}
+
 export default async function projectIngestionHandler(req,res) {
   if(!method(req,res,['GET','POST','PATCH']))return;
   const identity=sessionIdentity(req);
@@ -26,7 +35,7 @@ export default async function projectIngestionHandler(req,res) {
     const body=parseJson(req);
     if(req.method==='POST') {
       const result=await ingestProject(sql,body,identity.sub);
-      if(!result.success)return json(res,400,{error:'Invalid project import.',issues:result.issues});
+      if(!result.success)return json(res,422,{error:'Project import validation failed.',category:'VALIDATION',request_id:randomUUID(),issues:result.issues,action:'Correct the listed fields and submit again.'});
       return json(res,201,result);
     }
     if(!body||typeof body.id!=='string'||!['approve','reject'].includes(body.decision))return json(res,400,{error:'A valid ingestion id and decision are required.'});
@@ -36,7 +45,8 @@ export default async function projectIngestionHandler(req,res) {
     if(result.invalid)return json(res,422,{error:'Resolve validation issues before approval.',ingestion:result.ingestion});
     return json(res,200,result);
   } catch(error) {
-    const requestId=randomUUID(); console.error('Project ingestion failed safely',{request_id:requestId,message:error instanceof Error?error.message:'unknown'});
-    return json(res,500,{error:'Project ingestion failed safely.',request_id:requestId});
+    const requestId=randomUUID(),category=ingestionErrorCategory(error);
+    console.error('Project ingestion failed safely',{request_id:requestId,category,code:error?.code,message:error instanceof Error?error.message:'unknown'});
+    return json(res,500,{error:'Project ingestion could not be completed. No import was created.',category,request_id:requestId,action:'Verify the submitted values and retry. If it fails again, give this request ID to an administrator.'});
   }
 }
