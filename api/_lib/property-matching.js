@@ -51,6 +51,16 @@ function inventoryState(item) {
     .map(key=>[key,item[key]??null]);
 }
 
+// Unit types are project-level propositions, never physical availability.
+export function unitTypeMatchRecord(project,type) {
+  return {id:type.id,developer:project.developer,project:project.name,emirate:project.emirate,area:project.area,
+    property_type:type.property_type,bedrooms:type.bedrooms,minimum_price:type.starting_price,maximum_price:null,
+    minimum_size:type.minimum_area,maximum_size:type.maximum_area,price_per_sqft:type.approximate_psf,
+    handover:project.handover,payment_plan_summary:project.payment_plan_summary,construction_status:project.construction_status,
+    suitability:type.notes,status:type.review_status==='verified'&&project.review_status==='verified'?'active':'inactive',
+    source:type.source_reference,data_quality:'verified',last_updated:type.updated_at,is_test:type.is_test,match_kind:'PROJECT_UNIT_TYPE'};
+}
+
 export function matchProperties(lead, inventory, now = new Date()) {
   if (inventory.some(item => Boolean(item.is_test) !== Boolean(lead.is_test))) throw new Error('TEST and production matching data cannot be mixed');
   if (terminal.has(lead.status)) return { profile:normalizeRequirements(lead), matches:[], flags:[] };
@@ -81,12 +91,13 @@ export function matchProperties(lead, inventory, now = new Date()) {
     if (profile.objective && item.suitability && includesText(item.suitability,profile.objective)) { score+=5; why.push(`${profile.objective} suitability`); }
     if (profile.construction_status && /ready/i.test(profile.construction_status)) signals.push('READY_PROPERTY_MATCH');
     if (profile.preferred_handover && item.handover) signals.push('HANDOVER_MATCH');
-    if (inventoryIsStale(item,now)) { score-=12; misses.push('Inventory is stale and must be re-verified'); signals.push('INVENTORY_STALE'); }
+    if (item.match_kind!=='PROJECT_UNIT_TYPE'&&inventoryIsStale(item,now)) { score-=12; misses.push('Inventory is stale and must be re-verified'); signals.push('INVENTORY_STALE'); }
     score=Math.max(0,Math.min(100,score)); const tier=score>=80?'STRONG':score>=65?'GOOD':score>=50?'POSSIBLE':'WEAK';
-    matches.push({ inventory_id:item.id, project:item.project, developer:item.developer,
-      data_quality:item.data_quality==='verified'?'VERIFIED INVENTORY':'ADVISORY / GENERIC PROJECT DATA', inventory_last_updated:item.last_updated, score,tier,
+    const unitType=item.match_kind==='PROJECT_UNIT_TYPE';
+    matches.push({ inventory_id:unitType?null:item.id, unit_type_id:unitType?item.id:null, match_kind:unitType?'PROJECT/UNIT-TYPE MATCH':'AVAILABLE UNIT MATCH', project:item.project, developer:item.developer,
+      data_quality:unitType?'VERIFIED PRE-LAUNCH UNIT TYPE':item.data_quality==='verified'?'VERIFIED INVENTORY':'ADVISORY / GENERIC PROJECT DATA', inventory_last_updated:item.last_updated, score,tier,
       why:why.length?why:['Passes known hard requirements'], does_not_match:misses, missing_information:profile.missing_critical,
-      advisor_talking_points:[`${item.project} passes the known hard requirements.`, item.data_quality==='verified'?'Confirm current unit availability before presenting.':'Advisory project data only; verify price and availability.'],
+      advisor_talking_points:[`${item.project} passes the known hard requirements.`, unitType?'No physical unit is being offered; confirm release and terms with the developer.':item.data_quality==='verified'?'Confirm current unit availability before presenting.':'Advisory project data only; verify price and availability.'],
       recommended_next_action:tier==='STRONG'?'Human advisor to review and propose a shortlist meeting.':'Validate missing requirements before presenting.', signals });
   }
   matches.sort((a,b)=>b.score-a.score || a.project.localeCompare(b.project));
