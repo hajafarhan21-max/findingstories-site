@@ -8,7 +8,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "node --test",
-    "build": "node scripts/build.mjs",
+    "build": "node scripts/build-browser.mjs && node scripts/build.mjs",
+    "build:browser": "node scripts/build-browser.mjs",
     "db:init": "node scripts/init-production-db.mjs",
     "crm:user:create": "node scripts/create-crm-user.mjs",
     "inventory:binghatti": "node scripts/import-binghatti-amberhall.mjs",
@@ -19,6 +20,7 @@
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
     "@openai/agents": "^0.17.0",
+    "@vercel/blob": "^2.8.0",
     "@vercel/functions": "^2.2.12",
     "adm-zip": "^0.6.0",
     "zod": "^4.4.3"
@@ -26,6 +28,7 @@
   "devDependencies": {
     "@electric-sql/pglite": "^0.5.8",
     "@eslint/js": "^9.31.0",
+    "esbuild": "^0.28.2",
     "eslint": "^9.31.0",
     "typescript": "^5.8.3"
   },

@@ -1,7 +1,7 @@
 import js from '@eslint/js';
 
 export default [
-  { ignores: ['node_modules/**', 'dist/**'] },
+  { ignores: ['node_modules/**', 'dist/**', 'public/project-source-upload-client.js'] },
   js.configs.recommended,
   {
     files: ['**/*.js', '**/*.mjs'],
