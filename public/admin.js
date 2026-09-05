@@ -1,6 +1,6 @@
 import { filterAndSortLeads, formatDubaiDate, formatDubaiDateTime, isOverdue } from './crm-utils.js';
 import { createAdminLogin } from './admin-login.js';
-import { canDeleteLeads, selectedListedIds, toggleAllListed } from './crm-lead-selection.js';
+import { canDeleteLeads, canUseLeadSelection, selectedListedIds, selectionForRoute, toggleAllListed } from './crm-lead-selection.js';
 import { applyCrmRoute } from './crm-routing.js';
 import { parseUnitTypesTextarea } from './project-ingestion-form.js';
 import { uploadProjectSource } from './project-source-upload-client.js';
@@ -53,13 +53,26 @@ function controls(lead) {
 }
 
 function renderSelection() {
-  const allowed=canDeleteLeads(currentRole),bar=document.querySelector('#lead-bulk-actions'),all=document.querySelector('#select-all-leads');
+  const allowed=canUseLeadSelection(currentRole,crm.dataset.activeRoute),bar=document.querySelector('#lead-bulk-actions'),all=document.querySelector('#select-all-leads');
   selectedLeadIds=selectedListedIds(selectedLeadIds,listedLeadIds);
   const count=selectedLeadIds.size,selectedListed=listedLeadIds.filter(id=>selectedLeadIds.has(id)).length;
-  bar.classList.toggle('hidden',!allowed||count===0);
+  bar.classList.toggle('hidden',!allowed);
   document.querySelector('#selected-lead-count').textContent=`${count} lead${count===1?'':'s'} selected`;
   all.checked=listedLeadIds.length>0&&selectedListed===listedLeadIds.length;
   all.indeterminate=selectedListed>0&&selectedListed<listedLeadIds.length;
+}
+
+function resetLeadSelectionForRoute(route) {
+  selectedLeadIds=selectionForRoute(selectedLeadIds,route);
+  if(route==='leads')return;
+  const dialog=document.querySelector('#delete-leads-dialog');
+  if(dialog.open)dialog.close();
+}
+
+function handleCrmRouteChange() {
+  const route=applyCrmRoute(crm,location.hash,currentRole);
+  resetLeadSelectionForRoute(route);
+  render();
 }
 
 function render() {
@@ -67,8 +80,9 @@ function render() {
     status: document.querySelector('#status-filter').value, agent: document.querySelector('#agent').value, sort: document.querySelector('#sort').value };
   const shown = filterAndSortLeads([...leads], options);
   listedLeadIds=shown.map(lead=>lead.id); selectedLeadIds=selectedListedIds(selectedLeadIds,listedLeadIds);
+  const selectionEnabled=canUseLeadSelection(currentRole,crm.dataset.activeRoute);
   list.innerHTML = shown.map(lead => `<article class="lead ${isOverdue(lead.next_follow_up_at) ? 'overdue' : ''}" data-id="${lead.id}">
-    <div class="lead-row ${canDeleteLeads(currentRole)?'super-admin-row':''}">${canDeleteLeads(currentRole)?`<input class="lead-select" data-select-lead type="checkbox" aria-label="Select ${escapeHtml(lead.name)}" ${selectedLeadIds.has(lead.id)?'checked':''}>`:''}<div><span class="date">${escapeHtml(formatDubaiDateTime(lead.captured_at))} Dubai</span><h2>${escapeHtml(lead.name)}</h2><span>${escapeHtml(lead.phone)} · ${escapeHtml(lead.email || 'No email')}</span></div>
+    <div class="lead-row ${selectionEnabled?'super-admin-row':''}">${selectionEnabled?`<input class="lead-select" data-select-lead type="checkbox" aria-label="Select ${escapeHtml(lead.name)}" ${selectedLeadIds.has(lead.id)?'checked':''}>`:''}<div><span class="date">${escapeHtml(formatDubaiDateTime(lead.captured_at))} Dubai</span><h2>${escapeHtml(lead.name)}</h2><span>${escapeHtml(lead.phone)} · ${escapeHtml(lead.email || 'No email')}</span></div>
     <div><b class="score">${Number(lead.lead_score)}</b><span class="temp ${escapeHtml(lead.temperature)}">${escapeHtml(lead.temperature)}</span></div>
     <div><span class="pill">${escapeHtml(statusLabel(lead.status))}</span><small>${escapeHtml(lead.assigned_to || 'Unassigned')}</small></div>
     <div class="follow-up ${isOverdue(lead.next_follow_up_at) ? 'due' : ''}"><b>${escapeHtml(formatDubaiDate(lead.next_follow_up_at))}</b><small>${isOverdue(lead.next_follow_up_at) ? 'Overdue follow-up' : 'Follow-up'}</small></div>
@@ -290,6 +304,11 @@ function confirmDeletion(ids) {
   if(!canDeleteLeads(currentRole)||!ids.length)return;
   const dialog=document.querySelector('#delete-leads-dialog');
   dialog.dataset.ids=JSON.stringify(ids); document.querySelector('#delete-leads-error').textContent='';
+  document.querySelector('#delete-leads-result').classList.add('hidden');
+  document.querySelector('#delete-failure-details').classList.add('hidden');
+  document.querySelector('#delete-failure-list').replaceChildren();
+  document.querySelector('#confirm-delete-leads').classList.remove('hidden');
+  document.querySelector('#cancel-delete-leads').textContent='Cancel';
   document.querySelector('#delete-leads-message').textContent=`You are about to permanently delete ${ids.length} lead(s). This action cannot be undone.`;
   dialog.showModal();
 }
@@ -301,8 +320,14 @@ async function deleteConfirmedLeads() {
     const response=await fetch('/api/admin/leads?crm=leads',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({ids,confirm:true})});
     const data=await response.json(); if(!response.ok)throw new Error(data.error||'Deletion failed safely.');
     for(const id of data.deletedIds)selectedLeadIds.delete(id);
-    dialog.close();
-    if(data.notDeleted.length)window.alert(`${data.deletedCount} lead(s) deleted. Could not delete: ${data.notDeleted.map(item=>`${item.id} (${item.reason})`).join(', ')}`);
+    document.querySelector('#deleted-lead-total').textContent=String(data.deletedCount);
+    document.querySelector('#failed-lead-total').textContent=String(data.notDeleted.length);
+    const failures=document.querySelector('#delete-failure-details'),failureList=document.querySelector('#delete-failure-list');
+    for(const item of data.notDeleted){const row=document.createElement('li');row.textContent=`${item.id}: ${item.reason}`;failureList.append(row);}
+    failures.classList.toggle('hidden',data.notDeleted.length===0);
+    document.querySelector('#delete-leads-result').classList.remove('hidden');
+    document.querySelector('#confirm-delete-leads').classList.add('hidden');
+    document.querySelector('#cancel-delete-leads').textContent='Close';
     await load();
   } catch(error){document.querySelector('#delete-leads-error').textContent=error.message;}
   finally{button.disabled=false;button.textContent='Permanently delete';}
@@ -334,7 +359,8 @@ async function load() {
   if (!response.ok) { errorBox.textContent = data.error; return; }
   const identityResponse=await fetch('/api/admin/leads?crm=me');
   currentRole=identityResponse.ok?(await identityResponse.json()).user.role:null;
-  applyCrmRoute(crm,location.hash,currentRole);
+  const route=applyCrmRoute(crm,location.hash,currentRole);
+  resetLeadSelectionForRoute(route);
   leads = data.leads; login.classList.add('hidden'); crm.classList.remove('hidden');
   const labels = [['total','Total leads'],['new','New leads'],['hot','Hot leads'],['warm','Warm leads'],['cold','Cold leads'],['processing','Processing']];
   document.querySelector('#stats').innerHTML = labels.map(([key,label]) => `<div class="stat"><b>${Number(data.counts[key])}</b><span>${label}</span></div>`).join('');
@@ -354,7 +380,7 @@ function authenticatedShell() {
 const loginForm = document.querySelector('#login-form');
 loginForm.addEventListener('submit', createAdminLogin({ form:loginForm, errorBox, onAuthenticated:authenticatedShell }));
 document.querySelector('#logout').onclick = async () => { clearTimeout(refreshTimer); await fetch('/api/admin/logout',{method:'POST'}); location.reload(); };
-window.addEventListener('hashchange',()=>applyCrmRoute(crm,location.hash,currentRole));
+window.addEventListener('hashchange',handleCrmRouteChange);
 document.querySelector('#project-ingestion-form [name="sources"]').addEventListener('change',async event=>{const config=await getProjectSourceConfig();const files=[...event.target.files];event.target.value='';if(projectSourceUploads.length+files.length>config.max_files){document.querySelector('#project-ingestion-message').textContent=`A maximum of ${config.max_files} source files can be attached.`;return;}const items=files.map(file=>({id:crypto.randomUUID(),file,media_type:sourceTypes[file.name.split('.').pop().toLowerCase()],status:'uploading',progress:0,error:''}));projectSourceUploads.push(...items);renderProjectSources();await Promise.allSettled(items.map(uploadSourceItem));});
 document.querySelector('#project-source-list').addEventListener('click',event=>{const row=event.target.closest('[data-source-upload]');if(!row)return;const item=projectSourceUploads.find(x=>x.id===row.dataset.sourceUpload);if(event.target.closest('[data-source-remove]'))void removeSourceItem(item);if(event.target.closest('[data-source-retry]'))void uploadSourceItem(item);});
 document.querySelector('#project-ingestion-form').addEventListener('submit',async event=>{event.preventDefault();const form=event.currentTarget,message=document.querySelector('#project-ingestion-message');message.textContent='Validating stored sources…';try{if(projectSourceUploads.some(x=>x.status==='uploading'))throw new Error('Wait for all source uploads to finish.');const failed=projectSourceUploads.filter(x=>x.status==='failed');const sources=projectSourceUploads.filter(x=>x.status==='success').map(x=>({filename:x.file.name,media_type:x.media_type,source_kind:sourceKind(x.file.name),storage_path:x.storage_path,byte_size:x.byte_size}));const data=new FormData(form),value=name=>String(data.get(name)||'').trim()||undefined;const unit_types=parseUnitTypesTextarea(value('unit_types'));const response=await fetch('/api/admin/leads/update?view=project-ingestion',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({project:{developer:value('developer'),name:value('name'),availability_mode:value('availability_mode'),emirate:value('emirate'),area:value('area'),construction_status:value('construction_status'),launch_date:value('launch_date'),handover:value('handover'),payment_plan_summary:value('payment_plan_summary'),eoi_amount:value('eoi_amount'),eoi_type:value('eoi_type'),booking_amount:value('booking_amount'),campaign_status:value('campaign_status'),description:value('description'),attributes:{}},inventory:[],unit_types,sources,is_test:data.get('is_test')==='on'})});const result=await response.json();if(!response.ok){const issues=result.issues?.map(x=>`${x.path?.join('.')||'payload'}: ${x.message}`).join(' · ');throw new Error([issues||result.error,result.category&&`Category: ${result.category}`,result.request_id&&`Request ID: ${result.request_id}`,result.action].filter(Boolean).join(' · '));}message.textContent=`Imported ${result.ingestion.inventory_count} physical row(s) and ${result.ingestion.unit_type_count} unit type(s).${failed.length?` ${failed.length} failed source(s) were not attached and can be retried separately.`:''} Review is required before publication.`;form.reset();projectSourceUploads=[];renderProjectSources();await loadProjectIngestions();}catch(error){message.textContent=error.message;}});

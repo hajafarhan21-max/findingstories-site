@@ -7,7 +7,7 @@
     "dev": "vercel dev",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "node --test",
+    "test": "node --test --test-concurrency=1",
     "build": "node scripts/build-browser.mjs && node scripts/build.mjs",
     "build:browser": "node scripts/build-browser.mjs",
     "db:init": "node scripts/init-production-db.mjs",
