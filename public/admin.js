@@ -290,6 +290,11 @@ function confirmDeletion(ids) {
   if(!canDeleteLeads(currentRole)||!ids.length)return;
   const dialog=document.querySelector('#delete-leads-dialog');
   dialog.dataset.ids=JSON.stringify(ids); document.querySelector('#delete-leads-error').textContent='';
+  document.querySelector('#delete-leads-result').classList.add('hidden');
+  document.querySelector('#delete-failure-details').classList.add('hidden');
+  document.querySelector('#delete-failure-list').replaceChildren();
+  document.querySelector('#confirm-delete-leads').classList.remove('hidden');
+  document.querySelector('#cancel-delete-leads').textContent='Cancel';
   document.querySelector('#delete-leads-message').textContent=`You are about to permanently delete ${ids.length} lead(s). This action cannot be undone.`;
   dialog.showModal();
 }
@@ -301,8 +306,14 @@ async function deleteConfirmedLeads() {
     const response=await fetch('/api/admin/leads?crm=leads',{method:'DELETE',headers:{'Content-Type':'application/json'},body:JSON.stringify({ids,confirm:true})});
     const data=await response.json(); if(!response.ok)throw new Error(data.error||'Deletion failed safely.');
     for(const id of data.deletedIds)selectedLeadIds.delete(id);
-    dialog.close();
-    if(data.notDeleted.length)window.alert(`${data.deletedCount} lead(s) deleted. Could not delete: ${data.notDeleted.map(item=>`${item.id} (${item.reason})`).join(', ')}`);
+    document.querySelector('#deleted-lead-total').textContent=String(data.deletedCount);
+    document.querySelector('#failed-lead-total').textContent=String(data.notDeleted.length);
+    const failures=document.querySelector('#delete-failure-details'),failureList=document.querySelector('#delete-failure-list');
+    for(const item of data.notDeleted){const row=document.createElement('li');row.textContent=`${item.id}: ${item.reason}`;failureList.append(row);}
+    failures.classList.toggle('hidden',data.notDeleted.length===0);
+    document.querySelector('#delete-leads-result').classList.remove('hidden');
+    document.querySelector('#confirm-delete-leads').classList.add('hidden');
+    document.querySelector('#cancel-delete-leads').textContent='Close';
     await load();
   } catch(error){document.querySelector('#delete-leads-error').textContent=error.message;}
   finally{button.disabled=false;button.textContent='Permanently delete';}
