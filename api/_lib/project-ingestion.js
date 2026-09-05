@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import AdmZip from 'adm-zip';
 import { z } from 'zod';
+import { PROJECT_SOURCE_MAX_FILES, resolveStoredSource, validateSourceContent } from './project-source-files.js';
 
 const text = max => z.string().trim().min(1).max(max);
 const optionalText = max => z.preprocess(v => v === '' ? undefined : v, text(max).optional());
@@ -22,11 +23,13 @@ export const unitTypeSchema=z.object({
   floor_plan_reference:optionalText(500),availability_status:z.enum(['not_released','registering_interest','released','sold_out']).default('not_released'),
   source_reference:optionalText(500),notes:optionalText(2000)
 }).strict().superRefine((v,ctx)=>{if(v.minimum_area!=null&&v.maximum_area!=null&&v.minimum_area>v.maximum_area)ctx.addIssue({code:'custom',path:['maximum_area'],message:'Maximum area must not be below minimum area.'});});
-const sourceSchema=z.object({filename:text(255),media_type:z.enum(['application/pdf','image/jpeg','image/png','text/csv','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']),source_kind:z.enum(['brochure','master_plan','floor_plan','price_list','payment_plan','inventory','other']).default('other'),base64:text(14_000_000)}).strict();
+const mediaType=z.enum(['application/pdf','image/jpeg','image/png','text/csv','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','application/vnd.ms-excel']);
+const sourceBase=z.object({filename:text(255),media_type:mediaType,source_kind:z.enum(['brochure','master_plan','floor_plan','price_list','payment_plan','inventory','other']).default('other')});
+const sourceSchema=z.union([sourceBase.extend({base64:text(140_000_000)}).strict(),sourceBase.extend({storage_path:text(500),byte_size:z.number().int().positive()}).strict()]);
 export const projectPayloadSchema = z.object({
   project: z.object({developer:text(200),name:text(200),availability_mode:z.enum(['PRE_LAUNCH','LIVE_INVENTORY','SOLD_OUT','ARCHIVED']).default('PRE_LAUNCH'),emirate:optionalText(100),area:optionalText(200),description:optionalText(10000),construction_status:optionalText(100),launch_date:date,handover:date,payment_plan_summary:optionalText(3000),eoi_amount:number,eoi_type:optionalText(100),booking_amount:number,campaign_status:optionalText(100),attributes:z.record(z.string(),z.union([z.string(),z.number(),z.boolean(),z.null()])).default({})}).strict(),
   inventory:z.array(inventoryRowSchema).max(5000).default([]), is_test:z.boolean().default(false),
-  unit_types:z.array(unitTypeSchema).max(250).default([]),sources:z.array(sourceSchema).max(8).default([])
+  unit_types:z.array(unitTypeSchema).max(250).default([]),sources:z.array(sourceSchema).max(PROJECT_SOURCE_MAX_FILES).default([])
 }).strict();
 
 const normalized = value => value.trim().toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
@@ -47,9 +50,10 @@ function xlsxRows(content) {
 export function decodeSources(sources) {
   return sources.map(source=>{
     const content=Buffer.from(source.base64,'base64');
-    if (!content.length || content.length>10*1024*1024) throw new Error(`Invalid source size: ${source.filename}`);
-    if (source.media_type==='application/pdf' && content.subarray(0,5).toString()!=='%PDF-') throw new Error(`Malformed PDF: ${source.filename}`);
-    if (source.media_type.includes('spreadsheet') && content.subarray(0,2).toString()!=='PK') throw new Error(`Malformed XLSX: ${source.filename}`);
+    // Kept only for backward compatibility with existing small imports. Large
+    // sources must never enter a Vercel Function request body.
+    if(content.length>4*1024*1024)throw new Error(`${source.filename} must use direct-to-storage upload.`);
+    validateSourceContent(source,content);
     return {...source,content,sha256:createHash('sha256').update(content).digest('hex')};
   });
 }
@@ -61,10 +65,10 @@ export function rowsFromSources(decoded) {
   }
   return rows;
 }
-export function validateImport(input) {
+export async function validateImport(input) {
   if (typeof input?.unit_types === 'string') return {success:false,issues:[{code:'custom',path:['unit_types'],message:'Unit types JSON is invalid'}]};
   const parsed=projectPayloadSchema.safeParse(input); if(!parsed.success)return {success:false,issues:parsed.error.issues};
-  let sources; try { sources=decodeSources(parsed.data.sources); } catch(error){return {success:false,issues:[{path:['sources'],message:error.message}]};}
+  let sources; try { sources=await Promise.all(parsed.data.sources.map(source=>'storage_path' in source?resolveStoredSource(source):decodeSources([source])[0])); } catch(error){return {success:false,issues:[{path:['sources'],message:error.message}]};}
   const fileRows=rowsFromSources(sources), candidates=[...parsed.data.inventory,...fileRows], inventory=[], issues=[];
   candidates.forEach((row,index)=>{const checked=inventoryRowSchema.safeParse(row);if(checked.success)inventory.push(checked.data);else issues.push(...checked.error.issues.map(x=>({...x,path:['inventory',index,...x.path]})));});
   const units=new Set(); inventory.forEach((row,index)=>{const key=normalized(row.unit);if(units.has(key))issues.push({path:['inventory',index,'unit'],message:'Duplicate unit in this upload.'});units.add(key);});
@@ -87,7 +91,7 @@ export async function reviewIngestion(sql,id,decision,userId) {
 }
 
 export async function ingestProject(sql,input,userId) {
-  const checked=validateImport(input); if(!checked.success)return checked;
+  const checked=await validateImport(input); if(!checked.success)return checked;
   const {project,is_test}=checked.data, key=projectKey(project);
   // Neon encodes JavaScript arrays as PostgreSQL array literals. Those literals
   // are not JSON and produce 22P02 when cast to JSONB, so serialize each JSONB
@@ -95,7 +99,7 @@ export async function ingestProject(sql,input,userId) {
   const jsonb=value=>JSON.stringify(value);
   const payloadJson=jsonb({project,inventory_count:checked.data.inventory.length});
   const issuesJson=jsonb(checked.issues);
-  const sourcesJson=jsonb(checked.data.sources.map(s=>({filename:s.filename,media_type:s.media_type,source_kind:s.source_kind,byte_size:s.content.length,sha256:s.sha256,base64:s.content.toString('base64')})));
+  const sourcesJson=jsonb(checked.data.sources.map(s=>({filename:s.filename,media_type:s.media_type,source_kind:s.source_kind,byte_size:s.content.length,sha256:s.sha256,storage_path:s.storage_path||null,storage_url:s.storage_url||null,storage_etag:s.storage_etag||null,base64:s.storage_path?null:s.content.toString('base64')})));
   const unitTypesJson=jsonb(checked.data.unit_types);
   const inventoryJson=jsonb(checked.data.inventory.map((r,i)=>({...r,ordinality:i+1})));
   const attributesJson=jsonb(project.attributes);
@@ -104,7 +108,7 @@ export async function ingestProject(sql,input,userId) {
       VALUES (${key},${project.developer},${project.name},${project.availability_mode},${project.emirate||null},${project.area||null},${project.description||null},${project.construction_status||null},${project.launch_date||null},${project.handover||null},${project.payment_plan_summary||null},${project.eoi_amount??null},${project.eoi_type||null},${project.booking_amount??null},${project.campaign_status||null},${attributesJson}::jsonb,${is_test})
       ON CONFLICT (project_key,is_test) DO UPDATE SET availability_mode=EXCLUDED.availability_mode,emirate=COALESCE(EXCLUDED.emirate,projects.emirate),area=COALESCE(EXCLUDED.area,projects.area),description=COALESCE(EXCLUDED.description,projects.description),construction_status=COALESCE(EXCLUDED.construction_status,projects.construction_status),launch_date=COALESCE(EXCLUDED.launch_date,projects.launch_date),handover=COALESCE(EXCLUDED.handover,projects.handover),payment_plan_summary=COALESCE(EXCLUDED.payment_plan_summary,projects.payment_plan_summary),eoi_amount=COALESCE(EXCLUDED.eoi_amount,projects.eoi_amount),eoi_type=COALESCE(EXCLUDED.eoi_type,projects.eoi_type),booking_amount=COALESCE(EXCLUDED.booking_amount,projects.booking_amount),campaign_status=COALESCE(EXCLUDED.campaign_status,projects.campaign_status),attributes=projects.attributes||EXCLUDED.attributes,review_status='needs_review',active=FALSE,updated_at=NOW() RETURNING *),
     batch AS (INSERT INTO project_ingestions(project_id,import_kind,submitted_by,is_test,payload,issues) SELECT id,CASE WHEN EXISTS(SELECT 1 FROM existing) THEN 'update' ELSE 'create' END,${userId},${is_test},${payloadJson}::jsonb,${issuesJson}::jsonb FROM saved_project RETURNING *),
-    saved_sources AS (INSERT INTO project_sources(ingestion_id,filename,media_type,source_kind,byte_size,sha256,content) SELECT batch.id,s.filename,s.media_type,s.source_kind,s.byte_size,s.sha256,decode(s.base64,'base64') FROM batch,jsonb_to_recordset(${sourcesJson}::jsonb) AS s(filename text,media_type text,source_kind text,byte_size int,sha256 text,base64 text) ON CONFLICT DO NOTHING RETURNING id),
+    saved_sources AS (INSERT INTO project_sources(ingestion_id,filename,media_type,source_kind,byte_size,sha256,content,storage_path,storage_url,storage_etag) SELECT batch.id,s.filename,s.media_type,s.source_kind,s.byte_size,s.sha256,CASE WHEN s.base64 IS NULL THEN NULL ELSE decode(s.base64,'base64') END,s.storage_path,s.storage_url,s.storage_etag FROM batch,jsonb_to_recordset(${sourcesJson}::jsonb) AS s(filename text,media_type text,source_kind text,byte_size int,sha256 text,base64 text,storage_path text,storage_url text,storage_etag text) ON CONFLICT DO NOTHING RETURNING id),
     saved_unit_types AS (INSERT INTO project_unit_types(project_id,ingestion_id,unit_type,bedrooms,property_type,minimum_area,maximum_area,starting_price,price_currency,approximate_psf,floor_plan_reference,availability_status,source_reference,notes,is_test)
       SELECT p.id,b.id,u.unit_type,u.bedrooms,u.property_type,u.minimum_area,u.maximum_area,u.starting_price,u.price_currency,u.approximate_psf,u.floor_plan_reference,u.availability_status,u.source_reference,u.notes,${is_test} FROM saved_project p CROSS JOIN batch b CROSS JOIN LATERAL jsonb_to_recordset(${unitTypesJson}::jsonb) AS u(unit_type text,bedrooms text,property_type text,minimum_area numeric,maximum_area numeric,starting_price numeric,price_currency text,approximate_psf numeric,floor_plan_reference text,availability_status text,source_reference text,notes text)
       ON CONFLICT(project_id,unit_type,property_type,is_test) DO UPDATE SET ingestion_id=EXCLUDED.ingestion_id,bedrooms=COALESCE(EXCLUDED.bedrooms,project_unit_types.bedrooms),minimum_area=COALESCE(EXCLUDED.minimum_area,project_unit_types.minimum_area),maximum_area=COALESCE(EXCLUDED.maximum_area,project_unit_types.maximum_area),starting_price=COALESCE(EXCLUDED.starting_price,project_unit_types.starting_price),price_currency=EXCLUDED.price_currency,approximate_psf=COALESCE(EXCLUDED.approximate_psf,project_unit_types.approximate_psf),floor_plan_reference=COALESCE(EXCLUDED.floor_plan_reference,project_unit_types.floor_plan_reference),availability_status=EXCLUDED.availability_status,source_reference=COALESCE(EXCLUDED.source_reference,project_unit_types.source_reference),notes=COALESCE(EXCLUDED.notes,project_unit_types.notes),review_status='needs_review',updated_at=NOW() RETURNING id),

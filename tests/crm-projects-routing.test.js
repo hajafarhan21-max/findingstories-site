@@ -20,7 +20,7 @@ test('Projects workspace exposes guarded upload and review controls', async () =
     readFile('public/admin.js', 'utf8')
   ]);
   assert.match(html, /id="project-ingestion"/);
-  assert.match(html, /accept="\.pdf,\.csv,\.xlsx/);
+  assert.match(html, /accept="\.pdf,\.csv,\.xls,\.xlsx/);
   assert.match(html, /Upload for review/);
   assert.match(script, /currentRole!==['"]SUPER_ADMIN['"]/);
   assert.match(script, /data-ingestion-decision="approve"/);
