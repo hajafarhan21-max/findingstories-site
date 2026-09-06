@@ -1,5 +1,5 @@
 export const ROLES = Object.freeze(['SUPER_ADMIN','ADMIN','BUSINESS_HEAD','MANAGER','TEAM_LEADER','PROPERTY_ADVISOR','MARKETING','OPERATIONS']);
-export const RESOURCES = Object.freeze(['leads','opportunities','inventory','tasks','meetings','site_visits','eois','bookings','reports','users','settings','imports','exports','assignments','audit_logs']);
+export const RESOURCES = Object.freeze(['leads','opportunities','inventory','tasks','meetings','site_visits','eois','bookings','campaigns','reports','users','settings','imports','exports','assignments','audit_logs']);
 
 export async function hasPermission(sql, identity, resource, action) {
   if (!identity?.id || !ROLES.includes(identity.role) || !RESOURCES.includes(resource)) return false;

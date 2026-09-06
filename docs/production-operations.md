@@ -7,3 +7,6 @@ The acceptance API uses a dedicated machine secret rather than an administrator 
 ## Operations-agent decision
 
 An OpenAI Agents SDK layer is intentionally not installed. Health assertions, acceptance interpretation, incident classification, and recovery are deterministic and safer as versioned scripts and GitHub Actions. Adding an LLM would introduce a production secret, cost, latency, and nondeterministic incident handling without improving the constrained workflow. Remediation remains a reviewed code change; the guardian has no database credential, admin session, deployment permission, or unrestricted mutation tool. An advisory agent can be reconsidered if incident volume produces multiple recurring failure classes that cannot be classified deterministically.
+# Campaign management deployment
+
+Apply `database/migrations/017_campaign_management.sql` manually before deploying the campaign application code. It is additive and idempotent. It links the one requested DRAFT campaign to the existing, uniquely matched, active and verified production Azizi Florence project; if that exact project is absent or duplicated, the guarded insert safely creates no campaign. The migration does not create a project, lead, EOI, booking, revenue, or inventory record. Do not run it through automatic application startup.
