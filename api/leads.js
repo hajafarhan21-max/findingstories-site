@@ -22,15 +22,18 @@ async function persistLead(sql, lead) {
   const rows = await sql`
     INSERT INTO leads (submission_id, name, phone, email, country_of_residence, purpose, budget, property_type,
       bedrooms, preferred_areas, payment_method, purchase_timeline, owns_uae_property, additional_requirements,
-      consent, source, landing_page, referrer, utm_source, utm_medium, utm_campaign, content_source,
+      consent, source, medium, landing_page, referrer, utm_source, utm_medium, utm_campaign, utm_content, utm_term, content_source,
+      campaign_id, project_id, first_touch_attribution, latest_touch_attribution,
       page_type, acquisition_area, acquisition_project, acquisition_developer, budget_intent, bedroom_intent, acquisition_signals)
     VALUES (${lead.submission_id || null}, ${safeText(lead.name,100)}, ${lead.phone}, ${lead.email || null},
       ${lead.country_of_residence || null}, ${lead.purpose || null}, ${lead.budget || null},
       ${lead.property_type || null}, ${lead.bedrooms || null}, ${lead.preferred_areas || null},
       ${lead.payment_method || null}, ${lead.purchase_timeline || null}, ${lead.owns_uae_property || null},
-      ${safeText(lead.additional_requirements) || null}, ${lead.consent}, ${lead.source || 'website'},
+      ${safeText(lead.additional_requirements) || null}, ${lead.consent}, ${lead.source || 'website'},${lead.medium||null},
       ${lead.landing_page || null}, ${lead.referrer || null}, ${lead.utm_source || null}, ${lead.utm_medium || null},
-      ${lead.utm_campaign || null}, ${lead.content_source || null},${lead.page_type||null},${lead.acquisition_area||null},
+      ${lead.utm_campaign || null},${lead.utm_content||null},${lead.utm_term||null}, ${lead.content_source || null},
+      ${lead.campaign_id||null},${lead.project_id||null},${JSON.stringify({source:lead.source||'website',medium:lead.medium||'',utm_source:lead.utm_source||'',utm_medium:lead.utm_medium||'',utm_campaign:lead.utm_campaign||'',utm_content:lead.utm_content||'',utm_term:lead.utm_term||'',landing_page:lead.landing_page||'',referrer:lead.referrer||''})}::jsonb,${JSON.stringify({source:lead.source||'website',medium:lead.medium||'',utm_source:lead.utm_source||'',utm_medium:lead.utm_medium||'',utm_campaign:lead.utm_campaign||'',utm_content:lead.utm_content||'',utm_term:lead.utm_term||'',landing_page:lead.landing_page||'',referrer:lead.referrer||''})}::jsonb,
+      ${lead.page_type||null},${lead.acquisition_area||null},
       ${lead.acquisition_project||null},${lead.acquisition_developer||null},${lead.budget_intent||null},${lead.bedroom_intent||null},${JSON.stringify(lead.acquisition_signals||[])})
     ON CONFLICT (submission_id) WHERE submission_id IS NOT NULL DO NOTHING
     RETURNING id, captured_at`;
@@ -60,12 +63,21 @@ export default async function handler(req, res) {
 
     await ensureSchema();
     const sql = database();
+    let attributedLead=lead;
+    if(lead.campaign_id){
+      const campaigns=await sql`SELECT id,project_id FROM crm_campaigns WHERE id=${lead.campaign_id} AND is_test=FALSE AND status <> 'ARCHIVED'`;
+      if(!campaigns.length||lead.project_id&&String(campaigns[0].project_id)!==lead.project_id)return json(res,400,{error:'Campaign attribution is not valid for this production project.'});
+      attributedLead={...lead,project_id:String(campaigns[0].project_id)};
+    } else if(lead.project_id){
+      const projects=await sql`SELECT id FROM projects WHERE id=${lead.project_id} AND is_test=FALSE AND active=TRUE AND review_status='verified'`;
+      if(!projects.length)return json(res,400,{error:'Project attribution is not valid.'});
+    }
     const saved = await persistAndSchedule({
-      lead,
+      lead:attributedLead,
       persist: value => persistLead(sql, value),
       schedule: scheduleQualification,
       background: value => qualifySavedLead({
-        id: value.id, lead, capturedAt: value.captured_at, qualify: qualifyLead, fallback,
+        id: value.id, lead:attributedLead, capturedAt: value.captured_at, qualify: qualifyLead, fallback,
         start: id => markQualificationStarted(sql, id),
         update: (id, result) => updateQualification(sql, id, result)
       }).catch(error => console.error('Background qualification update failed:', error instanceof Error ? error.message : 'unknown'))

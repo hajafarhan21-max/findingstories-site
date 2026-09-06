@@ -7,9 +7,10 @@ import crmLeads from '../_lib/crm/leads.js';
 import crmTasks from '../_lib/crm/tasks.js';
 import crmOpportunities from '../_lib/crm/opportunities.js';
 import crmLaunch from '../_lib/crm/launch.js';
+import crmCampaigns from '../_lib/crm/campaigns.js';
 
 export default async function handler(req, res) {
-  const crmRoutes={me:crmMe,leads:crmLeads,tasks:crmTasks,opportunities:crmOpportunities,launch:crmLaunch};
+  const crmRoutes={me:crmMe,leads:crmLeads,tasks:crmTasks,opportunities:crmOpportunities,launch:crmLaunch,campaigns:crmCampaigns};
   if(req.query?.crm&&crmRoutes[req.query.crm])return crmRoutes[req.query.crm](req,res);
   if (req.query?.view === 'revenue') return revenueHandler(req, res);
   if (!method(req, res, ['GET'])) return;

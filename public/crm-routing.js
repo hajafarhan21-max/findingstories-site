@@ -1,6 +1,6 @@
 export const CRM_ROUTES = Object.freeze([
   'dashboard', 'leads', 'smart-views', 'opportunities', 'tasks', 'meetings',
-  'site-visits', 'eois', 'inventory', 'projects', 'campaigns', 'reports',
+  'site-visits', 'eois', 'inventory', 'projects', 'campaigns', 'organic-acquisition', 'reports',
   'project-performance', 'users-teams', 'automations', 'settings'
 ]);
 
@@ -13,7 +13,7 @@ export const CRM_ROUTE_ALIASES = Object.freeze({
   productivity: 'tasks',
   'pipeline-overview': 'meetings',
   'binghatti-attribution': 'eois',
-  'acquisition-performance': 'campaigns',
+  'acquisition-performance': 'organic-acquisition',
   'advisor-performance': 'reports',
   'ai-queue': 'automations'
 });
