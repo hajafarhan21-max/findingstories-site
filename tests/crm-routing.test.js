@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { applyCrmRoute, CRM_ROUTES, resolveCrmRoute } from '../public/crm-routing.js';
+import { canUseLeadSelection, selectionForRoute } from '../public/crm-lead-selection.js';
 
 function element(dataset={}) {
   const attributes=new Set();
@@ -42,4 +43,24 @@ test('Projects content remains SUPER_ADMIN guarded while its active route stays 
  const {crm,screens,links}=shell(); applyCrmRoute(crm,'#projects','ADMIN');
  assert.equal(screens.find(x=>x.dataset.crmScreen==='projects').classList.hidden,true);
  assert.equal(links.find(x=>x.dataset.crmRoute==='projects').hasAttribute('aria-current'),true);
+});
+
+test('lead bulk controls are enabled only on Leads for exact SUPER_ADMIN',()=>{
+ for(const route of CRM_ROUTES){
+  assert.equal(canUseLeadSelection('SUPER_ADMIN',route),route==='leads');
+  assert.equal(canUseLeadSelection('ADMIN',route),false);
+ }
+});
+
+test('back/forward away from Leads clears selection and the UI closes stale deletion state',async()=>{
+ let selected=new Set(['lead-1','lead-2']);
+ selected=selectionForRoute(selected,'inventory'); // browser forward away from Leads
+ assert.equal(selected.size,0);
+ selected=selectionForRoute(selected,'leads'); // browser back to Leads
+ assert.equal(selected.size,0);
+ const [script,html]=await Promise.all([readFile('public/admin.js','utf8'),readFile('admin.html','utf8')]);
+ assert.match(script,/window\.addEventListener\('hashchange',handleCrmRouteChange\)/);
+ assert.match(script,/if\(dialog\.open\)dialog\.close\(\)/);
+ assert.match(script,/selectionEnabled\?`<input class="lead-select" data-select-lead/);
+ assert.match(html,/\.bulk-actions\.hidden\{display:none\}/);
 });
