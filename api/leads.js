@@ -19,11 +19,14 @@ async function markQualificationStarted(sql, id) {
 }
 
 async function persistLead(sql, lead) {
-  const rows = await sql`
+  const touch={source:lead.source||'website',medium:lead.medium||'',utm_source:lead.utm_source||'',utm_medium:lead.utm_medium||'',utm_campaign:lead.utm_campaign||'',utm_content:lead.utm_content||'',utm_term:lead.utm_term||'',landing_page:lead.landing_page||'',referrer:lead.referrer||''};
+  const firstTouch=lead.first_touch_attribution||touch;
+  const latestTouch=lead.latest_touch_attribution||touch;
+  const rows = await sql`WITH attempted AS (
     INSERT INTO leads (submission_id, name, phone, email, country_of_residence, purpose, budget, property_type,
       bedrooms, preferred_areas, payment_method, purchase_timeline, owns_uae_property, additional_requirements,
       consent, source, medium, landing_page, referrer, utm_source, utm_medium, utm_campaign, utm_content, utm_term, content_source,
-      campaign_id, project_id, first_touch_attribution, latest_touch_attribution,
+      campaign_id, project_id, first_touch_attribution, latest_touch_attribution, preferred_contact_method,
       page_type, acquisition_area, acquisition_project, acquisition_developer, budget_intent, bedroom_intent, acquisition_signals)
     VALUES (${lead.submission_id || null}, ${safeText(lead.name,100)}, ${lead.phone}, ${lead.email || null},
       ${lead.country_of_residence || null}, ${lead.purpose || null}, ${lead.budget || null},
@@ -32,14 +35,18 @@ async function persistLead(sql, lead) {
       ${safeText(lead.additional_requirements) || null}, ${lead.consent}, ${lead.source || 'website'},${lead.medium||null},
       ${lead.landing_page || null}, ${lead.referrer || null}, ${lead.utm_source || null}, ${lead.utm_medium || null},
       ${lead.utm_campaign || null},${lead.utm_content||null},${lead.utm_term||null}, ${lead.content_source || null},
-      ${lead.campaign_id||null},${lead.project_id||null},${JSON.stringify({source:lead.source||'website',medium:lead.medium||'',utm_source:lead.utm_source||'',utm_medium:lead.utm_medium||'',utm_campaign:lead.utm_campaign||'',utm_content:lead.utm_content||'',utm_term:lead.utm_term||'',landing_page:lead.landing_page||'',referrer:lead.referrer||''})}::jsonb,${JSON.stringify({source:lead.source||'website',medium:lead.medium||'',utm_source:lead.utm_source||'',utm_medium:lead.utm_medium||'',utm_campaign:lead.utm_campaign||'',utm_content:lead.utm_content||'',utm_term:lead.utm_term||'',landing_page:lead.landing_page||'',referrer:lead.referrer||''})}::jsonb,
+      ${lead.campaign_id||null},${lead.project_id||null},${JSON.stringify(firstTouch)}::jsonb,${JSON.stringify(latestTouch)}::jsonb,${lead.preferred_contact_method||null},
       ${lead.page_type||null},${lead.acquisition_area||null},
       ${lead.acquisition_project||null},${lead.acquisition_developer||null},${lead.budget_intent||null},${lead.bedroom_intent||null},${JSON.stringify(lead.acquisition_signals||[])})
     ON CONFLICT (submission_id) WHERE submission_id IS NOT NULL DO NOTHING
-    RETURNING id, captured_at`;
-  if (rows[0]) return { ...rows[0], duplicate: false };
-  const existing = await sql`SELECT id, captured_at FROM leads WHERE submission_id=${lead.submission_id} LIMIT 1`;
-  return { ...existing[0], duplicate: true };
+    RETURNING id,captured_at,FALSE duplicate
+    ), duplicate AS (
+      UPDATE leads SET latest_touch_attribution=${JSON.stringify(latestTouch)}::jsonb,updated_at=NOW()
+      WHERE submission_id=${lead.submission_id||null} AND NOT EXISTS (SELECT 1 FROM attempted)
+      RETURNING id,captured_at,TRUE duplicate
+    ) SELECT * FROM attempted UNION ALL SELECT * FROM duplicate`;
+  if (rows[0]) return rows[0];
+  return {};
 }
 
 function scheduleQualification(promise) {
@@ -65,7 +72,7 @@ export default async function handler(req, res) {
     const sql = database();
     let attributedLead=lead;
     if(lead.campaign_id){
-      const campaigns=await sql`SELECT id,project_id FROM crm_campaigns WHERE id=${lead.campaign_id} AND is_test=FALSE AND status <> 'ARCHIVED'`;
+      const campaigns=await sql`SELECT id,project_id FROM crm_campaigns WHERE id=${lead.campaign_id} AND is_test=FALSE AND status='ACTIVE'`;
       if(!campaigns.length||lead.project_id&&String(campaigns[0].project_id)!==lead.project_id)return json(res,400,{error:'Campaign attribution is not valid for this production project.'});
       attributedLead={...lead,project_id:String(campaigns[0].project_id)};
     } else if(lead.project_id){

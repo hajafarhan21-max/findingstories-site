@@ -120,6 +120,7 @@ export async function initializeSchema(sql) {
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS payment_method TEXT`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS purchase_timeline TEXT`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS owns_uae_property TEXT`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS preferred_contact_method TEXT`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS additional_requirements TEXT`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS consent BOOLEAN DEFAULT FALSE`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS source TEXT DEFAULT 'website'`;

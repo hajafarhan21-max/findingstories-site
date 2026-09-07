@@ -10,3 +10,5 @@ An OpenAI Agents SDK layer is intentionally not installed. Health assertions, ac
 # Campaign management deployment
 
 Apply `database/migrations/017_campaign_management.sql` manually before deploying the campaign application code. It is additive and idempotent. It links the one requested DRAFT campaign to the existing, uniquely matched, active and verified production Azizi Florence project; if that exact project is absent or duplicated, the guarded insert safely creates no campaign. The migration does not create a project, lead, EOI, booking, revenue, or inventory record. Do not run it through automatic application startup.
+
+Before merging the Azizi Florence acquisition funnel, manually apply `database/migrations/018_azizi_florence_funnel.sql`. It adds the preferred-contact field and permits the funnel's analytics event names. It creates no project, campaign, lead, meeting, site visit, EOI, booking, or analytics record. The existing **Azizi Florence — Pre-Launch EOI Campaign** must already have been explicitly activated in CRM; the public page fails closed unless that exact production campaign and its verified production project are active.
