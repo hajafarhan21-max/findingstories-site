@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
-import { AZIZI_FLORENCE_CAMPAIGN,AZIZI_FLORENCE_PATH,aziziStructuredData,formatHandover,renderAziziFlorence } from '../api/_lib/azizi-florence.js';
+import { AZIZI_FLORENCE_CAMPAIGN,AZIZI_FLORENCE_PATH,FLORENCE_MEDIA_CLASS,aziziStructuredData,classifyFlorenceMedia,formatHandover,renderAziziFlorence } from '../api/_lib/azizi-florence.js';
 
 const project={id:'11111111-1111-4111-8111-111111111111',name:'Azizi Florence',developer:'Azizi Developments',area:'Verified Area',emirate:'Dubai',description:'Verified description.',availability_mode:'PRE_LAUNCH',payment_plan_summary:null,handover:null};
 const campaign={id:'22222222-2222-4222-8222-222222222222',name:AZIZI_FLORENCE_CAMPAIGN};
@@ -17,3 +17,31 @@ test('funnel captures qualification and UTM fields and sitemap is activation-gat
 test('clean public URL resolves to the funnel function in Vercel',async()=>{const config=JSON.parse(await readFile('vercel.json','utf8'));const route=config.rewrites.find(rewrite=>rewrite.source==='/azizi-florence');assert.deepEqual(route,{source:'/azizi-florence',destination:'/api/acquisition?route=azizi-florence'});const destination=new URL(route.destination,'https://www.finding-stories.com');assert.equal(destination.pathname,'/api/acquisition');assert.equal(destination.searchParams.get('route'),'azizi-florence');await readFile(`.${destination.pathname}.js`,'utf8');});
 test('funnel public assets and API endpoints are present in the production build structure',async()=>{const [template,client,style,handler,leads]=await Promise.all([readFile('api/_lib/azizi-florence.js','utf8'),readFile('public/azizi-florence.js','utf8'),readFile('public/azizi-florence.css','utf8'),readFile('api/acquisition.js','utf8'),readFile('api/leads.js','utf8')]);assert.match(template,/href="\/public\/azizi-florence\.css"/);assert.match(template,/src="\/public\/azizi-florence\.js"/);assert.match(style,/\.hero/);assert.match(client,/fetch\('\/api\/acquisition\?route=events'/);assert.match(client,/fetch\('\/api\/leads'/);assert.match(handler,/route==='azizi-florence'/);assert.match(handler,/route==='events'/);assert.match(leads,/export default async function handler/);});
 test('Azizi canonical and activation-gated sitemap use the clean public URL',async()=>{const config=JSON.parse(await readFile('vercel.json','utf8'));const sitemapRoute=config.rewrites.find(rewrite=>rewrite.source==='/sitemap.xml');assert.equal(sitemapRoute?.destination,'/api/acquisition?route=sitemap');assert.equal(AZIZI_FLORENCE_PATH,'/azizi-florence');const html=renderAziziFlorence({project,campaign,units:[unit],sources:[],origin:'https://www.finding-stories.com',whatsappNumber:''});assert.match(html,/rel="canonical" href="https:\/\/www\.finding-stories\.com\/azizi-florence"/);});
+
+test('document tables and sales sheets can never render as decorative Florence photography',()=>{
+  const sources=[
+    {id:'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',filename:'unit-bifurcation-table.png',source_kind:'inventory',media_type:'image/png'},
+    {id:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',filename:'payment-plan-sales-sheet.jpg',source_kind:'brochure',media_type:'image/jpeg'},
+    {id:'cccccccc-cccc-4ccc-8ccc-cccccccccccc',filename:'florence-exterior-render.jpg',source_kind:'project photography',media_type:'image/jpeg'}
+  ];
+  assert.equal(classifyFlorenceMedia(sources[0]),FLORENCE_MEDIA_CLASS.DOCUMENT_TABLE);
+  assert.equal(classifyFlorenceMedia(sources[1]),FLORENCE_MEDIA_CLASS.DOCUMENT_TABLE);
+  assert.equal(classifyFlorenceMedia(sources[2]),FLORENCE_MEDIA_CLASS.PROJECT_PHOTOGRAPHY);
+  const html=renderAziziFlorence({project,campaign,units:[unit],sources});
+  assert.doesNotMatch(html,/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa|bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb/);
+  assert.match(html,/cccccccc-cccc-4ccc-8ccc-cccccccccccc/);
+});
+
+test('maps, floor plans, logos, and unclassified images are excluded from photographic placements',()=>{
+  for(const [filename,classification] of [['location-map.png','MAP'],['three-bedroom-floor-plan.png','FLOOR_PLAN'],['azizi-logo.png','LOGO'],['page-12.png','UNCLASSIFIED']])assert.equal(classifyFlorenceMedia({filename}),classification);
+  const html=renderAziziFlorence({project,campaign,units:[unit],sources:[{id:'dddddddd-dddd-4ddd-8ddd-dddddddddddd',filename:'location-map.png',media_type:'image/png'}]});
+  assert.doesNotMatch(html,/dddddddd-dddd-4ddd-8ddd-dddddddddddd/);
+  assert.match(html,/unit-visual[^>]* role="img"/);
+});
+
+test('adjacent verified payment percentages remain separate milestones',()=>{
+  const html=renderAziziFlorence({project:{...project,payment_plan_summary:'4% SLD + 10% immediate / 70% on completion'},campaign,units:[],sources:[]});
+  assert.match(html,/4<sup>%<\/sup>[\s\S]*SLD/);
+  assert.match(html,/10<sup>%<\/sup>[\s\S]*immediate/);
+  assert.match(html,/70<sup>%<\/sup>[\s\S]*on completion/);
+});
