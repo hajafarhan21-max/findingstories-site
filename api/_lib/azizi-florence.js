@@ -1,4 +1,4 @@
-export const AZIZI_FLORENCE_PATH = '/projects/azizi-developments/azizi-florence';
+export const AZIZI_FLORENCE_PATH = '/azizi-florence';
 export const AZIZI_FLORENCE_CAMPAIGN = 'Azizi Florence — Pre-Launch EOI Campaign';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
