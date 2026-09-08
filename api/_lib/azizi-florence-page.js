@@ -13,7 +13,7 @@ export default async function handler(req,res){
     const [campaigns,units,sources]=await Promise.all([
       sql`SELECT id,name FROM crm_campaigns WHERE project_id=${project.id} AND name=${AZIZI_FLORENCE_CAMPAIGN} AND status='ACTIVE' AND is_test=FALSE`,
       sql`SELECT unit_type,bedrooms,property_type,minimum_area,maximum_area,starting_price,price_currency,review_status,is_test FROM project_unit_types WHERE project_id=${project.id} AND review_status='verified' AND is_test=FALSE ORDER BY starting_price NULLS LAST,unit_type`,
-      sql`SELECT DISTINCT s.filename,s.source_kind FROM project_sources s JOIN project_ingestions i ON i.id=s.ingestion_id WHERE i.project_id=${project.id} AND i.status='verified' AND i.is_test=FALSE ORDER BY s.filename`
+      sql`SELECT DISTINCT s.id,s.filename,s.source_kind,s.media_type FROM project_sources s JOIN project_ingestions i ON i.id=s.ingestion_id WHERE i.project_id=${project.id} AND i.status='verified' AND i.is_test=FALSE ORDER BY s.filename`
     ]);
     if(campaigns.length!==1){res.statusCode=404;res.setHeader('X-Robots-Tag','noindex, nofollow');return res.end('Campaign unavailable.');}
     const html=renderAziziFlorence({project,campaign:campaigns[0],units,sources,origin:process.env.PUBLIC_SITE_URL||'https://www.finding-stories.com',whatsappNumber:siteContact.whatsappNumber});
