@@ -29,13 +29,13 @@ test('document tables and sales sheets can never render as decorative Florence p
   assert.equal(classifyFlorenceMedia(sources[2]),FLORENCE_MEDIA_CLASS.PROJECT_PHOTOGRAPHY);
   const html=renderAziziFlorence({project,campaign,units:[unit],sources});
   assert.doesNotMatch(html,/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa|bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb/);
-  assert.match(html,/cccccccc-cccc-4ccc-8ccc-cccccccccccc/);
+  assert.doesNotMatch(html,/cccccccc-cccc-4ccc-8ccc-cccccccccccc/);
 });
 
 test('maps, floor plans, logos, and unclassified images are excluded from photographic placements',()=>{
   for(const [filename,classification] of [['location-map.png','MASTERPLAN_OR_MAP'],['three-bedroom-floor-plan.png','FLOORPLAN'],['azizi-logo.png','LOGO'],['page-12.png','UNSUITABLE']])assert.equal(classifyFlorenceMedia({filename}),classification);
   const html=renderAziziFlorence({project,campaign,units:[unit],sources:[{id:'dddddddd-dddd-4ddd-8ddd-dddddddddddd',filename:'location-map.png',media_type:'image/png'}]});
-  assert.match(html,/dddddddd-dddd-4ddd-8ddd-dddddddddddd/);
+  assert.doesNotMatch(html,/dddddddd-dddd-4ddd-8ddd-dddddddddddd/);
   assert.doesNotMatch(html,/unit-visual|image-mark|>AF</);
 });
 
@@ -50,7 +50,7 @@ test('adjacent verified payment percentages remain separate milestones',()=>{
 test('presentation uses an intentional seven-column desktop plan and never emits AF placeholders',async()=>{const [template,style]=await Promise.all([readFile('api/_lib/azizi-florence.js','utf8'),readFile('public/azizi-florence.css','utf8')]);assert.doesNotMatch(renderAziziFlorence({project,campaign,units:[unit],sources:[]}),/image-mark|map-placeholder|>AF</);assert.match(style,/grid-template-columns:repeat\(7,minmax\(0,1fr\)\)/);assert.match(style,/\.enquiry\{[^}]*grid-template-columns:42% 58%/);assert.match(template,/location-editorial/);});
 
 
-test('verified project copy supplies only supported quick USPs and map assets stay confined to location',()=>{const supplied={...project,description:'A 30 million sq.ft community with 3 & 4 bedroom townhouses and 4, 5 & 6 bedroom villas, 25% green and open spaces and direct access to E311.'};const map={id:'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',filename:'florence-location-map.png',media_type:'image/png'};const html=renderAziziFlorence({project:supplied,campaign,units:[unit],sources:[map]});for(const value of ['30 Million sq.ft Master Community','3, 4, 5 &amp; 6 Bed Townhouses &amp; Villas','~25% Green &amp; Open Spaces','Direct Access to E311'])assert.match(html,new RegExp(value));assert.match(html,/Verified Florence location plan/);assert.doesNotMatch(html,/hero-art has-image[^>]*>[\s\S]*eeeeeeee/);});
+test('verified project copy supplies only supported quick USPs and map assets stay confined to location',()=>{const supplied={...project,description:'A 30 million sq.ft community with 3 & 4 bedroom townhouses and 4, 5 & 6 bedroom villas, 25% green and open spaces and direct access to E311.'};const map={id:'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',filename:'florence-location-map.png',media_type:'image/png'};const html=renderAziziFlorence({project:supplied,campaign,units:[unit],sources:[map]});for(const value of ['30 Million sq.ft Master Community','3, 4, 5 &amp; 6 Bed Townhouses &amp; Villas','~25% Green &amp; Open Spaces','Direct Access to E311'])assert.match(html,new RegExp(value));assert.doesNotMatch(html,/Verified Florence location plan/);assert.doesNotMatch(html,/hero-art has-image[^>]*>[\s\S]*eeeeeeee/);});
 
 
-test('Florence resolver accepts generic verified image names and deterministically rejects obvious non-photography',()=>{const generic=[{id:'2',filename:'WhatsApp Image 2026-08-01 at 10.00.00.jpeg',media_type:'image/jpeg',source_kind:'other'},{id:'1',filename:'IMG_8472.png',media_type:'image/png',source_kind:'other'}];const rejected=[{id:'3',filename:'payment-plan.png',media_type:'image/png'},{id:'4',filename:'price sheet.jpg',media_type:'image/jpeg'},{id:'5',filename:'floor_plan.png',media_type:'image/png'},{id:'6',filename:'location-map.png',media_type:'image/png'},{id:'7',filename:'azizi-logo.png',media_type:'image/png'},{id:'8',filename:'brochure.pdf',media_type:'application/pdf'}];const assets=resolveFlorenceAssets([...generic,...rejected]);assert.deepEqual(assets.photos.map(x=>x.id),['1','2']);assert.equal(assets.hero.id,'1');assert.equal(assets.overview.id,'2');assert.equal(assets.HERO_IMAGE.id,'1');assert.equal(assets.OVERVIEW_MAIN_IMAGE.id,'2');assert.equal(assets.residences.length,5);});
+test('Florence resolver uses only exact static manifest ID and filename pairs',()=>{const source={id:'photo-id',filename:'audited-florence-hero.jpg',media_type:'image/jpeg'};const wrongName={...source,filename:'pricing-page.jpg'};const manifest={hero:{id:source.id,filename:source.filename},overview_main:null};assert.equal(resolveFlorenceAssets([source],manifest).hero,source);assert.equal(resolveFlorenceAssets([wrongName],manifest).hero,undefined);assert.equal(resolveFlorenceAssets([source],manifest).overview_main,undefined);});
