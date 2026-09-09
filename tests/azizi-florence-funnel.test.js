@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
-import { AZIZI_FLORENCE_CAMPAIGN,AZIZI_FLORENCE_PATH,FLORENCE_MEDIA_CLASS,aziziStructuredData,classifyFlorenceMedia,formatHandover,renderAziziFlorence } from '../api/_lib/azizi-florence.js';
+import { AZIZI_FLORENCE_CAMPAIGN,AZIZI_FLORENCE_PATH,FLORENCE_MEDIA_CLASS,aziziStructuredData,classifyFlorenceMedia,formatHandover,renderAziziFlorence,resolveFlorenceAssets } from '../api/_lib/azizi-florence.js';
 
 const project={id:'11111111-1111-4111-8111-111111111111',name:'Azizi Florence',developer:'Azizi Developments',area:'Verified Area',emirate:'Dubai',description:'Verified description.',availability_mode:'PRE_LAUNCH',payment_plan_summary:null,handover:null};
 const campaign={id:'22222222-2222-4222-8222-222222222222',name:AZIZI_FLORENCE_CAMPAIGN};
@@ -51,3 +51,6 @@ test('presentation uses an intentional seven-column desktop plan and never emits
 
 
 test('verified project copy supplies only supported quick USPs and map assets stay confined to location',()=>{const supplied={...project,description:'A 30 million sq.ft community with 3 & 4 bedroom townhouses and 4, 5 & 6 bedroom villas, 25% green and open spaces and direct access to E311.'};const map={id:'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',filename:'florence-location-map.png',media_type:'image/png'};const html=renderAziziFlorence({project:supplied,campaign,units:[unit],sources:[map]});for(const value of ['30 Million sq.ft Master Community','3, 4, 5 &amp; 6 Bed Townhouses &amp; Villas','~25% Green &amp; Open Spaces','Direct Access to E311'])assert.match(html,new RegExp(value));assert.match(html,/Verified Florence location plan/);assert.doesNotMatch(html,/hero-art has-image[^>]*>[\s\S]*eeeeeeee/);});
+
+
+test('Florence resolver accepts generic verified image names and deterministically rejects obvious non-photography',()=>{const generic=[{id:'2',filename:'WhatsApp Image 2026-08-01 at 10.00.00.jpeg',media_type:'image/jpeg',source_kind:'brochure'},{id:'1',filename:'IMG_8472.png',media_type:'image/png',source_kind:'other'}];const rejected=[{id:'3',filename:'payment-plan.png',media_type:'image/png'},{id:'4',filename:'price sheet.jpg',media_type:'image/jpeg'},{id:'5',filename:'floor_plan.png',media_type:'image/png'},{id:'6',filename:'location-map.png',media_type:'image/png'},{id:'7',filename:'azizi-logo.png',media_type:'image/png'},{id:'8',filename:'brochure.pdf',media_type:'application/pdf'}];const assets=resolveFlorenceAssets([...generic,...rejected]);assert.deepEqual(assets.photos.map(x=>x.id),['1','2']);assert.equal(assets.hero.id,'1');assert.equal(assets.overview.id,'2');assert.equal(assets.residences.length,5);});
