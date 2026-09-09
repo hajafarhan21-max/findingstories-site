@@ -35,7 +35,7 @@ test('document tables and sales sheets can never render as decorative Florence p
 test('maps, floor plans, logos, and unclassified images are excluded from photographic placements',()=>{
   for(const [filename,classification] of [['location-map.png','MASTERPLAN_OR_MAP'],['three-bedroom-floor-plan.png','FLOORPLAN'],['azizi-logo.png','LOGO'],['page-12.png','UNSUITABLE']])assert.equal(classifyFlorenceMedia({filename}),classification);
   const html=renderAziziFlorence({project,campaign,units:[unit],sources:[{id:'dddddddd-dddd-4ddd-8ddd-dddddddddddd',filename:'location-map.png',media_type:'image/png'}]});
-  assert.doesNotMatch(html,/dddddddd-dddd-4ddd-8ddd-dddddddddddd/);
+  assert.match(html,/dddddddd-dddd-4ddd-8ddd-dddddddddddd/);
   assert.doesNotMatch(html,/unit-visual|image-mark|>AF</);
 });
 
@@ -48,3 +48,6 @@ test('adjacent verified payment percentages remain separate milestones',()=>{
 
 
 test('presentation uses an intentional seven-column desktop plan and never emits AF placeholders',async()=>{const [template,style]=await Promise.all([readFile('api/_lib/azizi-florence.js','utf8'),readFile('public/azizi-florence.css','utf8')]);assert.doesNotMatch(renderAziziFlorence({project,campaign,units:[unit],sources:[]}),/image-mark|map-placeholder|>AF</);assert.match(style,/grid-template-columns:repeat\(7,minmax\(0,1fr\)\)/);assert.match(style,/\.enquiry\{[^}]*grid-template-columns:42% 58%/);assert.match(template,/location-editorial/);});
+
+
+test('verified project copy supplies only supported quick USPs and map assets stay confined to location',()=>{const supplied={...project,description:'A 30 million sq.ft community with 3 & 4 bedroom townhouses and 4, 5 & 6 bedroom villas, 25% green and open spaces and direct access to E311.'};const map={id:'eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',filename:'florence-location-map.png',media_type:'image/png'};const html=renderAziziFlorence({project:supplied,campaign,units:[unit],sources:[map]});for(const value of ['30 Million sq.ft Master Community','3, 4, 5 &amp; 6 Bed Townhouses &amp; Villas','~25% Green &amp; Open Spaces','Direct Access to E311'])assert.match(html,new RegExp(value));assert.match(html,/Verified Florence location plan/);assert.doesNotMatch(html,/hero-art has-image[^>]*>[\s\S]*eeeeeeee/);});
