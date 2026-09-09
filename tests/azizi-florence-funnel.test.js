@@ -24,8 +24,8 @@ test('document tables and sales sheets can never render as decorative Florence p
     {id:'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',filename:'payment-plan-sales-sheet.jpg',source_kind:'brochure',media_type:'image/jpeg'},
     {id:'cccccccc-cccc-4ccc-8ccc-cccccccccccc',filename:'florence-exterior-render.jpg',source_kind:'project photography',media_type:'image/jpeg'}
   ];
-  assert.equal(classifyFlorenceMedia(sources[0]),FLORENCE_MEDIA_CLASS.DOCUMENT_TABLE);
-  assert.equal(classifyFlorenceMedia(sources[1]),FLORENCE_MEDIA_CLASS.DOCUMENT_TABLE);
+  assert.equal(classifyFlorenceMedia(sources[0]),FLORENCE_MEDIA_CLASS.DOCUMENT_OR_TABLE);
+  assert.equal(classifyFlorenceMedia(sources[1]),FLORENCE_MEDIA_CLASS.DOCUMENT_OR_TABLE);
   assert.equal(classifyFlorenceMedia(sources[2]),FLORENCE_MEDIA_CLASS.PROJECT_PHOTOGRAPHY);
   const html=renderAziziFlorence({project,campaign,units:[unit],sources});
   assert.doesNotMatch(html,/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa|bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb/);
@@ -33,10 +33,10 @@ test('document tables and sales sheets can never render as decorative Florence p
 });
 
 test('maps, floor plans, logos, and unclassified images are excluded from photographic placements',()=>{
-  for(const [filename,classification] of [['location-map.png','MAP'],['three-bedroom-floor-plan.png','FLOOR_PLAN'],['azizi-logo.png','LOGO'],['page-12.png','UNCLASSIFIED']])assert.equal(classifyFlorenceMedia({filename}),classification);
+  for(const [filename,classification] of [['location-map.png','MASTERPLAN_OR_MAP'],['three-bedroom-floor-plan.png','FLOORPLAN'],['azizi-logo.png','LOGO'],['page-12.png','UNSUITABLE']])assert.equal(classifyFlorenceMedia({filename}),classification);
   const html=renderAziziFlorence({project,campaign,units:[unit],sources:[{id:'dddddddd-dddd-4ddd-8ddd-dddddddddddd',filename:'location-map.png',media_type:'image/png'}]});
   assert.doesNotMatch(html,/dddddddd-dddd-4ddd-8ddd-dddddddddddd/);
-  assert.match(html,/unit-visual[^>]* role="img"/);
+  assert.doesNotMatch(html,/unit-visual|image-mark|>AF</);
 });
 
 test('adjacent verified payment percentages remain separate milestones',()=>{
@@ -45,3 +45,6 @@ test('adjacent verified payment percentages remain separate milestones',()=>{
   assert.match(html,/10<sup>%<\/sup>[\s\S]*immediate/);
   assert.match(html,/70<sup>%<\/sup>[\s\S]*on completion/);
 });
+
+
+test('presentation uses an intentional seven-column desktop plan and never emits AF placeholders',async()=>{const [template,style]=await Promise.all([readFile('api/_lib/azizi-florence.js','utf8'),readFile('public/azizi-florence.css','utf8')]);assert.doesNotMatch(renderAziziFlorence({project,campaign,units:[unit],sources:[]}),/image-mark|map-placeholder|>AF</);assert.match(style,/grid-template-columns:repeat\(7,minmax\(0,1fr\)\)/);assert.match(style,/\.enquiry\{[^}]*grid-template-columns:42% 58%/);assert.match(template,/location-editorial/);});
