@@ -99,10 +99,11 @@ test('production build includes required routes/assets and no secret canaries', 
   }});
   assert.equal(result.status, 0, result.stderr);
   const files = ['dist/index.html','dist/admin.html','dist/open-house.html','dist/event-admin.html',
-    'dist/public/advisor.js','dist/public/advisor.css','dist/public/open-house.js','dist/public/open-house.css',
-    'dist/public/event-admin.js','dist/public/event-admin.css'];
+    'dist/advisor.js','dist/advisor.css','dist/open-house.js','dist/open-house.css',
+    'dist/event-admin.js','dist/event-admin.css','dist/assets/azizi-florence/hero.webp'];
   for (const file of files) await access(file);
-  const output = (await Promise.all(files.map(file => readFile(file, 'utf8')))).join('\n');
+  await assert.rejects(access('dist/public'));
+  const output = (await Promise.all(files.filter(file => !file.endsWith('.webp')).map(file => readFile(file, 'utf8')))).join('\n');
   for (const canary of canaries) assert.equal(output.includes(canary), false);
 });
 
