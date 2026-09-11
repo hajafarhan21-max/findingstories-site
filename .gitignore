@@ -4,3 +4,7 @@ node_modules/
 .env.local
 dist/
 *.log
+
+# Materialized from tracked text sources by scripts/materialize-florence-assets.mjs
+/public/assets/azizi-florence/amenities-background.webp
+/public/assets/azizi-florence/location-map.webp

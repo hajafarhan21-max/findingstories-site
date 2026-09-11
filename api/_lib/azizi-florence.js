@@ -45,37 +45,41 @@ export function classifyFlorenceMedia(source={}){
 }
 
 export const AZIZI_FLORENCE_ASSET_MANIFEST=Object.freeze({
-  hero:null,
-  overview_main:null,
-  overview_thumb_1:null,
-  overview_thumb_2:null,
-  overview_thumb_3:null,
+  hero:'/assets/azizi-florence/hero.webp',
+  overview_main:'/assets/azizi-florence/overview-main.webp',
+  overview_thumb_1:'/assets/azizi-florence/overview-thumb-1.webp',
+  overview_thumb_2:'/assets/azizi-florence/overview-thumb-2.webp',
+  overview_thumb_3:'/assets/azizi-florence/overview-thumb-3.webp',
+  // The uploaded thumb 4 is byte-for-byte identical to the amenities image.
+  // Keep the slot empty rather than presenting the same scene as a different view.
   overview_thumb_4:null,
-  residence_3br_townhouse:null,
-  residence_4br_townhouse:null,
-  residence_4br_villa:null,
-  residence_5br_villa:null,
-  residence_6br_villa:null,
+  residence_3br_townhouse:'/assets/azizi-florence/residence-3br-townhouse.webp',
+  residence_4br_townhouse:'/assets/azizi-florence/residence-4br-townhouse.webp',
+  residence_4br_villa:'/assets/azizi-florence/residence-4br-villa.webp',
+  residence_5br_villa:'/assets/azizi-florence/residence-5br-villa.webp',
+  residence_6br_villa:'/assets/azizi-florence/residence-6br-villa.webp',
+  // No separately approved payment-plan artwork exists in the production assets.
   payment_plan_visual:null,
-  amenities_background:null,
-  location_map:null
+  amenities_background:'/assets/azizi-florence/amenities-background.webp',
+  location_map:'/assets/azizi-florence/location-map.webp'
 });
 
 /** Resolve only exact, human-audited Florence manifest entries; never infer or recycle a source. */
 export function resolveFlorenceAssets(sources=[],manifest=AZIZI_FLORENCE_ASSET_MANIFEST){
   const byExactReference=reference=>{
     if(!reference)return undefined;
+    if(typeof reference==='string')return {path:reference,filename:reference.split('/').at(-1),media_type:'image/webp'};
     const source=sources.find(item=>item.id===reference.id&&item.filename===reference.filename);
     return source&&['image/jpeg','image/png'].includes(source.media_type)?source:undefined;
   };
   return Object.fromEntries(Object.entries(manifest).map(([slot,reference])=>[slot,byExactReference(reference)]));
 }
 
-const mediaUrl=source=>source?.id?`/api/acquisition?route=azizi-media&amp;id=${encodeURIComponent(source.id)}`:'';
+const mediaUrl=source=>source?.path?esc(source.path):source?.id?`/api/acquisition?route=azizi-media&amp;id=${encodeURIComponent(source.id)}`:'';
 function projectVisual(source,className,title,loading='lazy'){
   const image=mediaUrl(source);
   if(!image)return '';
-  return `<figure class="${className} has-image" data-source-id="${esc(source.id)}" data-source-file="${esc(source.filename||'')}"><img src="${image}" alt="Azizi Florence — ${esc(title)}" loading="${loading}" decoding="async"><figcaption><span>${esc(title)}</span><small>Azizi Florence</small></figcaption></figure>`;
+  return `<figure class="${className} has-image"${source.id?` data-source-id="${esc(source.id)}"`:''} data-source-file="${esc(source.filename||'')}"><img src="${image}" alt="Azizi Florence — ${esc(title)}" loading="${loading}" decoding="async"${loading==='eager'?' fetchpriority="high"':''}><figcaption><span>${esc(title)}</span><small>Azizi Florence</small></figcaption></figure>`;
 }
 
 export function aziziStructuredData(project,units,origin){
@@ -111,7 +115,14 @@ export function renderAziziFlorence({project,campaign,units=[],sources=[],origin
   const lowestPrice=prices.length?Math.min(...prices):null;
   const bedrooms=verifiedUnits.map(x=>Number(x.bedrooms)).filter(Number.isFinite);
   const bedroomRange=bedrooms.length?`${Math.min(...bedrooms)}–${Math.max(...bedrooms)} bedrooms`:'';
-  const unitCards=verifiedUnits.map((x,index)=>`<article class="unit-card">${projectVisual([assetMap.residence_3br_townhouse,assetMap.residence_4br_townhouse,assetMap.residence_4br_villa,assetMap.residence_5br_villa,assetMap.residence_6br_villa][index],'unit-visual','Florence project lifestyle')}<div class="unit-body"><div class="unit-number">0${index+1}</div><p class="card-kicker">${esc(x.property_type||'Residence')}</p><h3>${esc(x.unit_type)}</h3><dl>${fact('Bedrooms',x.bedrooms)}${fact('Size',x.minimum_area!=null&&x.maximum_area!=null?`${area(x.minimum_area)} – ${area(x.maximum_area)}`:x.minimum_area!=null?`From ${area(x.minimum_area)}`:'')}${fact('Starting from',x.starting_price!=null?money(x.starting_price,x.price_currency||'AED'):'')}</dl><a href="#enquire" class="card-link" data-analytics="cta_click" data-unit="${esc(x.unit_type)}">Request current availability <span>↗</span></a></div></article>`).join('');
+  const residenceAsset=unit=>{
+    const bedrooms=Number(unit.bedrooms);
+    const townhouse=/townhouse/i.test(`${unit.property_type||''} ${unit.unit_type||''}`);
+    if(bedrooms===3&&townhouse)return assetMap.residence_3br_townhouse;
+    if(bedrooms===4&&townhouse)return assetMap.residence_4br_townhouse;
+    return assetMap[`residence_${bedrooms}br_villa`];
+  };
+  const unitCards=verifiedUnits.map((x,index)=>`<article class="unit-card">${projectVisual(residenceAsset(x),'unit-visual',x.unit_type)}<div class="unit-body"><div class="unit-number">0${index+1}</div><p class="card-kicker">${esc(x.property_type||'Residence')}</p><h3>${esc(x.unit_type)}</h3><dl>${fact('Bedrooms',x.bedrooms)}${fact('Size',x.minimum_area!=null&&x.maximum_area!=null?`${area(x.minimum_area)} – ${area(x.maximum_area)}`:x.minimum_area!=null?`From ${area(x.minimum_area)}`:'')}${fact('Starting from',x.starting_price!=null?money(x.starting_price,x.price_currency||'AED'):'')}</dl><a href="#enquire" class="card-link" data-analytics="cta_click" data-unit="${esc(x.unit_type)}">Request current availability <span>↗</span></a></div></article>`).join('');
   const whatsApp=whatsappNumber?`<a class="button button-outline" data-analytics="whatsapp_click" target="_blank" rel="noopener noreferrer" href="https://wa.me/${esc(whatsappNumber)}?text=${encodeURIComponent('Hello Finding Stories, I would like to speak with an advisor about Azizi Florence.')}"><span>WhatsApp Advisor</span></a>`:'';
   const mobileWhatsApp=whatsappNumber?`<a data-analytics="whatsapp_click" target="_blank" rel="noopener noreferrer" href="https://wa.me/${esc(whatsappNumber)}?text=${encodeURIComponent('Hello Finding Stories, I would like to speak with an advisor about Azizi Florence.')}">WhatsApp</a>`:'';
   const sourceKinds=[...new Set(sources.map(x=>label(x.source_kind==='other'?'project source':x.source_kind)))];

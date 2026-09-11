@@ -8,6 +8,8 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "node --test --test-concurrency=1",
+    "assets:materialize": "node scripts/materialize-florence-assets.mjs",
+    "prebuild": "npm run assets:materialize",
     "build": "node scripts/build-browser.mjs && node scripts/build.mjs",
     "build:browser": "node scripts/build-browser.mjs",
     "db:init": "node scripts/init-production-db.mjs",
@@ -30,6 +32,7 @@
     "@eslint/js": "^9.31.0",
     "esbuild": "^0.28.2",
     "eslint": "^9.31.0",
+    "sharp": "^0.35.4",
     "typescript": "^5.8.3"
   },
   "engines": {
