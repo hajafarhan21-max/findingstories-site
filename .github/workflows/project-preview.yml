@@ -1,0 +1,21 @@
+name: Project preview gate
+on:
+  pull_request:
+    paths: ['projects/**','project-launch/**','scripts/project-agent.mjs','public/assets/**']
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+      - name: Gate changed project manifests
+        run: |
+          for manifest in projects/*/manifest.json; do npm run project:qa -- --manifest "$manifest"; done
+      # Vercel's Git integration creates the Preview only after this required job
+      # succeeds. Production promotion remains a separate protected approval.
