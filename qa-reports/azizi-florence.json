@@ -1,0 +1,21 @@
+{
+  "manifest": "/workspace/findingstories-site/projects/azizi-florence/manifest.json",
+  "passed": true,
+  "errors": [],
+  "warnings": [],
+  "checks": [
+    {
+      "name": "lead_endpoint",
+      "value": "/api/leads"
+    },
+    {
+      "name": "attribution",
+      "value": true
+    },
+    {
+      "name": "production_mutation",
+      "value": false
+    }
+  ],
+  "generated_at": "2026-09-11T13:58:42.488Z"
+}

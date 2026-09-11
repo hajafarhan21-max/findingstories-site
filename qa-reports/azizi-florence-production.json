@@ -1,0 +1,140 @@
+{
+  "base_url": "https://www.finding-stories.com",
+  "project_path": "/azizi-florence",
+  "submission_id": "8c031f93-e033-4ea9-bf85-c9d866dc3041",
+  "checks": {
+    "page": true,
+    "css": true,
+    "js": true,
+    "whatsapp_safe": true,
+    "assets": true,
+    "asset_semantics": true,
+    "cta_tracking": true,
+    "form_submission": true,
+    "crm_persistence": true,
+    "attribution": true,
+    "duplicate_protection": true
+  },
+  "defects": [],
+  "lead": {
+    "first_status": 201,
+    "duplicate_status": 200,
+    "id": "3561ba47-0c35-4b76-b0b2-042f6811a3c7",
+    "duplicate_id": "3561ba47-0c35-4b76-b0b2-042f6811a3c7",
+    "created": true,
+    "duplicate": true,
+    "same_record": true,
+    "test_marker": "AUTOMATED PRODUCTION ACCEPTANCE TEST - DO NOT CONTACT; AUTOMATED TEST - DO NOT CONTACT",
+    "cleanup": "not attempted: no unauthenticated production deletion is exposed",
+    "attribution": true
+  },
+  "assets": [
+    {
+      "path": "/assets/azizi-florence/hero.webp",
+      "status": 200,
+      "mime": "image/webp",
+      "decoded": true
+    },
+    {
+      "path": "/assets/azizi-florence/overview-main.webp",
+      "status": 200,
+      "mime": "image/webp",
+      "decoded": true
+    },
+    {
+      "path": "/assets/azizi-florence/overview-thumb-2.webp",
+      "status": 200,
+      "mime": "image/webp",
+      "decoded": true
+    },
+    {
+      "path": "/assets/azizi-florence/overview-thumb-3.webp",
+      "status": 200,
+      "mime": "image/webp",
+      "decoded": true
+    },
+    {
+      "path": "/assets/azizi-florence/residence-3br-townhouse.webp",
+      "status": 200,
+      "mime": "image/webp",
+      "decoded": true
+    },
+    {
+      "path": "/assets/azizi-florence/residence-4br-townhouse.webp",
+      "status": 200,
+      "mime": "image/webp",
+      "decoded": true
+    },
+    {
+      "path": "/assets/azizi-florence/residence-4br-villa.webp",
+      "status": 200,
+      "mime": "image/webp",
+      "decoded": true
+    },
+    {
+      "path": "/assets/azizi-florence/residence-5br-villa.webp",
+      "status": 200,
+      "mime": "image/webp",
+      "decoded": true
+    },
+    {
+      "path": "/assets/azizi-florence/residence-6br-villa.webp",
+      "status": 200,
+      "mime": "image/webp",
+      "decoded": true
+    },
+    {
+      "path": "/assets/azizi-florence/amenities-background.webp",
+      "status": 200,
+      "mime": "image/webp",
+      "decoded": true
+    },
+    {
+      "path": "/assets/azizi-florence/location-map.webp",
+      "status": 200,
+      "mime": "image/webp",
+      "decoded": true
+    }
+  ],
+  "roles": {
+    "hero": "/assets/azizi-florence/hero.webp",
+    "lifestyle": "/assets/azizi-florence/amenities-background.webp",
+    "location_map": "/assets/azizi-florence/location-map.webp",
+    "residences": [
+      "/assets/azizi-florence/residence-3br-townhouse.webp",
+      "/assets/azizi-florence/residence-4br-townhouse.webp",
+      "/assets/azizi-florence/residence-4br-villa.webp",
+      "/assets/azizi-florence/residence-5br-villa.webp",
+      "/assets/azizi-florence/residence-6br-villa.webp"
+    ],
+    "overview": [
+      "/assets/azizi-florence/overview-main.webp",
+      "/assets/azizi-florence/overview-thumb-2.webp",
+      "/assets/azizi-florence/overview-thumb-3.webp"
+    ]
+  },
+  "semantic_assets": [
+    {
+      "path": "/assets/azizi-florence/amenities-background.webp",
+      "slot": "amenities",
+      "sha256": "1835d61b6349eb6b8289e8884a4c31b709fb768f3838b8b6777aacecd364dbb9",
+      "mime": "image/webp",
+      "width": 1121,
+      "height": 625,
+      "decoded": true,
+      "approved": true
+    },
+    {
+      "path": "/assets/azizi-florence/location-map.webp",
+      "slot": "location_map",
+      "sha256": "0ae2775fa012defe55ac5ab8926ff9adf5516734370c427cb46e52984390e847",
+      "mime": "image/webp",
+      "width": 2480,
+      "height": 1691,
+      "decoded": true,
+      "approved": true
+    }
+  ],
+  "revenue_ready": true,
+  "generated_at": "2026-09-11T14:12:51.695Z"
+}

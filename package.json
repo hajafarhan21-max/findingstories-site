@@ -17,7 +17,10 @@
     "inventory:binghatti": "node scripts/import-binghatti-amberhall.mjs",
     "smoke:production": "node scripts/production-smoke.mjs",
     "acceptance:rsvp": "node scripts/acceptance-rsvp.mjs",
-    "acceptance:production": "node scripts/acceptance-production.mjs"
+    "acceptance:production": "node scripts/acceptance-production.mjs",
+    "acceptance:project": "node scripts/production-project-acceptance.mjs",
+    "project:agent": "node scripts/project-agent.mjs",
+    "project:qa": "node scripts/project-agent.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",

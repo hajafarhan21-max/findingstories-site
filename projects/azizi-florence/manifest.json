@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "project": { "slug": "azizi-florence", "name": "Azizi Florence", "developer": "Azizi Developments", "path": "/azizi-florence" },
+  "facts": {},
+  "assets": [
+    {
+      "path": "public/assets/azizi-florence/amenities-background.webp",
+      "slot": "amenities",
+      "sha256": "1835d61b6349eb6b8289e8884a4c31b709fb768f3838b8b6777aacecd364dbb9",
+      "perceptual_hash": "9f8f0f8dce6f9e9e",
+      "mime": "image/webp", "width": 1121, "height": 625,
+      "visual_review": { "classification": "amenities", "confidence": 1, "evidence": "Approved Florence brochure render visibly shows the landscaped Bardini Park amenity and pavilion.", "reviewer": "PR-71 asset materialization approval" }
+    },
+    {
+      "path": "public/assets/azizi-florence/location-map.webp",
+      "slot": "location_map",
+      "sha256": "0ae2775fa012defe55ac5ab8926ff9adf5516734370c427cb46e52984390e847",
+      "perceptual_hash": "080624091221066c",
+      "mime": "image/webp", "width": 2480, "height": 1691,
+      "visual_review": { "classification": "location_map", "confidence": 1, "evidence": "Approved Florence brochure map visibly identifies Florence and labelled Dubai, Sharjah, road and airport connectivity.", "reviewer": "PR-71 asset materialization approval" }
+    }
+  ],
+  "rejected_assets": [],
+  "lead": { "endpoint": "/api/leads", "campaign_id": "azizi-florence", "project_id": "azizi-florence" }
+}
