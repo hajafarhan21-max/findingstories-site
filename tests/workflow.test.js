@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { followUpDate, persistAndSchedule, qualifySavedLead } from '../api/_lib/workflow.js';
+import { followUpDate, persistAndSchedule, persistRespondAndSchedule, qualifySavedLead } from '../api/_lib/workflow.js';
 
 const fallback = lead => ({ lead_score: 20, temperature: 'Cold', qualification_summary: 'Fallback',
   requirement_summary: 'Initial enquiry', missing_information: [], next_action: 'Review',
@@ -33,6 +33,45 @@ test('capture returns without waiting for slow qualification', async () => {
   assert.equal(result.id, 'fast-lead');
   finishQualification();
   await scheduled;
+});
+
+test('durable persistence and HTTP response finish before any post-persistence work starts', async () => {
+  const events = [];
+  let scheduled;
+  const saved = await persistRespondAndSchedule({
+    lead: { name: 'Test' },
+    persist: async () => { events.push('persisted'); return { id: 'lead-fast' }; },
+    respond: () => events.push('response-ended'),
+    schedule: promise => { events.push('scheduled'); scheduled = promise; },
+    background: async () => events.push('smtp-and-ai')
+  });
+  assert.equal(saved.id, 'lead-fast');
+  assert.deepEqual(events.slice(0, 3), ['persisted', 'response-ended', 'scheduled']);
+  await scheduled;
+  assert.deepEqual(events, ['persisted', 'response-ended', 'scheduled', 'smtp-and-ai']);
+});
+
+test('slow or failing background work cannot delay or fail the successful response', async () => {
+  let release;
+  const waiting = new Promise((_, reject) => { release = () => reject(new Error('SMTP unavailable')); });
+  let scheduled;
+  const result = await Promise.race([
+    persistRespondAndSchedule({ lead: {}, persist: async () => ({ id: 'durable-lead' }), respond: () => {},
+      schedule: promise => { scheduled = promise.catch(() => undefined); }, background: () => waiting }),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('response exceeded 50ms after persistence')), 50))
+  ]);
+  assert.equal(result.id, 'durable-lead');
+  release();
+  await scheduled;
+});
+
+test('responded duplicate retains duplicate semantics and schedules no workflow', async () => {
+  const events = [];
+  const result = await persistRespondAndSchedule({ lead: {}, persist: async () => ({ id: 'original', duplicate: true }),
+    respond: saved => events.push(`response:${saved.duplicate}`), schedule: () => events.push('scheduled'),
+    background: async () => events.push('background') });
+  assert.equal(result.id, 'original');
+  assert.deepEqual(events, ['response:true']);
 });
 
 test('a duplicate submission is returned without scheduling qualification again', async () => {

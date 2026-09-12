@@ -27,6 +27,21 @@ export async function persistAndSchedule({ lead, persist, schedule, background }
   return saved;
 }
 
+/**
+ * Finish the visitor-facing response as soon as persistence succeeds, then hand
+ * post-capture work to the platform lifecycle. `background` is deliberately a
+ * function rather than an already-started promise: SMTP/AI work cannot begin
+ * before `respond` has ended the HTTP response.
+ */
+export async function persistRespondAndSchedule({ lead, persist, respond, schedule, background }) {
+  const saved = await persist(lead);
+  if (!saved.id) throw new Error('Lead persistence did not return an identifier');
+
+  respond(saved);
+  if (!saved.duplicate) schedule(Promise.resolve().then(() => background(saved)));
+  return saved;
+}
+
 export async function qualifySavedLead({ id, lead, capturedAt, qualify, fallback, start = async () => {}, update }) {
   await start(id);
   let qualification;
