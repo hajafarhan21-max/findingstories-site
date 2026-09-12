@@ -6,8 +6,8 @@ export const PUBLIC_PROJECTS=Object.freeze([
     "developer": "Azizi Developments",
     "path": "/azizi-florence",
     "indexable": true,
-    "title": "Azizi Florence: Prices, Payment Plan & Units | Finding Stories",
-    "description": "Explore verified Azizi Florence unit types, starting prices, payment plan and location details. Request current availability, floor plans or EOI guidance.",
+    "title": "Azizi Florence Sharjah | Townhouses & Villas",
+    "description": "Review verified Azizi Florence prices, residence sizes, payment plan and Sharjah location with Finding Stories, then request current availability or floor plans.",
     "primary_intent": "Azizi Florence project details and availability",
     "secondary_intents": [
       "Azizi Florence price",
@@ -46,6 +46,51 @@ export const PUBLIC_PROJECTS=Object.freeze([
         "answer": "Suitability depends on your objectives, budget, time horizon and the confirmed release terms. An advisor can help you assess the project; investment outcomes are not guaranteed."
       }
     ],
+    "organic_search": {
+      "property_types": [
+        "Townhouses",
+        "Villas"
+      ],
+      "unit_configurations": [
+        "3 bedroom townhouse",
+        "4 bedroom townhouse",
+        "4 bedroom villa",
+        "5 bedroom villa",
+        "6 bedroom villa"
+      ],
+      "verified_pricing": true,
+      "payment_plan": true,
+      "completion_handover": true,
+      "location_facts": true,
+      "investment_considerations": [
+        "Master-community scale",
+        "Townhouse and villa property mix",
+        "Verified payment structure",
+        "Green and open-space proposition",
+        "Verified road connectivity",
+        "Buyer objectives and suitability"
+      ],
+      "internal_link_context": [
+        "Sharjah",
+        "Azizi Developments",
+        "townhouses",
+        "villas",
+        "off-plan property",
+        "investment",
+        "new launches",
+        "payment plans"
+      ],
+      "cta_mappings": {
+        "price": "Request current availability",
+        "payment_plan": "Discuss payment plan",
+        "floor_plan": "Request floor plan",
+        "location": "Ask an advisor",
+        "eoi": "Register interest",
+        "investment": "Speak with an advisor",
+        "residence": "Request current availability"
+      },
+      "supporting_pages": []
+    },
     "canonical_url": "https://www.finding-stories.com/azizi-florence"
   }
 ]);

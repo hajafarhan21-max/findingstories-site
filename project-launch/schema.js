@@ -8,6 +8,18 @@ const asset = z.object({
   width: z.number().int().positive(), height: z.number().int().positive(),
   visual_review: z.object({ classification: z.enum([...ASSET_SLOTS,'lifestyle','logo','document','unsuitable']), confidence: z.number().min(0).max(1), evidence: z.string().min(10), reviewer: z.string().min(1) }).strict()
 }).strict();
+const organicSearch = z.object({
+  property_types:z.array(z.string().min(2)).min(1).max(12),
+  unit_configurations:z.array(z.string().min(2)).min(1).max(20),
+  verified_pricing:z.boolean(), payment_plan:z.boolean(), completion_handover:z.boolean(),
+  location_facts:z.boolean(), investment_considerations:z.array(z.string().min(10)).max(12),
+  internal_link_context:z.array(z.string().min(3)).max(12),
+  cta_mappings:z.record(z.string().min(2),z.string().min(2)),
+  supporting_pages:z.array(z.object({
+    path:z.string().startsWith('/insights/'), title:z.string().min(10).max(70),
+    description:z.string().min(50).max(170), quality_rationale:z.string().min(80), approved:z.literal(true)
+  }).strict()).max(3).default([])
+}).strict();
 
 export const projectManifestSchema = z.object({
   schema_version: z.literal(1), status: z.enum(['draft','ready_for_preview','approved']),
@@ -17,7 +29,8 @@ export const projectManifestSchema = z.object({
     primary_intent:z.string().min(3).optional(), secondary_intents:z.array(z.string().min(3)).max(12).optional(),
     location:z.string().min(2).optional(), unit_types:z.array(z.string().min(2)).max(12).optional(),
     launch_status:z.string().min(2).optional(), hero_image:z.string().startsWith('/').optional(), hero_alt:z.string().min(8).optional(),
-    faq:z.array(z.object({ question:z.string().min(10), answer:z.string().min(20) }).strict()).max(10).optional()
+    faq:z.array(z.object({ question:z.string().min(10), answer:z.string().min(20) }).strict()).max(10).optional(),
+    organic_search:organicSearch.optional()
   }).strict().optional(),
   facts: z.record(z.string(), fact), assets: z.array(asset), rejected_assets: z.array(z.object({ path:z.string(), observed_content:z.string(), reason:z.string() }).strict()).default([]),
   lead: z.object({ endpoint:z.literal('/api/leads'), campaign_id:z.string().min(1), project_id:z.string().min(1), whatsapp_number:z.string().regex(/^\d{8,15}$/).optional() }).strict()
