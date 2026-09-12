@@ -1,15 +1,33 @@
 import { z } from 'zod';
 
 const clean = (max) => z.string().trim().max(max).optional().default('');
+export const conversionTypeSchema=z.enum(['enquiry','brochure_request','availability_request','consultation','site_visit','whatsapp']);
+
+export function normalizeLeadPhone(value){
+  const raw=String(value||'').trim();
+  if(!/^[+()\-\s\d]+$/.test(raw))throw new Error('Invalid phone characters');
+  let digits=raw.replace(/\D/g,'');
+  if(raw.startsWith('00'))digits=digits.slice(2);
+  else if(/^05\d{8}$/.test(digits))digits=`971${digits.slice(1)}`;
+  else if(!raw.startsWith('+'))throw new Error('International numbers must include a country code');
+  if(!/^[1-9]\d{7,14}$/.test(digits))throw new Error('Phone must be a valid international number');
+  return `+${digits}`;
+}
+
+export const FLORENCE_QUALIFICATION_FIELDS=Object.freeze(['email','property_type','budget','purpose','purchase_timeline','preferred_contact_method','conversion_type']);
+export function missingFlorenceQualification(lead){
+  return FLORENCE_QUALIFICATION_FIELDS.filter(field=>!String(lead[field]||'').trim());
+}
 const attributionSchema=z.object({source:clean(120),medium:clean(120),landing_page:clean(1000),referrer:clean(1000),utm_source:clean(200),utm_medium:clean(200),utm_campaign:clean(200),utm_content:clean(200),utm_term:clean(200)}).strict();
 export const leadSchema = z.object({
   name: z.string().trim().min(2).max(100),
-  phone: z.string().trim().min(7).max(30).regex(/^[+()\-\s\d]+$/),
+  phone: z.string().trim().min(7).max(30).transform((value,ctx)=>{try{return normalizeLeadPhone(value);}catch(error){ctx.addIssue({code:'custom',message:error.message});return z.NEVER;}}),
   email: z.union([z.string().trim().email().max(254), z.literal('')]).optional().default(''),
   country_of_residence: clean(100), purpose: clean(80), budget: clean(100),
   property_type: clean(100), bedrooms: clean(50), preferred_areas: clean(300),
   payment_method: clean(50), purchase_timeline: clean(100), owns_uae_property: clean(30),
   preferred_contact_method: clean(30),
+  conversion_type: conversionTypeSchema.optional(),
   additional_requirements: clean(1500),
   consent: z.union([z.boolean(), z.literal('true'), z.literal('on')]).transform(Boolean),
   source: clean(120), medium: clean(120), landing_page: clean(1000), referrer: clean(1000),

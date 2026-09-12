@@ -121,6 +121,7 @@ export async function initializeSchema(sql) {
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS purchase_timeline TEXT`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS owns_uae_property TEXT`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS preferred_contact_method TEXT`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS conversion_type TEXT`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS additional_requirements TEXT`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS consent BOOLEAN DEFAULT FALSE`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS source TEXT DEFAULT 'website'`;
@@ -219,7 +220,10 @@ export async function initializeSchema(sql) {
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS budget_intent TEXT`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS bedroom_intent TEXT`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS acquisition_signals JSONB NOT NULL DEFAULT '[]'`;
-    await sql`CREATE TABLE IF NOT EXISTS acquisition_events (id BIGSERIAL PRIMARY KEY,event_key UUID NOT NULL UNIQUE,visitor_id UUID NOT NULL,event_type TEXT NOT NULL CHECK(event_type IN ('page_view','repeated_visit','property_comparison','payment_plan_interest','whatsapp_click','meeting_request','site_visit_request')),page_url TEXT NOT NULL,page_type TEXT,area TEXT,project TEXT,developer TEXT,source TEXT,referrer TEXT,utm_source TEXT,utm_medium TEXT,utm_campaign TEXT,is_test BOOLEAN NOT NULL DEFAULT FALSE,created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+    await sql`CREATE TABLE IF NOT EXISTS acquisition_events (id BIGSERIAL PRIMARY KEY,event_key UUID NOT NULL UNIQUE,visitor_id UUID NOT NULL,event_type TEXT NOT NULL CHECK(event_type IN ('page_view','page_visit','cta_click','location_explore','enquiry_started','enquiry','brochure_request','availability_request','consultation','site_visit','whatsapp','repeated_visit','property_comparison','payment_plan_interest','meeting_request','site_visit_request')),conversion_type TEXT,page_url TEXT NOT NULL,page_type TEXT,area TEXT,project TEXT,developer TEXT,source TEXT,referrer TEXT,utm_source TEXT,utm_medium TEXT,utm_campaign TEXT,utm_content TEXT,utm_term TEXT,is_test BOOLEAN NOT NULL DEFAULT FALSE,created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`;
+    await sql`ALTER TABLE acquisition_events ADD COLUMN IF NOT EXISTS conversion_type TEXT`;
+    await sql`ALTER TABLE acquisition_events ADD COLUMN IF NOT EXISTS utm_content TEXT`;
+    await sql`ALTER TABLE acquisition_events ADD COLUMN IF NOT EXISTS utm_term TEXT`;
     await sql`CREATE INDEX IF NOT EXISTS acquisition_events_page_idx ON acquisition_events(is_test,page_url,created_at DESC)`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS search_query TEXT`;
     await sql`CREATE TABLE IF NOT EXISTS search_console_snapshots (id BIGSERIAL PRIMARY KEY,fingerprint TEXT NOT NULL UNIQUE,query TEXT NOT NULL,page TEXT NOT NULL,clicks INTEGER NOT NULL CHECK(clicks>=0),impressions INTEGER NOT NULL CHECK(impressions>=clicks),ctr NUMERIC NOT NULL CHECK(ctr BETWEEN 0 AND 1),average_position NUMERIC NOT NULL CHECK(average_position>=0),metric_date DATE NOT NULL,device TEXT,country TEXT,report_start DATE NOT NULL,report_end DATE NOT NULL,source TEXT NOT NULL CHECK(source='google_search_console'),environment TEXT NOT NULL,is_test BOOLEAN NOT NULL DEFAULT FALSE,ingested_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),CHECK(is_test=(environment='test')))`;

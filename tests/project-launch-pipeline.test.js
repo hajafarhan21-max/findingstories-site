@@ -32,5 +32,5 @@ test('truncated and extension-spoofed images fail byte-level inspection',async()
 test('reusable production acceptance is wired and Florence primary enquiry has analytics',async()=>{
   const [runner,template,pkg]=await Promise.all([readFile('project-launch/production-acceptance.js','utf8'),readFile('api/_lib/azizi-florence.js','utf8'),readFile('package.json','utf8')]);
   assert.match(runner,/ASSET_APPROVAL_MISMATCH/);assert.match(runner,/LEAD_PERSISTENCE_OR_IDEMPOTENCY_FAILED/);assert.match(runner,/same_record/);assert.match(runner,/whatsapp_safe/);
-  assert.match(template,/class="nav-cta" data-analytics="cta_click"/);assert.equal(JSON.parse(pkg).scripts['acceptance:project'],'node scripts/production-project-acceptance.mjs');
+  assert.match(template,/class="nav-cta" data-conversion="enquiry"/);assert.equal(JSON.parse(pkg).scripts['acceptance:project'],'node scripts/production-project-acceptance.mjs');
 });
