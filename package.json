@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit",
     "test": "node --test --test-concurrency=1",
     "assets:materialize": "node scripts/materialize-florence-assets.mjs",
-    "prebuild": "npm run assets:materialize",
+    "prebuild": "npm run assets:materialize && npm run seo:generate",
     "build": "node scripts/build-browser.mjs && node scripts/build.mjs",
     "build:browser": "node scripts/build-browser.mjs",
     "db:init": "node scripts/init-production-db.mjs",
@@ -20,7 +20,9 @@
     "acceptance:production": "node scripts/acceptance-production.mjs",
     "acceptance:project": "node scripts/production-project-acceptance.mjs",
     "project:agent": "node scripts/project-agent.mjs",
-    "project:qa": "node scripts/project-agent.mjs"
+    "project:qa": "node scripts/project-agent.mjs",
+    "seo:generate": "node scripts/generate-seo.mjs",
+    "seo:verify": "node scripts/verify-production-seo.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",

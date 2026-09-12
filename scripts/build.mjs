@@ -1,4 +1,4 @@
-import { access, cp, mkdir, readdir, rm } from 'node:fs/promises';
+import { access, cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 
 const staticEntries = ['index.html', 'admin.html', 'open-house.html', 'event-admin.html'];
 const requiredFunctions = [
@@ -24,6 +24,12 @@ for (const file of staticEntries) {
 }
 for (const file of await readdir('public')) {
   await cp(`public/${file}`, `dist/${file}`, { recursive: true });
+}
+if(process.env.VERCEL_ENV&&process.env.VERCEL_ENV!=='production'){
+  const homepage=await readFile('dist/index.html','utf8');
+  await writeFile('dist/index.html',homepage.replace('<head>','<head><meta name="robots" content="noindex,nofollow">'));
+  await writeFile('dist/robots.txt','User-agent: *\nDisallow: /\n');
+  await rm('dist/sitemap.xml',{force:true});
 }
 // Vercel bundles root api/ files as Functions rather than copying them into outputDirectory.
 // Failing here gives a useful build error if a route is accidentally renamed or omitted.

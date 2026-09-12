@@ -2,6 +2,7 @@ import searchConsole from './_lib/search-console-route.js';
 import events from './_lib/acquisition-events.js';
 import page from './_lib/acquisition-page.js';
 import sitemap from './_lib/acquisition-sitemap.js';
+import robots from './_lib/robots.js';
 import aziziFlorence from './_lib/azizi-florence-page.js';
 import aziziFlorenceMedia from './_lib/azizi-florence-media.js';
-export default function handler(req,res){const route=req.query?.route;if(route==='events')return events(req,res);if(route==='azizi-florence')return aziziFlorence(req,res);if(route==='azizi-media')return aziziFlorenceMedia(req,res);if(route==='page')return page(req,res);if(route==='sitemap')return sitemap(req,res);if(route==='search-console')return searchConsole(req,res);res.statusCode=404;return res.end('Not found');}
+export default function handler(req,res){const route=req.query?.route;if(route==='events')return events(req,res);if(route==='azizi-florence')return aziziFlorence(req,res);if(route==='azizi-media')return aziziFlorenceMedia(req,res);if(route==='page')return page(req,res);if(route==='sitemap')return sitemap(req,res);if(route==='robots')return robots(req,res);if(route==='search-console')return searchConsole(req,res);res.statusCode=404;return res.end('Not found');}

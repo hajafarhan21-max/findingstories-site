@@ -12,6 +12,7 @@ const asset = z.object({
 export const projectManifestSchema = z.object({
   schema_version: z.literal(1), status: z.enum(['draft','ready_for_preview','approved']),
   project: z.object({ slug: z.string().regex(/^[a-z0-9-]+$/), name: z.string().min(1), developer: z.string().min(1), path: z.string().startsWith('/') }).strict(),
+  seo: z.object({ indexable:z.boolean(), title:z.string().min(10).max(70), description:z.string().min(50).max(170) }).strict().optional(),
   facts: z.record(z.string(), fact), assets: z.array(asset), rejected_assets: z.array(z.object({ path:z.string(), observed_content:z.string(), reason:z.string() }).strict()).default([]),
   lead: z.object({ endpoint:z.literal('/api/leads'), campaign_id:z.string().min(1), project_id:z.string().min(1), whatsapp_number:z.string().regex(/^\d{8,15}$/).optional() }).strict()
 }).strict();

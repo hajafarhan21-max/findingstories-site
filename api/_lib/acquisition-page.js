@@ -1,5 +1,6 @@
 import { database } from '../_lib/db.js';
 import { canonicalUrl, discoverOpportunities, eligiblePage, internalLinks, pageSchema, safeProperty } from '../_lib/acquisition.js';
+import { CANONICAL_ORIGIN } from './seo.js';
 import { method } from '../_lib/http.js';
 
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -25,6 +26,6 @@ export default async function handler(req,res){
     const pages=discoverOpportunities(inventory);
     const selected=inventory.filter(x=>page.inventory_ids.includes(x.id));
     res.statusCode=200;res.setHeader('Content-Type','text/html; charset=utf-8');res.setHeader('Cache-Control','public, s-maxage=900, stale-while-revalidate=86400');
-    return res.end(render(page,selected,pages,process.env.PUBLIC_SITE_URL||'https://www.finding-stories.com'));
+    return res.end(render(page,selected,pages,CANONICAL_ORIGIN));
   }catch{res.statusCode=503;res.setHeader('X-Robots-Tag','noindex, nofollow');return res.end('Property data is temporarily unavailable.');}
 }

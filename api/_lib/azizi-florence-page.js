@@ -2,6 +2,7 @@ import { database } from './db.js';
 import { method } from './http.js';
 import { AZIZI_FLORENCE_CAMPAIGN,renderAziziFlorence } from './azizi-florence.js';
 import { siteContact } from './site-config.js';
+import { CANONICAL_ORIGIN,isPreviewDeployment } from './seo.js';
 
 export default async function handler(req,res){
   if(!method(req,res,['GET']))return;
@@ -16,7 +17,7 @@ export default async function handler(req,res){
       sql`SELECT DISTINCT s.id,s.filename,s.source_kind,s.media_type FROM project_sources s JOIN project_ingestions i ON i.id=s.ingestion_id WHERE i.project_id=${project.id} AND i.status='verified' AND i.is_test=FALSE ORDER BY s.filename`
     ]);
     if(campaigns.length!==1){res.statusCode=404;res.setHeader('X-Robots-Tag','noindex, nofollow');return res.end('Campaign unavailable.');}
-    const html=renderAziziFlorence({project,campaign:campaigns[0],units,sources,origin:process.env.PUBLIC_SITE_URL||'https://www.finding-stories.com',whatsappNumber:siteContact.whatsappNumber});
-    res.statusCode=200;res.setHeader('Content-Type','text/html; charset=utf-8');res.setHeader('Cache-Control','public, s-maxage=300, stale-while-revalidate=3600');return res.end(html);
+    const html=renderAziziFlorence({project,campaign:campaigns[0],units,sources,origin:CANONICAL_ORIGIN,whatsappNumber:siteContact.whatsappNumber});
+    res.statusCode=200;if(isPreviewDeployment())res.setHeader('X-Robots-Tag','noindex, nofollow');res.setHeader('Content-Type','text/html; charset=utf-8');res.setHeader('Cache-Control','public, s-maxage=300, stale-while-revalidate=3600');return res.end(html);
   }catch(error){console.error('Azizi Florence page failed:',error instanceof Error?error.message:'unknown');res.statusCode=503;res.setHeader('X-Robots-Tag','noindex, nofollow');return res.end('Project data is temporarily unavailable.');}
 }

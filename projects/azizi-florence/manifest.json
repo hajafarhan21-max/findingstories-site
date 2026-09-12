@@ -1,7 +1,12 @@
 {
   "schema_version": 1,
   "status": "approved",
-  "project": { "slug": "azizi-florence", "name": "Azizi Florence", "developer": "Azizi Developments", "path": "/azizi-florence" },
+  "project": {
+    "slug": "azizi-florence",
+    "name": "Azizi Florence",
+    "developer": "Azizi Developments",
+    "path": "/azizi-florence"
+  },
   "facts": {},
   "assets": [
     {
@@ -9,18 +14,41 @@
       "slot": "amenities",
       "sha256": "1835d61b6349eb6b8289e8884a4c31b709fb768f3838b8b6777aacecd364dbb9",
       "perceptual_hash": "9f8f0f8dce6f9e9e",
-      "mime": "image/webp", "width": 1121, "height": 625,
-      "visual_review": { "classification": "amenities", "confidence": 1, "evidence": "Approved Florence brochure render visibly shows the landscaped Bardini Park amenity and pavilion.", "reviewer": "PR-71 asset materialization approval" }
+      "mime": "image/webp",
+      "width": 1121,
+      "height": 625,
+      "visual_review": {
+        "classification": "amenities",
+        "confidence": 1,
+        "evidence": "Approved Florence brochure render visibly shows the landscaped Bardini Park amenity and pavilion.",
+        "reviewer": "PR-71 asset materialization approval"
+      }
     },
     {
       "path": "public/assets/azizi-florence/location-map.png",
       "slot": "location_map",
       "sha256": "c5c4be887c1a816502c1797c5bad03ab832b963a91ff818c0facd0d124a977cd",
       "perceptual_hash": "010624091220046c",
-      "mime": "image/png", "width": 3119, "height": 2126,
-      "visual_review": { "classification": "location_map", "confidence": 1, "evidence": "Approved Florence brochure map visibly identifies Florence and labelled Dubai, Sharjah, road and airport connectivity.", "reviewer": "PR-71 asset materialization approval" }
+      "mime": "image/png",
+      "width": 3119,
+      "height": 2126,
+      "visual_review": {
+        "classification": "location_map",
+        "confidence": 1,
+        "evidence": "Approved Florence brochure map visibly identifies Florence and labelled Dubai, Sharjah, road and airport connectivity.",
+        "reviewer": "PR-71 asset materialization approval"
+      }
     }
   ],
   "rejected_assets": [],
-  "lead": { "endpoint": "/api/leads", "campaign_id": "azizi-florence", "project_id": "azizi-florence" }
+  "lead": {
+    "endpoint": "/api/leads",
+    "campaign_id": "azizi-florence",
+    "project_id": "azizi-florence"
+  },
+  "seo": {
+    "indexable": true,
+    "title": "Azizi Florence | Verified Pre-Launch Residences | Finding Stories",
+    "description": "Explore verified Azizi Florence residences and register your interest with a Finding Stories property advisor."
+  }
 }
