@@ -1,5 +1,22 @@
-import { database } from '../_lib/db.js';
-import { canonicalUrl, discoverOpportunities } from '../_lib/acquisition.js';
-import { AZIZI_FLORENCE_CAMPAIGN,AZIZI_FLORENCE_PATH } from './azizi-florence.js';
-import { method } from '../_lib/http.js';
-export default async function handler(req,res){if(!method(req,res,['GET']))return;try{const sql=database();const [inventory,campaign]=await Promise.all([sql`SELECT * FROM property_inventory WHERE status='active' AND is_test=FALSE AND data_quality='verified'`,sql`SELECT c.id FROM crm_campaigns c JOIN projects p ON p.id=c.project_id WHERE c.name=${AZIZI_FLORENCE_CAMPAIGN} AND c.status='ACTIVE' AND c.is_test=FALSE AND p.review_status='verified' AND p.active=TRUE AND p.is_test=FALSE`]);const origin=process.env.PUBLIC_SITE_URL||'https://www.finding-stories.com';const urls=['/',...(campaign.length===1?[AZIZI_FLORENCE_PATH]:[]),...discoverOpportunities(inventory).map(x=>x.path)];res.setHeader('Content-Type','application/xml; charset=utf-8');res.setHeader('Cache-Control','public, s-maxage=900');res.end(`<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${[...new Set(urls)].map(x=>`<url><loc>${canonicalUrl(x,origin)}</loc></url>`).join('')}</urlset>`);}catch{res.statusCode=503;res.setHeader('X-Robots-Tag','noindex');res.end('');}}
+import { database } from './db.js';
+import { method } from './http.js';
+import { discoverOpportunities } from './acquisition.js';
+import { PUBLIC_PROJECTS } from './project-registry.generated.js';
+import { isPreviewDeployment,sitemapXml } from './seo.js';
+
+export default async function handler(req,res){
+  if(!method(req,res,['GET']))return;
+  if(isPreviewDeployment()){
+    res.statusCode=404;res.setHeader('X-Robots-Tag','noindex, nofollow');return res.end('Not found');
+  }
+  let inventory=[];
+  try{
+    const sql=database();
+    inventory=await sql`SELECT * FROM property_inventory WHERE status='active' AND is_test=FALSE AND data_quality='verified'`;
+  }catch(error){
+    // Approved project discovery must not disappear during a database incident.
+    console.error('Optional inventory sitemap expansion failed:',error instanceof Error?error.message:'unknown');
+  }
+  const paths=['/',...PUBLIC_PROJECTS.map(project=>project.path),...discoverOpportunities(inventory).filter(page=>page.indexable).map(page=>page.path)];
+  res.statusCode=200;res.setHeader('Content-Type','application/xml; charset=utf-8');res.setHeader('Cache-Control','public, s-maxage=900, stale-while-revalidate=3600');res.end(sitemapXml(paths));
+}

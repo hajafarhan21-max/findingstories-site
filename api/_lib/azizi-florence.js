@@ -1,3 +1,5 @@
+import { CANONICAL_ORIGIN } from './seo.js';
+
 export const AZIZI_FLORENCE_PATH = '/azizi-florence';
 export const AZIZI_FLORENCE_CAMPAIGN = 'Azizi Florence — Pre-Launch EOI Campaign';
 
@@ -88,7 +90,7 @@ export function aziziStructuredData(project,units,origin){
   return {'@context':'https://schema.org','@type':'RealEstateListing',name:project.name,url,description:project.description||undefined,address:project.area||project.emirate?{'@type':'PostalAddress',addressLocality:project.area||undefined,addressRegion:project.emirate||undefined,addressCountry:'AE'}:undefined,offers:offers.length?offers:undefined,brand:project.developer?{'@type':'Organization',name:project.developer}:undefined};
 }
 
-export function renderAziziFlorence({project,campaign,units=[],sources=[],origin='https://www.finding-stories.com',whatsappNumber=''}){
+export function renderAziziFlorence({project,campaign,units=[],sources=[],origin=CANONICAL_ORIGIN,whatsappNumber=''}){
   const canonical=`${origin.replace(/\/$/,'')}${AZIZI_FLORENCE_PATH}`;
   const verifiedUnits=units.filter(x=>x.review_status==='verified'&&!x.is_test&&Number(x.bedrooms)>=3&&Number(x.bedrooms)<=6);
   const handover=formatHandover(project.handover);
