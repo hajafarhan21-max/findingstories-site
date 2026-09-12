@@ -1,10 +1,8 @@
 import { waitUntil } from '@vercel/functions';
-import { ensureSchema, database } from './_lib/db.js';
+import { database } from './_lib/db.js';
 import { clientIp, json, method, parseJson, rateLimit } from './_lib/http.js';
 import { leadSchema, missingFlorenceQualification, safeText } from './_lib/validation.js';
-import { qualifyLead, fallback } from './_lib/qualify.js';
-import { persistAndSchedule, qualifySavedLead } from './_lib/workflow.js';
-import { sendLeadNotification } from './_lib/lead-notification.js';
+import { persistRespondAndSchedule, qualifySavedLead } from './_lib/workflow.js';
 
 async function updateQualification(sql, id, result) {
   await sql`UPDATE leads SET lead_score=${result.lead_score}, temperature=${result.temperature},
@@ -59,6 +57,24 @@ function scheduleQualification(promise) {
   }
 }
 
+async function runPostPersistence({ saved, lead, project, sql }) {
+  // Keep optional, relatively heavy integrations out of the capture function's
+  // cold-start module graph as well as out of its HTTP response lifecycle.
+  const [{ sendLeadNotification }, { qualifyLead, fallback }] = await Promise.all([
+    import('./_lib/lead-notification.js'),
+    import('./_lib/qualify.js')
+  ]);
+  await Promise.allSettled([
+    sendLeadNotification({ saved, lead, project })
+      .catch(error => console.error('Lead notification failed:', error instanceof Error ? error.message : 'unknown')),
+    qualifySavedLead({
+      id: saved.id, lead, capturedAt: saved.captured_at, qualify: qualifyLead, fallback,
+      start: id => markQualificationStarted(sql, id),
+      update: (id, result) => updateQualification(sql, id, result)
+    }).catch(error => console.error('Background qualification update failed:', error instanceof Error ? error.message : 'unknown'))
+  ]);
+}
+
 export default async function handler(req, res) {
   if (!method(req, res, ['POST'])) return;
   if (!rateLimit(`lead:${clientIp(req)}`, 6, 10 * 60_000)) return json(res, 429, { error: 'Too many requests. Please try again later.' });
@@ -69,7 +85,9 @@ export default async function handler(req, res) {
     if (lead.website) return json(res, 202, { ok: true });
     if (!lead.consent) return json(res, 400, { error: 'Contact consent is required.' });
 
-    await ensureSchema();
+    // Production schema changes are deployed by migrations (`npm run db:init`).
+    // Running the full idempotent DDL bootstrap here made cold lead submissions
+    // wait for scores of unrelated ALTER/CREATE/UPDATE statements.
     const sql = database();
     let attributedLead=lead;
     let attributedProject=null;
@@ -88,23 +106,14 @@ export default async function handler(req, res) {
       if(missing.length)return json(res,400,{error:'Please complete all Florence qualification fields.',fields:Object.fromEntries(missing.map(field=>[field,['Required']]))});
       if(attributedLead.conversion_type==='whatsapp')return json(res,400,{error:'WhatsApp conversions cannot create form leads.'});
     }
-    const saved = await persistAndSchedule({
+    await persistRespondAndSchedule({
       lead:attributedLead,
       persist: value => persistLead(sql, value),
+      respond: saved => json(res, saved.duplicate ? 200 : 201, { ok: true, id: saved.id, duplicate: saved.duplicate,
+        message: 'Thank you. Haja and the Finding Stories team will review your requirement.' }),
       schedule: scheduleQualification,
-      background: value => Promise.allSettled([
-        sendLeadNotification({ saved:value, lead:attributedLead, project:attributedProject })
-          .catch(error => console.error('Lead notification failed:', error instanceof Error ? error.message : 'unknown')),
-        qualifySavedLead({
-          id: value.id, lead:attributedLead, capturedAt: value.captured_at, qualify: qualifyLead, fallback,
-          start: id => markQualificationStarted(sql, id),
-          update: (id, result) => updateQualification(sql, id, result)
-        }).catch(error => console.error('Background qualification update failed:', error instanceof Error ? error.message : 'unknown'))
-      ])
+      background: saved => runPostPersistence({ saved, lead:attributedLead, project:attributedProject, sql })
     });
-
-    json(res, saved.duplicate ? 200 : 201, { ok: true, id: saved.id, duplicate: saved.duplicate,
-      message: 'Thank you. Haja and the Finding Stories team will review your requirement.' });
   } catch (error) {
     console.error('Lead capture failed:', error instanceof Error ? error.message : 'unknown');
     json(res, 500, { error: 'We could not save your enquiry. Please contact us on WhatsApp.' });
