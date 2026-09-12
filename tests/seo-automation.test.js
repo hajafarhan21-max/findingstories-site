@@ -52,3 +52,20 @@ test('Florence metadata is self-canonical, indexable, useful and internally link
   assert.match(template,/meta name="description"/);assert.match(template,/meta name="robots" content="index,follow/);assert.match(template,/rel="canonical"/);assert.match(template,/property="og:url"/);assert.match(template,/application\/ld\+json/);
   assert.match(home,/href="\/azizi-florence"/);
 });
+
+
+test('every approved project has reusable organic acquisition inputs and homepage discovery',async()=>{
+  const home=await readFile('index.html','utf8');
+  const manifests=await loadPublicProjects();
+  assert.match(home,/PROJECT_DISCOVERY_START/);
+  for(const project of manifests){
+    assert.ok(project.title.length>=30&&project.title.length<=70,`${project.slug} title length`);
+    assert.ok(project.description.length>=70&&project.description.length<=170,`${project.slug} description length`);
+    assert.ok(project.primary_intent);
+    assert.ok(project.secondary_intents?.length);
+    assert.ok(project.hero_alt);
+    assert.ok(project.faq?.length);
+    assert.ok(home.includes(`href="${project.path}"`),`${project.slug} homepage discovery`);
+    assert.doesNotMatch(JSON.stringify(project),/vercel\.app|guaranteed (?:roi|appreciation|returns)/i);
+  }
+});
