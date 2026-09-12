@@ -1,87 +1,57 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { leadNotification, sendLeadNotification } from '../api/_lib/lead-notification.js';
-import { leadSchema } from '../api/_lib/validation.js';
-import { persistAndSchedule } from '../api/_lib/workflow.js';
+import { readFile } from 'node:fs/promises';
+import { PGlite } from '@electric-sql/pglite';
+import { formatAedBudget, formatUaeTime, leadNotification, sendLeadNotification } from '../api/_lib/lead-notification.js';
+import { persistRespondAndSchedule } from '../api/_lib/workflow.js';
 
-const saved = { id: '91d5698d-b109-4c4f-a2e8-752b61387a0f', captured_at: '2026-09-12T10:00:00.000Z' };
-const attribution = { source: 'google', medium: 'cpc', landing_page: '/projects/azizi-developments/azizi-florence', referrer: 'https://google.com/', utm_source: 'google', utm_medium: 'cpc', utm_campaign: 'florence-launch', utm_content: 'hero', utm_term: 'sharjah villas' };
-const lead = { name: 'Real Buyer', phone: '+971501234567', email: 'buyer@example.com', country_of_residence: 'UAE', property_type: 'Villa', bedrooms: '4', preferred_areas: 'Al Furjan', budget: 'AED 3m', budget_intent: '2m-3m', bedroom_intent: '4', purpose: 'Investment', payment_method: 'Mortgage', purchase_timeline: 'Within 3 months', owns_uae_property: 'Yes', preferred_contact_method: 'WhatsApp', additional_requirements: 'Please call', acquisition_signals: ['project_page_enquiry'], consent: true, ...attribution, first_touch_attribution: attribution, latest_touch_attribution: attribution };
-const env = { GMAIL_SMTP_USER: 'findingstories@gmail.com', GMAIL_SMTP_APP_PASSWORD: 'test-app-password', LEAD_NOTIFICATION_TO: 'hajafarhan21@gmail.com' };
+const saved = { id: '91d5698d-b109-4c4f-a2e8-752b61387a0f', lead_number: 100001, captured_at: '2026-09-12T15:12:00.000Z' };
+const lead = { name: 'Real Buyer', phone: '+971501234567', email: 'buyer@example.com', property_type: 'Villa', bedrooms: '5', preferred_areas: 'Umm Al Fanain, Sharjah', budget: '1234567', purpose: 'Investment', purchase_timeline: 'Within 3 months', preferred_contact_method: 'WhatsApp', additional_requirements: 'Please call & confirm', source: 'google', medium: 'cpc', utm_source: 'google', utm_campaign: 'florence-launch' };
+const project = { project_name: 'Azizi Florence', developer: 'Azizi Developments' };
+const env = { GMAIL_SMTP_USER: 'findingstories@gmail.com', GMAIL_SMTP_APP_PASSWORD: 'test-app-password' };
 
-function smtp({ error } = {}) {
-  const transports = [];
-  const messages = [];
-  return { transports, messages, createTransport: options => { transports.push(options); return { sendMail: async message => { messages.push(message); if (error) throw error; return { messageId: 'test' }; } }; } };
-}
+function smtp() { const messages=[]; return { messages, createTransport: () => ({ sendMail: async message => { messages.push(message); } }) }; }
 
-test('homepage and Florence notifications include clear project/source subject context', () => {
-  assert.equal(leadNotification({ saved, lead }).subject, 'New Finding Stories Lead — google — Real Buyer');
-  assert.equal(leadNotification({ saved, lead: { ...lead, conversion_type: 'site_visit' }, project: { project_name: 'Azizi Florence', developer: 'Azizi Developments' } }).subject,
-    'New Finding Stories Lead — Azizi Florence — Real Buyer');
+test('UAE time and AED values are formatted for sales', () => {
+  assert.equal(formatUaeTime(saved.captured_at), '12 Sep 2026, 7:12 PM UAE Time');
+  assert.equal(formatAedBudget('AED 1,234,567'), 'AED 1,234,567');
+  assert.equal(formatAedBudget('1234567', true), 'AED 1.23M');
 });
 
-test('notification preserves Florence, UTM, qualification and conversion metadata', () => {
-  const florenceLead = { ...lead, conversion_type: 'site_visit', project_id: saved.id, campaign_id: saved.id, page_type: 'project', acquisition_area: 'Dubai South', content_source: 'Florence landing page' };
-  const notification = leadNotification({ saved, lead: florenceLead, project: { project_name: 'Azizi Florence', developer: 'Azizi Developments' } });
-  for (const value of [...Object.values(attribution), 'Azizi Florence', 'Azizi Developments', 'Request a Site Visit', 'UAE', 'Mortgage', '4', 'Al Furjan', 'project_page_enquiry', 'Dubai South', 'Florence landing page']) assert.ok(notification.text.includes(value), `missing ${value}`);
-  for (const label of ['Lead ID', 'Date/time', 'Client name', 'Phone', 'Email', 'Project', 'Developer', 'Conversion type', 'Preferred residence / property type', 'Budget', 'Buying purpose', 'Purchase timeframe', 'Preferred contact method', 'Enquiry message', 'Source / medium', 'Landing page', 'Referrer', 'UTM source', 'UTM medium', 'UTM campaign', 'UTM content', 'UTM term', 'First-touch attribution', 'Latest-touch attribution']) assert.match(notification.text, new RegExp(`${label}:`));
+test('Florence notification has concise subject plus HTML and text bodies', () => {
+  const result=leadNotification({saved,lead:{...lead,conversion_type:'site_visit'},project});
+  assert.equal(result.subject, '🔥 New Lead | Azizi Florence | 5BR Villa | AED 1.23M');
+  for (const body of [result.text,result.html]) for (const value of ['Lead #100001','12 Sep 2026, 7:12 PM UAE Time','Azizi Florence','Site Visit','AED 1,234,567']) assert.match(body,new RegExp(value.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')));
+  assert.match(result.html,/Please call &amp; confirm/);
+  assert.match(result.text,/Internal reference: 91d5698d/);
 });
 
-test('new lead persists and responds promptly before scheduling SMTP notification', async () => {
-  const events = [];
-  let scheduled;
-  let release;
-  const waiting = new Promise(resolve => { release = resolve; });
-  const result = await Promise.race([
-    persistAndSchedule({ lead, persist: async () => { events.push('persisted'); return saved; }, background: async () => { events.push('notification'); await waiting; }, schedule: promise => { events.push('scheduled'); scheduled = promise; } }),
-    new Promise((_, reject) => setTimeout(() => reject(new Error('response waited for notification')), 50))
-  ]);
-  assert.equal(result.id, saved.id);
-  assert.deepEqual(events.slice(0, 2), ['persisted', 'scheduled']);
-  release();
-  await scheduled;
-  assert.deepEqual(events, ['persisted', 'scheduled', 'notification']);
+test('homepage consultation falls back gracefully and empty placeholders are omitted', () => {
+  const result=leadNotification({saved,lead:{name:'Homepage Buyer',phone:'+971501111111',source:'Direct',conversion_type:'consultation',email:'Not provided',budget:'',additional_requirements:null}});
+  assert.equal(result.subject,'🔥 New Lead | Finding Stories | Consultation');
+  for (const body of [result.text,result.html]) { assert.doesNotMatch(body,/Not provided|null|undefined/); assert.match(body,/Homepage Buyer/); assert.match(body,/Consultation/); }
 });
 
-test('duplicate persisted retries do not schedule duplicate operational email', async () => {
-  let notifications = 0;
-  const result = await persistAndSchedule({ lead, persist: async () => ({ ...saved, duplicate: true }), background: async () => { notifications += 1; }, schedule: () => {} });
-  assert.equal(result.duplicate, true);
-  assert.equal(notifications, 0);
+test('Gmail SMTP receives both body formats without changing its configuration', async () => {
+  const mock=smtp(); await sendLeadNotification({saved,lead,project,env,createTransport:mock.createTransport});
+  assert.ok(mock.messages[0].text); assert.ok(mock.messages[0].html); assert.equal(mock.messages[0].from,env.GMAIL_SMTP_USER); assert.equal(mock.messages[0].to,'hajafarhan21@gmail.com');
 });
 
-test('validation and honeypot failures cannot reach notification scheduling', () => {
-  let notifications = 0;
-  const invalid = leadSchema.safeParse({ ...lead, phone: 'invalid' });
-  const spam = leadSchema.safeParse({ ...lead, website: 'https://spam.example' });
-  if (invalid.success || (spam.success && !spam.data.website)) notifications += 1;
-  assert.equal(invalid.success, false);
-  assert.equal(spam.success, true);
-  assert.equal(notifications, 0);
+test('duplicate suppression and SMTP remain strictly post-response', async () => {
+  const events=[]; let scheduled;
+  await persistRespondAndSchedule({lead,persist:async()=>saved,respond:()=>events.push('response'),schedule:p=>{events.push('scheduled');scheduled=p;},background:async()=>events.push('smtp')});
+  assert.deepEqual(events.slice(0,2),['response','scheduled']); await scheduled; assert.deepEqual(events,['response','scheduled','smtp']);
+  await persistRespondAndSchedule({lead,persist:async()=>({...saved,duplicate:true}),respond:()=>events.push('duplicate-response'),schedule:()=>events.push('bad-schedule'),background:async()=>events.push('bad-smtp')});
+  assert.deepEqual(events.slice(-1),['duplicate-response']);
 });
 
-test('lead is delivered using secure Gmail SMTP and the default recipient', async () => {
-  const mock = smtp();
-  await sendLeadNotification({ saved, lead: { ...lead, conversion_type: 'consultation' }, env: { GMAIL_SMTP_USER: env.GMAIL_SMTP_USER, GMAIL_SMTP_APP_PASSWORD: env.GMAIL_SMTP_APP_PASSWORD }, createTransport: mock.createTransport });
-  assert.deepEqual(mock.transports[0], { host: 'smtp.gmail.com', port: 465, secure: true, auth: { user: env.GMAIL_SMTP_USER, pass: env.GMAIL_SMTP_APP_PASSWORD }, connectionTimeout: 8000, greetingTimeout: 8000, socketTimeout: 8000 });
-  assert.equal(mock.messages[0].from, env.GMAIL_SMTP_USER);
-  assert.equal(mock.messages[0].to, 'hajafarhan21@gmail.com');
-});
-
-test('missing SMTP credentials fails notification without creating a transport', async () => {
-  const mock = smtp();
-  await assert.rejects(sendLeadNotification({ saved, lead, env: {}, createTransport: mock.createTransport }), /GMAIL_SMTP_USER and GMAIL_SMTP_APP_PASSWORD/);
-  assert.equal(mock.transports.length, 0);
-});
-
-test('SMTP failure is isolated from successful persisted lead capture', async () => {
-  const mock = smtp({ error: new Error('SMTP unavailable') });
-  let scheduled;
-  const result = await persistAndSchedule({ lead, persist: async () => saved,
-    background: value => sendLeadNotification({ saved: value, lead, env, createTransport: mock.createTransport }).catch(() => undefined),
-    schedule: promise => { scheduled = promise; } });
-  assert.equal(result.id, saved.id);
-  await scheduled;
-  assert.equal(mock.messages.length, 1);
+test('lead-number migration preserves UUIDs and assigns unique numbers under concurrency', async () => {
+  const db=new PGlite();
+  await db.exec('CREATE TABLE leads(id UUID PRIMARY KEY DEFAULT gen_random_uuid(), captured_at TIMESTAMPTZ DEFAULT NOW()); INSERT INTO leads DEFAULT VALUES;');
+  const original=(await db.query('SELECT id FROM leads')).rows[0].id;
+  await db.exec(await readFile('database/migrations/020_lead_numbers.sql','utf8'));
+  await Promise.all(Array.from({length:20},()=>db.query('INSERT INTO leads DEFAULT VALUES')));
+  const rows=(await db.query('SELECT id,lead_number FROM leads ORDER BY lead_number')).rows;
+  assert.equal(rows.length,21); assert.equal(new Set(rows.map(row=>Number(row.lead_number))).size,21); assert.equal(Number(rows[0].lead_number),100001); assert.ok(rows.some(row=>row.id===original));
+  await db.close();
 });

@@ -58,9 +58,12 @@ export function database() {
 }
 
 export async function initializeSchema(sql) {
+  await runPhase('leads', 'create_lead_number_sequence', () => sql`
+      CREATE SEQUENCE IF NOT EXISTS lead_number_seq START WITH 100001`, { tolerateConcurrentDdl: true });
   await runPhase('leads', 'create_leads_table', () => sql`
       CREATE TABLE IF NOT EXISTS leads (
         id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(),
+        lead_number BIGINT NOT NULL DEFAULT nextval('lead_number_seq'),
         submission_id UUID,
         name TEXT NOT NULL,
         phone TEXT NOT NULL,
@@ -108,6 +111,12 @@ export async function initializeSchema(sql) {
     // A legacy table may predate any of the current capture fields. Keep every
     // addition nullable or give it a population-safe default.
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS id UUID DEFAULT pg_catalog.gen_random_uuid()`;
+    await sql`CREATE SEQUENCE IF NOT EXISTS lead_number_seq START WITH 100001`;
+    await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS lead_number BIGINT`;
+    await sql`ALTER TABLE leads ALTER COLUMN lead_number SET DEFAULT nextval('lead_number_seq')`;
+    await sql`SELECT setval('lead_number_seq', GREATEST(COALESCE(MAX(lead_number), 100000), 100001), MAX(lead_number) IS NOT NULL) FROM leads`;
+    await sql`UPDATE leads SET lead_number=nextval('lead_number_seq') WHERE lead_number IS NULL`;
+    await sql`ALTER TABLE leads ALTER COLUMN lead_number SET NOT NULL`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS name TEXT`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS phone TEXT`;
     await sql`ALTER TABLE leads ADD COLUMN IF NOT EXISTS email TEXT`;
@@ -172,6 +181,7 @@ export async function initializeSchema(sql) {
     await sql`CREATE INDEX IF NOT EXISTS leads_created_at_idx ON leads (created_at DESC)`;
     await sql`CREATE INDEX IF NOT EXISTS leads_temperature_idx ON leads (temperature)`;
     await sql`CREATE UNIQUE INDEX IF NOT EXISTS leads_submission_id_idx ON leads (submission_id) WHERE submission_id IS NOT NULL`;
+    await sql`CREATE UNIQUE INDEX IF NOT EXISTS leads_lead_number_idx ON leads (lead_number)`;
     await sql`CREATE INDEX IF NOT EXISTS leads_qualification_status_idx ON leads (qualification_status)`;
     await sql`CREATE INDEX IF NOT EXISTS leads_status_idx ON leads (status)`;
     await sql`CREATE INDEX IF NOT EXISTS leads_assigned_to_idx ON leads (assigned_to)`;

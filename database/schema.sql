@@ -1,5 +1,6 @@
+CREATE SEQUENCE IF NOT EXISTS lead_number_seq START WITH 100001;
 CREATE TABLE IF NOT EXISTS leads (
-  id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(), submission_id UUID, name TEXT NOT NULL, phone TEXT NOT NULL, email TEXT,
+  id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(), lead_number BIGINT NOT NULL DEFAULT nextval('lead_number_seq'), submission_id UUID, name TEXT NOT NULL, phone TEXT NOT NULL, email TEXT,
   country_of_residence TEXT, purpose TEXT, budget TEXT, property_type TEXT, bedrooms TEXT, conversion_type TEXT,
   preferred_areas TEXT, payment_method TEXT, purchase_timeline TEXT, owns_uae_property TEXT,
   additional_requirements TEXT, consent BOOLEAN NOT NULL DEFAULT FALSE, source TEXT NOT NULL DEFAULT 'website',
@@ -18,6 +19,11 @@ CREATE TABLE IF NOT EXISTS leads (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), captured_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS submission_id UUID;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS lead_number BIGINT;
+ALTER TABLE leads ALTER COLUMN lead_number SET DEFAULT nextval('lead_number_seq');
+SELECT setval('lead_number_seq', GREATEST(COALESCE(MAX(lead_number), 100000), 100001), MAX(lead_number) IS NOT NULL) FROM leads;
+UPDATE leads SET lead_number=nextval('lead_number_seq') WHERE lead_number IS NULL;
+ALTER TABLE leads ALTER COLUMN lead_number SET NOT NULL;
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS conversion_type TEXT;
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualification_status TEXT NOT NULL DEFAULT 'pending';
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualification_source TEXT;
@@ -48,6 +54,7 @@ UPDATE leads SET qualification_status='completed', qualification_source=COALESCE
 CREATE INDEX IF NOT EXISTS leads_created_at_idx ON leads (created_at DESC);
 CREATE INDEX IF NOT EXISTS leads_temperature_idx ON leads (temperature);
 CREATE UNIQUE INDEX IF NOT EXISTS leads_submission_id_idx ON leads (submission_id) WHERE submission_id IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS leads_lead_number_idx ON leads (lead_number);
 CREATE INDEX IF NOT EXISTS leads_qualification_status_idx ON leads (qualification_status);
 CREATE INDEX IF NOT EXISTS leads_status_idx ON leads (status);
 CREATE INDEX IF NOT EXISTS leads_assigned_to_idx ON leads (assigned_to);
@@ -64,3 +71,4 @@ CREATE INDEX IF NOT EXISTS leads_next_follow_up_at_idx ON leads (next_follow_up_
 \ir migrations/013_project_ingestion.sql
 \ir migrations/010_crm_foundation.sql
 \ir migrations/019_florence_revenue_funnel.sql
+\ir migrations/020_lead_numbers.sql
