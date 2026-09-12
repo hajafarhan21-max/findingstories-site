@@ -38,11 +38,11 @@ async function persistLead(sql, lead) {
       ${lead.page_type||null},${lead.acquisition_area||null},
       ${lead.acquisition_project||null},${lead.acquisition_developer||null},${lead.budget_intent||null},${lead.bedroom_intent||null},${JSON.stringify(lead.acquisition_signals||[])})
     ON CONFLICT (submission_id) WHERE submission_id IS NOT NULL DO NOTHING
-    RETURNING id,captured_at,FALSE duplicate
+    RETURNING id,lead_number,captured_at,FALSE duplicate
     ), duplicate AS (
       UPDATE leads SET latest_touch_attribution=${JSON.stringify(latestTouch)}::jsonb,updated_at=NOW()
       WHERE submission_id=${lead.submission_id||null} AND NOT EXISTS (SELECT 1 FROM attempted)
-      RETURNING id,captured_at,TRUE duplicate
+      RETURNING id,lead_number,captured_at,TRUE duplicate
     ) SELECT * FROM attempted UNION ALL SELECT * FROM duplicate`;
   if (rows[0]) return rows[0];
   return {};
