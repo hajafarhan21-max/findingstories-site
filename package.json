@@ -28,6 +28,7 @@
     "@vercel/blob": "^2.8.0",
     "@vercel/functions": "^2.2.12",
     "adm-zip": "^0.6.0",
+    "nodemailer": "^7.0.13",
     "zod": "^4.4.3"
   },
   "devDependencies": {

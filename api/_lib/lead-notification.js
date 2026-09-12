@@ -1,6 +1,7 @@
+import nodemailer from 'nodemailer';
 import { safeText } from './validation.js';
 
-const RESEND_ENDPOINT = 'https://api.resend.com/emails';
+const DEFAULT_NOTIFICATION_TO = 'hajafarhan21@gmail.com';
 const CONVERSION_LABELS = Object.freeze({
   enquiry: 'Enquiry',
   brochure_request: 'Request Brochure',
@@ -10,7 +11,12 @@ const CONVERSION_LABELS = Object.freeze({
 });
 
 function display(value, fallback = 'Not provided') {
-  return safeText(value, 1000) || fallback;
+  return safeText(Array.isArray(value) ? value.join(', ') : value, 1000) || fallback;
+}
+
+function attribution(value) {
+  if (!value || typeof value !== 'object') return '';
+  return Object.entries(value).map(([key, item]) => `${key}: ${display(item)}`).join('; ');
 }
 
 export function conversionLabel(value) {
@@ -19,6 +25,7 @@ export function conversionLabel(value) {
 
 export function leadNotification({ saved, lead, project }) {
   const projectName = display(project?.project_name || lead.acquisition_project, 'Homepage');
+  const subjectSource = projectName === 'Homepage' ? display(lead.source, 'Website') : projectName;
   const developer = display(project?.developer || lead.acquisition_developer);
   const conversion = conversionLabel(lead.conversion_type);
   const name = display(lead.name);
@@ -29,46 +36,60 @@ export function leadNotification({ saved, lead, project }) {
     ['Client name', name],
     ['Phone', lead.phone],
     ['Email', lead.email],
+    ['Country of residence', lead.country_of_residence],
     ['Project', projectName],
+    ['Project ID', lead.project_id],
     ['Developer', developer],
+    ['Campaign ID', lead.campaign_id],
     ['Conversion type', conversion],
+    ['Page type', lead.page_type],
+    ['Acquisition area', lead.acquisition_area],
     ['Preferred residence / property type', residence],
     ['Budget', lead.budget],
+    ['Budget intent', lead.budget_intent],
+    ['Bedroom intent', lead.bedroom_intent],
     ['Buying purpose', lead.purpose],
+    ['Payment method', lead.payment_method],
     ['Purchase timeframe', lead.purchase_timeline],
+    ['Owns UAE property', lead.owns_uae_property],
     ['Preferred contact method', lead.preferred_contact_method],
     ['Enquiry message', lead.additional_requirements],
+    ['Acquisition signals', lead.acquisition_signals],
     ['Source / medium', [lead.source, lead.medium].filter(Boolean).join(' / ')],
+    ['Content source', lead.content_source],
     ['Landing page', lead.landing_page],
     ['Referrer', lead.referrer],
     ['UTM source', lead.utm_source],
     ['UTM medium', lead.utm_medium],
     ['UTM campaign', lead.utm_campaign],
     ['UTM content', lead.utm_content],
-    ['UTM term', lead.utm_term]
+    ['UTM term', lead.utm_term],
+    ['First-touch attribution', attribution(lead.first_touch_attribution)],
+    ['Latest-touch attribution', attribution(lead.latest_touch_attribution)]
   ];
   return {
-    subject: `NEW FINDING STORIES LEAD | ${conversion} | ${projectName} | ${name}`,
+    subject: `New Finding Stories Lead — ${subjectSource} — ${name}`,
     text: rows.map(([label, value]) => `${label}: ${display(value)}`).join('\n')
   };
 }
 
-export async function sendLeadNotification({ saved, lead, project, env = process.env, fetchImpl = fetch }) {
-  const apiKey = env.RESEND_API_KEY?.trim();
-  const to = env.LEAD_NOTIFICATION_TO?.trim();
-  const from = env.LEAD_NOTIFICATION_FROM?.trim();
-  if (!apiKey || !to || !from) {
-    throw new Error('Lead notifications are not configured: set RESEND_API_KEY, LEAD_NOTIFICATION_TO, and LEAD_NOTIFICATION_FROM');
+export async function sendLeadNotification({ saved, lead, project, env = process.env, createTransport = nodemailer.createTransport }) {
+  const user = env.GMAIL_SMTP_USER?.trim();
+  const pass = env.GMAIL_SMTP_APP_PASSWORD?.trim();
+  const to = env.LEAD_NOTIFICATION_TO?.trim() || DEFAULT_NOTIFICATION_TO;
+  if (!user || !pass) {
+    throw new Error('Lead notifications are not configured: set GMAIL_SMTP_USER and GMAIL_SMTP_APP_PASSWORD');
   }
-  const notification = leadNotification({ saved, lead, project });
-  const response = await fetchImpl(RESEND_ENDPOINT, {
-    method: 'POST',
-    headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ from, to: [to], subject: notification.subject, text: notification.text }),
-    signal: globalThis.AbortSignal.timeout(8_000)
+
+  const transporter = createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: { user, pass },
+    connectionTimeout: 8_000,
+    greetingTimeout: 8_000,
+    socketTimeout: 8_000
   });
-  if (!response.ok) {
-    const detail = safeText(await response.text(), 500);
-    throw new Error(`Resend rejected lead notification (${response.status})${detail ? `: ${detail}` : ''}`);
-  }
+  const notification = leadNotification({ saved, lead, project });
+  await transporter.sendMail({ from: user, to, subject: notification.subject, text: notification.text });
 }
