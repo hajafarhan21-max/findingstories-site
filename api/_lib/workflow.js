@@ -21,7 +21,9 @@ export function finaliseQualification(qualification, capturedAt) {
 export async function persistAndSchedule({ lead, persist, schedule, background }) {
   const saved = await persist(lead);
   if (!saved.id) throw new Error('Lead persistence did not return an identifier');
-  if (!saved.duplicate) schedule(background(saved));
+  // Deferring invocation also contains synchronous background failures: once the
+  // durable row exists, no follow-up work may change the capture response.
+  if (!saved.duplicate) schedule(Promise.resolve().then(() => background(saved)));
   return saved;
 }
 
