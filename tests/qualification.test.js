@@ -29,9 +29,9 @@ test('lead is persisted before background qualification is scheduled', async () 
     schedule: promise => { events.push('scheduled'); scheduled = promise; }
   });
   assert.equal(saved.id, 'lead-1');
-  assert.equal(events[0], 'persisted');
-  assert.equal(events[2], 'scheduled');
+  assert.deepEqual(events.slice(0, 2), ['persisted', 'scheduled']);
   await scheduled;
+  assert.deepEqual(events, ['persisted', 'scheduled', 'qualification']);
 });
 
 test('OpenAI failure uses fallback without losing the saved lead', async () => {

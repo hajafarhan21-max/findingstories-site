@@ -4,6 +4,7 @@ import { clientIp, json, method, parseJson, rateLimit } from './_lib/http.js';
 import { leadSchema, missingFlorenceQualification, safeText } from './_lib/validation.js';
 import { qualifyLead, fallback } from './_lib/qualify.js';
 import { persistAndSchedule, qualifySavedLead } from './_lib/workflow.js';
+import { sendLeadNotification } from './_lib/lead-notification.js';
 
 async function updateQualification(sql, id, result) {
   await sql`UPDATE leads SET lead_score=${result.lead_score}, temperature=${result.temperature},
@@ -91,11 +92,15 @@ export default async function handler(req, res) {
       lead:attributedLead,
       persist: value => persistLead(sql, value),
       schedule: scheduleQualification,
-      background: value => qualifySavedLead({
-        id: value.id, lead:attributedLead, capturedAt: value.captured_at, qualify: qualifyLead, fallback,
-        start: id => markQualificationStarted(sql, id),
-        update: (id, result) => updateQualification(sql, id, result)
-      }).catch(error => console.error('Background qualification update failed:', error instanceof Error ? error.message : 'unknown'))
+      background: value => Promise.allSettled([
+        sendLeadNotification({ saved:value, lead:attributedLead, project:attributedProject })
+          .catch(error => console.error('Lead notification failed:', error instanceof Error ? error.message : 'unknown')),
+        qualifySavedLead({
+          id: value.id, lead:attributedLead, capturedAt: value.captured_at, qualify: qualifyLead, fallback,
+          start: id => markQualificationStarted(sql, id),
+          update: (id, result) => updateQualification(sql, id, result)
+        }).catch(error => console.error('Background qualification update failed:', error instanceof Error ? error.message : 'unknown'))
+      ])
     });
 
     json(res, saved.duplicate ? 200 : 201, { ok: true, id: saved.id, duplicate: saved.duplicate,
