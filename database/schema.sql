@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS leads (
   id UUID PRIMARY KEY DEFAULT pg_catalog.gen_random_uuid(), submission_id UUID, name TEXT NOT NULL, phone TEXT NOT NULL, email TEXT,
-  country_of_residence TEXT, purpose TEXT, budget TEXT, property_type TEXT, bedrooms TEXT,
+  country_of_residence TEXT, purpose TEXT, budget TEXT, property_type TEXT, bedrooms TEXT, conversion_type TEXT,
   preferred_areas TEXT, payment_method TEXT, purchase_timeline TEXT, owns_uae_property TEXT,
   additional_requirements TEXT, consent BOOLEAN NOT NULL DEFAULT FALSE, source TEXT NOT NULL DEFAULT 'website',
   landing_page TEXT, referrer TEXT, utm_source TEXT, utm_medium TEXT, utm_campaign TEXT, content_source TEXT,
@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS leads (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), captured_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS submission_id UUID;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS conversion_type TEXT;
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualification_status TEXT NOT NULL DEFAULT 'pending';
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualification_source TEXT;
 ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualification_started_at TIMESTAMPTZ;
@@ -62,3 +63,4 @@ CREATE INDEX IF NOT EXISTS leads_next_follow_up_at_idx ON leads (next_follow_up_
 \ir migrations/009_binghatti_inventory_revenue.sql
 \ir migrations/013_project_ingestion.sql
 \ir migrations/010_crm_foundation.sql
+\ir migrations/019_florence_revenue_funnel.sql
