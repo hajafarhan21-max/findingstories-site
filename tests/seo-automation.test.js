@@ -65,7 +65,21 @@ test('every approved project has reusable organic acquisition inputs and homepag
     assert.ok(project.secondary_intents?.length);
     assert.ok(project.hero_alt);
     assert.ok(project.faq?.length);
+    assert.ok(project.organic_search?.property_types.length);
+    assert.ok(project.organic_search?.unit_configurations.length>=5);
+    assert.equal(project.organic_search?.supporting_pages.length,0);
+    for(const intent of ['price','payment_plan','floor_plan','location','eoi','investment','residence'])assert.ok(project.organic_search?.cta_mappings[intent]);
     assert.ok(home.includes(`href="${project.path}"`),`${project.slug} homepage discovery`);
     assert.doesNotMatch(JSON.stringify(project),/vercel\.app|guaranteed (?:roi|appreciation|returns)/i);
   }
+});
+
+test('Florence hub exposes buyer-intent sections and accurate schema without thin pages',async()=>{
+  const [template,sitemap]=await Promise.all([readFile('api/_lib/azizi-florence.js','utf8'),readFile('public/sitemap.xml','utf8')]);
+  for(const id of ['floor-plans','availability','eoi','investment'])assert.match(template,new RegExp(`id="${id}"`));
+  for(const action of ['Request a floor plan','Request current availability','Register interest','Speak with an advisor'])assert.match(template,new RegExp(action,'i'));
+  for(const type of ['BreadcrumbList','WebPage','RealEstateListing','FAQPage'])assert.match(template,new RegExp(type));
+  assert.match(template,/not, by itself, an official EOI submitted to Azizi Developments/);
+  assert.doesNotMatch(template,/guaranteed (?:ROI|returns)|live inventory/i);
+  assert.equal((sitemap.match(/azizi-florence/g)||[]).length,1);
 });
