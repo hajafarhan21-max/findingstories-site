@@ -1,0 +1,38 @@
+{
+  "publishing_ready_platforms": [],
+  "publication_planned": false,
+  "single_revenue_blocker": "HUMAN_REQUIRED: Create or identify the LinkedIn Company Page, complete owner/admin verification, and record dated evidence.",
+  "review_tasks": [
+    {
+      "id": "azizi-florence-linkedin-project_introduction",
+      "project_slug": "azizi-florence",
+      "platform": "linkedin",
+      "format": "native_post",
+      "theme": "project_introduction",
+      "copy": "Azizi Florence brings together 3 and 4 bedroom townhouses and 4, 5 and 6 bedroom villas in Sharjah. Finding Stories has prepared a buyer-focused overview covering verified project information, location, payment-plan guidance and how to request current availability. Terms and availability remain subject to reconfirmation.",
+      "cta": "Review the buyer guide and speak privately with a Finding Stories advisor.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=project_introduction",
+      "utm": {
+        "utm_source": "linkedin",
+        "utm_medium": "organic_social",
+        "utm_campaign": "azizi-florence-project-launch",
+        "utm_content": "project_introduction"
+      },
+      "facts_used": [
+        "Azizi Developments",
+        "Sharjah, UAE",
+        "Townhouses",
+        "Villas"
+      ],
+      "disclaimer": "Finding Stories provides independent buyer-focused advisory support and does not claim official developer representation. Prices, terms, completion timing and availability must be reconfirmed before commitment.",
+      "publishing_mode": "REVIEW_ONLY",
+      "published": false,
+      "publication_url": null,
+      "asset_reference": "/assets/azizi-florence/hero.webp",
+      "asset_rights_review_required": true,
+      "priority": 1,
+      "status": "BLOCKED",
+      "blocking_step": "Account ownership and publishing readiness are unverified."
+    }
+  ]
+}

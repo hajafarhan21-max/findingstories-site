@@ -1,0 +1,27 @@
+{
+  "mode": "REVIEW_ONLY",
+  "objective": "Make one verified channel publishing-ready before scheduling content.",
+  "days": [
+    {
+      "day": 1,
+      "action": "Complete the single LinkedIn owner/admin verification action."
+    },
+    {
+      "day": 2,
+      "action": "Record evidence and configure the profile; otherwise remain blocked."
+    },
+    {
+      "day": 3,
+      "action": "Review the LinkedIn introduction payload and image rights."
+    },
+    {
+      "day": 4,
+      "action": "Human owner may publish only if readiness is evidenced."
+    },
+    {
+      "day": 5,
+      "action": "Record truthful post evidence and review attributable visits/leads; otherwise retain null outcomes."
+    }
+  ],
+  "publication_claimed": false
+}
