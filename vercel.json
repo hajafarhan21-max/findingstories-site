@@ -6,6 +6,38 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/api/newsletter/subscribe",
+      "destination": "/api/acquisition?route=newsletter&action=subscribe"
+    },
+    {
+      "source": "/api/newsletter/unsubscribe",
+      "destination": "/api/acquisition?route=newsletter&action=unsubscribe"
+    },
+    {
+      "source": "/market-intelligence",
+      "destination": "/market-intelligence.html"
+    },
+    {
+      "source": "/insights/videos",
+      "destination": "/insights-videos.html"
+    },
+    {
+      "source": "/learn/where-to-invest",
+      "destination": "/learn-where-to-invest.html"
+    },
+    {
+      "source": "/learn/why-invest",
+      "destination": "/learn-why-invest.html"
+    },
+    {
+      "source": "/learn/how-to-invest",
+      "destination": "/learn-how-to-invest.html"
+    },
+    {
+      "source": "/unsubscribe",
+      "destination": "/unsubscribe.html"
+    },
+    {
       "source": "/projects",
       "destination": "/projects.html"
     },

@@ -17,6 +17,6 @@ if(updatedHome===home&&!home.includes('PROJECT_DISCOVERY_START'))throw new Error
 await writeFile(homePath,updatedHome);
 
 await mkdir('public',{recursive:true});
-await writeFile('public/sitemap.xml',sitemapXml([...PLATFORM_ROUTES,...projects.map(project=>project.path)]));
+await writeFile('public/sitemap.xml',sitemapXml([...PLATFORM_ROUTES,...projects.map(project=>project.path),'/market-intelligence','/insights/videos','/learn/where-to-invest','/learn/why-invest','/learn/how-to-invest']));
 await writeFile('public/robots.txt',`User-agent: *\nAllow: /\nDisallow: /admin.html\nDisallow: /admin/\nDisallow: /api/\nSitemap: ${CANONICAL_ORIGIN}/sitemap.xml\n`);
 console.log(`Generated SEO discovery for ${projects.length} approved project(s).`);
