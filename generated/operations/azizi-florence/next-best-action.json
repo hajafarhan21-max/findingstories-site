@@ -1,0 +1,24 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/azizi-florence/manifest.json",
+    "generated/distribution/azizi-florence.json",
+    "generated/authority/azizi-florence"
+  ],
+  "external_action_performed": false,
+  "selection_rule": "Highest transparent net score among today actions; ties favor direct qualified-enquiry potential and execution readiness.",
+  "action": "Verify the Finding Stories LinkedIn account, approve the project-overview post, and publish it through the authorized account.",
+  "why": "The complete advisory post has the strongest ready path from professional discovery to an attributable enquiry.",
+  "buyer_intent": "Azizi Florence project details and availability",
+  "expected_business_value": "Create attributable professional-channel discovery with a direct path to WhatsApp or form enquiry.",
+  "dependency": "Authorized account owner, copy approval and asset-rights confirmation.",
+  "human_required": true,
+  "asset": "generated/authority/azizi-florence/social-revenue-pack.json#/linkedin_posts/0",
+  "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_introduction",
+  "success_metric": "Attributed LinkedIn sessions, WhatsApp clicks, lead_form_start and lead_success.",
+  "review_condition": "Review after 24 hours if published, or immediately after an ownership/approval blocker is recorded."
+}

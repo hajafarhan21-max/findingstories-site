@@ -1,0 +1,65 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/azizi-florence/manifest.json",
+    "generated/distribution/azizi-florence.json",
+    "generated/authority/azizi-florence"
+  ],
+  "external_action_performed": false,
+  "actions": [
+    {
+      "id": "linkedin-publish",
+      "WHAT": "Verify the Finding Stories LinkedIn account, approve the project-overview post, and publish it through the authorized account.",
+      "WHY": "The complete advisory post has the strongest ready path from professional discovery to an attributable enquiry.",
+      "WHERE": "Authorized Finding Stories LinkedIn account",
+      "EXACT ASSET": "generated/authority/azizi-florence/social-revenue-pack.json#/linkedin_posts/0",
+      "TRACKED URL": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_introduction",
+      "WHAT TO CAPTURE": "Owned account URL, approval, public post URL, screenshot and publication time.",
+      "HOW TO MARK COMPLETE": "Set publish status to PUBLISHED only after recording the public post URL, screenshot, approval and publication time."
+    },
+    {
+      "id": "search-console-export",
+      "WHAT": "Export the Florence Search Console page report and review available organic/referral lead attribution; leave every unavailable metric null.",
+      "WHY": "Real query and conversion evidence is required before any content refresh decision.",
+      "WHERE": "Google Search Console Performance and URL Inspection for the exact canonical page",
+      "EXACT ASSET": "generated/operations/azizi-florence/search-console.json",
+      "TRACKED URL": "https://www.finding-stories.com/azizi-florence?utm_source=google&utm_medium=organic&utm_campaign=azizi-florence-project-launch&utm_content=search_console_review",
+      "WHAT TO CAPTURE": "Export date/range, property, filters and privacy-safe lead report reference.",
+      "HOW TO MARK COMPLETE": "Set data_status to available only after importing the dated export; preserve null for every absent metric."
+    },
+    {
+      "id": "consented-whatsapp-share",
+      "WHAT": "Select one known, consented and contextually relevant buyer; approve and manually send the matching WhatsApp buyer message.",
+      "WHY": "A relevant one-to-one share provides a short path to an advisor conversation without cold outreach.",
+      "WHERE": "Authorized advisor WhatsApp account and an existing consented conversation",
+      "EXACT ASSET": "generated/authority/azizi-florence/social-revenue-pack.json#/whatsapp_messages/end_user_focused",
+      "TRACKED URL": "https://www.finding-stories.com/azizi-florence?utm_source=whatsapp&utm_medium=whatsapp_share&utm_campaign=azizi-florence-project-launch&utm_content=end_user_share",
+      "WHAT TO CAPTURE": "Privacy-safe internal send record and attributed outcome when available.",
+      "HOW TO MARK COMPLETE": "Record a privacy-safe send outcome; do not mark a reply, lead or meeting without evidence."
+    },
+    {
+      "id": "relationship-verification",
+      "WHAT": "Verify one existing professional relationship and approve the matching referral message; do not contact an unverified candidate.",
+      "WHY": "A legitimate relationship can qualify audience context before a project visit.",
+      "WHERE": "Internal relationship record; no external send",
+      "EXACT ASSET": "generated/authority/azizi-florence/partner-outreach-pack.json",
+      "TRACKED URL": "https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=referral&utm_campaign=azizi-florence-project-launch&utm_content=project_referral",
+      "WHAT TO CAPTURE": "Privacy-safe relationship basis, approval and later send/result evidence.",
+      "HOW TO MARK COMPLETE": "Replace the null target in referral/outreach queue only after the relationship owner verifies it."
+    },
+    {
+      "id": "authority-target-verification",
+      "WHAT": "Verify one named, relevant editorial or directory target and record its current public eligibility or contact route without submitting.",
+      "WHY": "Existing authority records contain candidate categories rather than verified target evidence.",
+      "WHERE": "The target’s current public website",
+      "EXACT ASSET": "generated/authority/azizi-florence/editorial-pitches.json",
+      "TRACKED URL": "https://www.finding-stories.com/azizi-florence?utm_source=publication_domain&utm_medium=editorial&utm_campaign=azizi-florence-project-launch&utm_content=project_reference",
+      "WHAT TO CAPTURE": "Target name, public domain, relevant current page, route and check date.",
+      "HOW TO MARK COMPLETE": "Set verification_status only; submission/live states remain unchanged until separate evidence exists."
+    }
+  ]
+}

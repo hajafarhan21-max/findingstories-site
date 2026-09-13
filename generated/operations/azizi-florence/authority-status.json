@@ -1,0 +1,71 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/azizi-florence/manifest.json",
+    "generated/distribution/azizi-florence.json",
+    "generated/authority/azizi-florence"
+  ],
+  "external_action_performed": false,
+  "rule": "LIVE requires independent public verification and a real evidence URL.",
+  "targets": [
+    {
+      "target": "Finding Stories LinkedIn account",
+      "verification_status": "needs_verification",
+      "owner_verified": false,
+      "relationship_status": "candidate",
+      "submission_status": "not_submitted",
+      "live_status": "not_live",
+      "last_checked": null,
+      "evidence_url": null,
+      "next_action": "Name and verify the exact social_profile opportunity, eligibility and current route before approval."
+    },
+    {
+      "target": "Finding Stories Instagram account",
+      "verification_status": "needs_verification",
+      "owner_verified": false,
+      "relationship_status": "candidate",
+      "submission_status": "not_submitted",
+      "live_status": "not_live",
+      "last_checked": null,
+      "evidence_url": null,
+      "next_action": "Name and verify the exact social_profile opportunity, eligibility and current route before approval."
+    },
+    {
+      "target": "Developer project reference opportunity",
+      "verification_status": "needs_verification",
+      "owner_verified": false,
+      "relationship_status": "candidate",
+      "submission_status": "not_submitted",
+      "live_status": "not_live",
+      "last_checked": null,
+      "evidence_url": null,
+      "next_action": "Name and verify the exact developer_owned_channel opportunity, eligibility and current route before approval."
+    },
+    {
+      "target": "Relevant UAE property editorial opportunity",
+      "verification_status": "needs_verification",
+      "owner_verified": false,
+      "relationship_status": "candidate",
+      "submission_status": "not_submitted",
+      "live_status": "not_live",
+      "last_checked": null,
+      "evidence_url": null,
+      "next_action": "Name and verify the exact editorial_publication opportunity, eligibility and current route before approval."
+    },
+    {
+      "target": "Legitimate UAE business or property directory opportunity",
+      "verification_status": "needs_verification",
+      "owner_verified": false,
+      "relationship_status": "candidate",
+      "submission_status": "not_submitted",
+      "live_status": "not_live",
+      "last_checked": null,
+      "evidence_url": null,
+      "next_action": "Name and verify the exact directory opportunity, eligibility and current route before approval."
+    }
+  ]
+}

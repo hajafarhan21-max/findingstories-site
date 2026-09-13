@@ -1,0 +1,31 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/azizi-florence/manifest.json",
+    "generated/distribution/azizi-florence.json",
+    "generated/authority/azizi-florence"
+  ],
+  "external_action_performed": false,
+  "data_status": "unavailable",
+  "known_status": {
+    "url_live": true,
+    "canonical_established": true,
+    "sitemap_discovery_exists": true,
+    "prior_live_test_indexable": true,
+    "last_repository_status": "Discovered – currently not indexed",
+    "observed_at": null
+  },
+  "indexing_policy": "Do not request indexing repeatedly and do not use the Google Indexing API.",
+  "checklist": [
+    "Record current index status and inspection date.",
+    "Export impressions, clicks, CTR and average position for the exact canonical page.",
+    "Export queries and classify branded, non-branded, project-specific and new clusters.",
+    "Compare page discovery and sitemap state with the previous review.",
+    "Record the date range, Search Console property and exact page filter."
+  ],
+  "exact_human_step": "In Google Search Console Performance > Search results, filter Page exactly to https://www.finding-stories.com/azizi-florence, select a dated range, export queries/pages metrics, and place the privacy-safe export in the approved reporting workflow; separately export organic/referral attribution from the existing lead store."
+}

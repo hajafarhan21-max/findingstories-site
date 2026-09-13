@@ -1,0 +1,103 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/azizi-florence/manifest.json",
+    "generated/distribution/azizi-florence.json",
+    "generated/authority/azizi-florence"
+  ],
+  "external_action_performed": false,
+  "method": "Transparent bounded scoring; no conversion probabilities or third-party authority scores.",
+  "dimensions": "1 (low) to 5 (high); effort, dependency risk and spam risk are costs",
+  "formula": "benefits (buyer intent + referral traffic + lead generation + authority value + readiness + evidence quality + revenue connection) minus costs (effort + dependency risk + spam risk)",
+  "actions": [
+    {
+      "id": "publish-linkedin-overview",
+      "prioritization": {
+        "scale": "1 (low) to 5 (high); effort, dependency risk and spam risk are costs",
+        "buyer_intent": 5,
+        "referral_traffic": 4,
+        "lead_generation": 4,
+        "authority_value": 3,
+        "execution_readiness": 5,
+        "evidence_quality": 4,
+        "effort": 2,
+        "dependency_risk": 3,
+        "spam_risk": 1,
+        "revenue_connection": 5,
+        "total": 24
+      }
+    },
+    {
+      "id": "share-with-consented-buyer",
+      "prioritization": {
+        "scale": "1 (low) to 5 (high); effort, dependency risk and spam risk are costs",
+        "buyer_intent": 5,
+        "referral_traffic": 4,
+        "lead_generation": 5,
+        "authority_value": 1,
+        "execution_readiness": 5,
+        "evidence_quality": 3,
+        "effort": 1,
+        "dependency_risk": 3,
+        "spam_risk": 1,
+        "revenue_connection": 5,
+        "total": 23
+      }
+    },
+    {
+      "id": "verify-referral-relationship",
+      "prioritization": {
+        "scale": "1 (low) to 5 (high); effort, dependency risk and spam risk are costs",
+        "buyer_intent": 4,
+        "referral_traffic": 5,
+        "lead_generation": 4,
+        "authority_value": 3,
+        "execution_readiness": 3,
+        "evidence_quality": 2,
+        "effort": 2,
+        "dependency_risk": 4,
+        "spam_risk": 1,
+        "revenue_connection": 4,
+        "total": 18
+      }
+    },
+    {
+      "id": "verify-authority-target",
+      "prioritization": {
+        "scale": "1 (low) to 5 (high); effort, dependency risk and spam risk are costs",
+        "buyer_intent": 3,
+        "referral_traffic": 3,
+        "lead_generation": 2,
+        "authority_value": 5,
+        "execution_readiness": 3,
+        "evidence_quality": 2,
+        "effort": 3,
+        "dependency_risk": 3,
+        "spam_risk": 1,
+        "revenue_connection": 2,
+        "total": 13
+      }
+    },
+    {
+      "id": "review-measurement",
+      "prioritization": {
+        "scale": "1 (low) to 5 (high); effort, dependency risk and spam risk are costs",
+        "buyer_intent": 3,
+        "referral_traffic": 1,
+        "lead_generation": 2,
+        "authority_value": 2,
+        "execution_readiness": 1,
+        "evidence_quality": 1,
+        "effort": 2,
+        "dependency_risk": 5,
+        "spam_risk": 1,
+        "revenue_connection": 4,
+        "total": 6
+      }
+    }
+  ]
+}

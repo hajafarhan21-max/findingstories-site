@@ -1,0 +1,48 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/azizi-florence/manifest.json",
+    "generated/distribution/azizi-florence.json",
+    "generated/authority/azizi-florence"
+  ],
+  "external_action_performed": false,
+  "findings": [
+    {
+      "severity": "P0",
+      "finding": "No lead-capture, attribution or revenue-measurement regression found in the reviewed protected system.",
+      "resolution": "No protected code changed."
+    },
+    {
+      "severity": "P1",
+      "finding": "No dedicated operations package translated prepared authority assets into one evidence-led daily and weekly loop.",
+      "resolution": "Added deterministic operations outputs using existing manifests and generated assets."
+    },
+    {
+      "severity": "P1",
+      "finding": "Search Console, analytics, lead-stage and revenue evidence is unavailable in-repository.",
+      "resolution": "Kept metrics null and provided exact authorized human export steps."
+    },
+    {
+      "severity": "P1",
+      "finding": "Social ownership, named outreach recipients, relationships and live citations are unverified.",
+      "resolution": "Kept all actions human-gated and all publication/send/live claims false."
+    },
+    {
+      "severity": "P2",
+      "finding": "CTA-level conversion and content refresh optimization lacks behavioral evidence.",
+      "resolution": "Deferred until authorized data exists."
+    }
+  ],
+  "preserved": [
+    "POST /api/leads and lead persistence",
+    "lead numbering, duplicate suppression, notifications and UAE timestamps",
+    "AI qualification, attribution and UTM capture",
+    "Florence UI, content, form and WhatsApp journey",
+    "sitemap, robots, canonical and preview handling",
+    "project registry/manifest and SEO/distribution/authority generators"
+  ]
+}

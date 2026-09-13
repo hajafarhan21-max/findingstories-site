@@ -1,0 +1,76 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/azizi-florence/manifest.json",
+    "generated/distribution/azizi-florence.json",
+    "generated/authority/azizi-florence"
+  ],
+  "external_action_performed": false,
+  "cadence": "quality-first; no repeated indexing requests, bulk submissions or unsolicited volume",
+  "days": [
+    {
+      "day": 1,
+      "focus": "measurement and approval",
+      "actions": [
+        "Export the Florence Search Console page report.",
+        "Verify LinkedIn ownership and approve post 1."
+      ],
+      "success_metric": "A dated data export and a documented publish decision."
+    },
+    {
+      "day": 2,
+      "focus": "qualified social discovery",
+      "actions": [
+        "Publish LinkedIn post 1 only if approved; capture its URL.",
+        "Share one approved buyer message only with a known consented contact."
+      ],
+      "success_metric": "Evidence-backed publication/send status and attributable activity when available."
+    },
+    {
+      "day": 3,
+      "focus": "authority verification",
+      "actions": [
+        "Verify one named editorial or moderated-directory target; do not submit."
+      ],
+      "success_metric": "One evidence-complete target record."
+    },
+    {
+      "day": 4,
+      "focus": "referral preparation",
+      "actions": [
+        "Verify one existing professional relationship and tailor one role-appropriate message for approval."
+      ],
+      "success_metric": "One verified relationship and approved or rejected draft."
+    },
+    {
+      "day": 5,
+      "focus": "organic decision review",
+      "actions": [
+        "Classify real new queries, if available, and apply the content-refresh decision rule.",
+        "Prepare LinkedIn post 2 without publishing if post 1 still lacks evidence."
+      ],
+      "success_metric": "Documented no-change/change decision tied to evidence."
+    },
+    {
+      "day": 6,
+      "focus": "citation verification",
+      "actions": [
+        "Open every claimed public citation; record live only with complete public evidence."
+      ],
+      "success_metric": "Citation records retain truthful live states and review dates."
+    },
+    {
+      "day": 7,
+      "focus": "lead and revenue review",
+      "actions": [
+        "Review organic/referral enquiries, qualification, meetings and known revenue stages.",
+        "Select next week’s single highest-value action."
+      ],
+      "success_metric": "Privacy-safe attributable report; unavailable stages remain null."
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/azizi-florence/manifest.json",
+    "generated/distribution/azizi-florence.json",
+    "generated/authority/azizi-florence"
+  ],
+  "external_action_performed": false,
+  "classification": "SUFFICIENT_NO_CHANGE",
+  "reviewed_ctas": [
+    "Enquire Now",
+    "WhatsApp",
+    "Request Current Availability",
+    "Request Floor Plan",
+    "Register Interest",
+    "Book Consultation",
+    "Request Site Visit",
+    "Ask About Florence"
+  ],
+  "finding": "The existing architecture provides broad and intent-specific routes to form and WhatsApp. No P0/P1 defect or behavioral evidence supports redesign.",
+  "p2_deferred": [
+    "Compare CTA-level event completion after an authorized analytics export exists.",
+    "Review buyer drop-off questions before changing CTA wording or placement."
+  ]
+}

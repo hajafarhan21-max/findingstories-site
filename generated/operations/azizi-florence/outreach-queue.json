@@ -1,0 +1,40 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/azizi-florence/manifest.json",
+    "generated/distribution/azizi-florence.json",
+    "generated/authority/azizi-florence"
+  ],
+  "external_action_performed": false,
+  "auto_send": false,
+  "queue": [
+    {
+      "target": null,
+      "relationship_type": "editorial",
+      "reason": "A verified publication may find the buyer due-diligence angle useful.",
+      "content_asset": "generated/authority/azizi-florence/editorial-pitches.json#/pitches/0",
+      "tracked_destination": "https://www.finding-stories.com/azizi-florence?utm_source=publication_domain&utm_medium=editorial&utm_campaign=azizi-florence-project-launch&utm_content=pitch_1",
+      "approval_status": "needs_verification",
+      "send_status": "not_sent",
+      "follow_up_date": null,
+      "result": null,
+      "evidence": null
+    },
+    {
+      "target": null,
+      "relationship_type": "existing professional referral",
+      "reason": "A documented relationship may introduce the guide in a relevant buyer context.",
+      "content_asset": "generated/authority/azizi-florence/partner-outreach-pack.json",
+      "tracked_destination": "https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=partner&utm_campaign=azizi-florence-project-launch&utm_content=project_reference",
+      "approval_status": "needs_relationship",
+      "send_status": "not_sent",
+      "follow_up_date": null,
+      "result": null,
+      "evidence": null
+    }
+  ]
+}

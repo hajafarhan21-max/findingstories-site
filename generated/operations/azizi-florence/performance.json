@@ -1,0 +1,49 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/azizi-florence/manifest.json",
+    "generated/distribution/azizi-florence.json",
+    "generated/authority/azizi-florence"
+  ],
+  "external_action_performed": false,
+  "data_status": "unavailable",
+  "reporting_period": null,
+  "search_console": {
+    "indexed": null,
+    "impressions": null,
+    "clicks": null,
+    "ctr": null,
+    "average_position": null,
+    "branded_queries": null,
+    "non_branded_queries": null,
+    "project_queries": null,
+    "new_query_clusters": null,
+    "page_discovery_changes": null
+  },
+  "referral": {
+    "sessions": null,
+    "top_referrers": null
+  },
+  "conversion": {
+    "whatsapp_clicks": null,
+    "form_starts": null,
+    "form_success": null,
+    "qualified_leads": null
+  },
+  "authority": {
+    "verified_targets": 0,
+    "submissions": 0,
+    "live_citations": 0
+  },
+  "revenue": {
+    "meetings": null,
+    "eois": null,
+    "bookings": null
+  },
+  "unavailable_reason": "No authorized Search Console, analytics, lead-status, meeting or revenue export is present in the repository.",
+  "human_step": "In Google Search Console Performance > Search results, filter Page exactly to https://www.finding-stories.com/azizi-florence, select a dated range, export queries/pages metrics, and place the privacy-safe export in the approved reporting workflow; separately export organic/referral attribution from the existing lead store."
+}
