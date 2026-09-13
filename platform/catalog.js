@@ -1,45 +1,20 @@
-export const PLATFORM_ROUTES = Object.freeze([
-  '/', '/projects', '/new-launches', '/pre-launch', '/recently-launched', '/ready-properties',
-  '/areas', '/areas/sharjah', '/developers', '/developers/azizi-developments',
-  '/property-types', '/property-types/townhouses', '/property-types/villas',
-  '/compare', '/services/private-buyer-advisory', '/services/mortgage-solutions',
-  '/services/equity-solutions', '/insights'
-]);
+/** Public directory records are facts-only pointers. A directory presence never means inventory is available. */
+const official = (url, checked = '2026-09-13') => ({ type: 'OFFICIAL', url, checked, approval: 'APPROVED', availability: 'NOT_ASSERTED' });
 
-export const DISCOVERY_GROUPS = Object.freeze({
-  statuses: [
-    { slug: 'new-launches', label: 'New launches', description: 'Reviewed launch opportunities with published, source-backed project information.' },
-    { slug: 'pre-launch', label: 'Pre-launch / EOI', description: 'Early-stage opportunities where the enquiry process and unknowns are stated clearly.' },
-    { slug: 'recently-launched', label: 'Recently launched', description: 'Recently released projects that have passed Finding Stories’ publication checks.' },
-    { slug: 'ready-properties', label: 'Ready / near ready', description: 'Published opportunities with a verified completion position.' }
-  ],
-  areas: [{ slug: 'sharjah', label: 'Sharjah', description: 'Explore our currently published, verified project guide in Sharjah.' }],
-  developers: [{ slug: 'azizi-developments', label: 'Azizi Developments', description: 'View the approved Azizi project guide currently published by Finding Stories.' }],
-  propertyTypes: [
-    { slug: 'townhouses', label: 'Townhouses', description: 'Compare published townhouse opportunities by location, configuration and verified commercial facts.' },
-    { slug: 'villas', label: 'Villas', description: 'Discover published villa opportunities with a buyer-focused view of the facts.' }
-  ]
-});
+export const DEVELOPERS = Object.freeze([
+  ['emaar','Emaar','https://www.emaar.com'],['dubai-holding','Dubai Holding','https://www.dubaiholding.com'],['meraas','Meraas','https://meraas.com'],['nakheel','Nakheel','https://www.nakheel.com'],['sobha-realty','Sobha Realty','https://sobharealty.com'],['aldar','Aldar','https://www.aldar.com'],['arada','Arada','https://www.arada.com'],['damac','DAMAC','https://www.damacproperties.com'],['binghatti','Binghatti','https://www.binghatti.com'],['danube','Danube','https://danubeproperties.com'],['deyaar','Deyaar','https://www.deyaar.ae'],['azizi-developments','Azizi Developments','https://www.azizidevelopments.com'],['alef','Alef','https://alefgroup.ae'],['omniyat','Omniyat','https://www.omniyat.com'],['select-group','Select Group','https://www.select-group.ae'],['ellington','Ellington','https://ellingtonproperties.ae'],['mag','MAG','https://mag.global'],['samana','Samana','https://www.samanadevelopers.com'],['majid-al-futtaim','Majid Al Futtaim','https://www.majidalfuttaim.com'],['wasl','Wasl','https://www.wasl.ae'],['expo-city-dubai','Expo City Dubai','https://www.expocitydubai.com'],['reportage','Reportage','https://reportageuae.com'],['imtiaz','Imtiaz','https://imtiaz.ae'],['object-1','Object 1','https://object-1.com'],['tiger','Tiger','https://tigerproperties.ae'],['prescott','Prescott','https://prescott.ae'],['ahs','AHS','https://ahs-properties.com'],['beyond','Beyond','https://www.beyonddevelopments.ae'],['leos','LEOS','https://leosdevelopments.com'],['vincitore','Vincitore','https://vincitorerealty.com'],['taraf','Taraf','https://www.tarafholding.com']
+].map(([slug,name,url]) => ({ slug,name,description:`Explore Finding Stories’ source-governed directory record for ${name}. Live availability is shown only after separate verification.`,source:official(url) })));
 
-export const PUBLISHED_PROJECTS = Object.freeze([{
-  slug: 'azizi-florence', path: '/azizi-florence', name: 'Azizi Florence', developer: 'Azizi Developments',
-  developerSlug: 'azizi-developments', area: 'Sharjah', areaSlug: 'sharjah', emirate: 'Sharjah',
-  launchStatus: 'Pre-launch', statusSlug: 'pre-launch', propertyTypes: ['Townhouses', 'Villas'],
-  propertyTypeSlugs: ['townhouses', 'villas'], bedrooms: ['3 bedroom', '4 bedroom', '5 bedroom', '6 bedroom'],
-  image: '/assets/azizi-florence/hero.webp', imageAlt: 'Azizi Florence townhouse and villa community exterior',
-  summary: 'A buyer-focused guide to the published residence mix, location context and process for requesting current details.',
-  startingPrice: null, handover: null, paymentPlan: 'Request the current verified milestone schedule',
-  suitability: 'For buyers considering townhouse or villa living in Sharjah; individual suitability requires an advisor review.',
-  verifiedHighlights: ['3 and 4 bedroom townhouses', '4, 5 and 6 bedroom villas', 'Verified information is reconfirmed before commitment'],
-  verification: { status: 'PUBLISHED', lastReviewed: '2026-08-26', source: 'Approved project manifest and production records', confidence: 'verified', pendingFields: ['Current unit availability', 'Release-specific commercial terms'] }
-}]);
+const areaNames = ['Downtown Dubai','Business Bay','Dubai Marina','JBR','Palm Jumeirah','Palm Jebel Ali','Dubai Hills Estate','Dubai Creek Harbour','Dubai Harbour','Dubai Islands','Jumeirah Village Circle','Jumeirah Village Triangle','Al Furjan','Al Jaddaf','Meydan','Mohammed Bin Rashid City','District One','Dubai South','Expo City','Dubai Production City','Dubai Sports City','Motor City','Dubailand','Dubai Land Residence Complex','Arjan','Dubai Science Park','Dubai Maritime City','Mina Rashid','Dubai Design District','City Walk','Bluewaters','Jumeirah Golf Estates','Arabian Ranches','The Valley','The Oasis','Emirates Living','Tilal Al Ghaf','Damac Hills','Damac Hills 2','Damac Lagoons','Dubai Investment Park','Dubai Silicon Oasis','International City','Town Square','Remraam','Sharjah','Abu Dhabi','Ras Al Khaimah'];
+const slugify = value => value.toLowerCase().replace(/&/g,'and').replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+export const AREAS = Object.freeze(areaNames.map(name => ({ slug:slugify(name),name,emirate:name==='Sharjah'?'Sharjah':name==='Abu Dhabi'?'Abu Dhabi':name==='Ras Al Khaimah'?'Ras Al Khaimah':'Dubai',description:`A research-led starting point for ${name}: projects, property types and opportunities are added only when approved records exist.`,source:official('https://u.ae/en/information-and-services/visiting-and-exploring-the-uae') })));
 
-export const SERVICE_PAGES = Object.freeze({
-  'private-buyer-advisory': { title: 'Private Buyer Advisory', eyebrow: 'DECISIONS WITH PERSPECTIVE', description: 'A considered, private process for defining your brief, comparing published opportunities and deciding what deserves a closer look.', points: ['Requirement and objective discovery', 'Fact-led project comparison', 'Clear next-step coordination'] },
-  'mortgage-solutions': { title: 'Mortgage Solutions', eyebrow: 'PARTNER-LED ASSISTANCE', description: 'Discover potential mortgage routes and request an introduction to an appropriate, independently verified provider.', points: ['Requirement discovery', 'Document-readiness guidance', 'Introductions where an appropriate provider is available'] },
-  'equity-solutions': { title: 'Equity Solutions', eyebrow: 'EXPLORE YOUR OPTIONS', description: 'Discuss whether an existing property may support your wider plans, with any regulated product handled by an appropriately authorised third party.', points: ['Initial objective discovery', 'Questions to prepare for a provider', 'Partner-led next steps where available'] }
-});
+export const PROPERTY_TYPES = Object.freeze(['Apartments','Villas','Townhouses','Penthouses','Duplexes','Branded Residences','Plots','Commercial','Office Spaces','Retail'].map(name=>({slug:slugify(name),name,description:`Discover approved ${name.toLowerCase()} records without implied live availability.`})));
+export const STATUS_GROUPS = Object.freeze([['new-launches','New launches'],['pre-launch','Pre-launch / EOI'],['recently-launched','Recently launched'],['under-construction','Under construction'],['ready-properties','Ready / near ready'],['completed','Completed / handed over'],['resale','Resale'],['rent','Rental'],['commercial','Commercial']].map(([slug,label])=>({slug,label,description:`Browse ${label.toLowerCase()} records that have cleared publication controls.`})));
 
-export function projectsFor({ status, area, developer, propertyType } = {}) {
-  return PUBLISHED_PROJECTS.filter(project => (!status || project.statusSlug === status) && (!area || project.areaSlug === area) && (!developer || project.developerSlug === developer) && (!propertyType || project.propertyTypeSlugs.includes(propertyType)));
-}
+export const PUBLISHED_PROJECTS = Object.freeze([{slug:'azizi-florence',path:'/azizi-florence',name:'Azizi Florence',developer:'Azizi Developments',developerSlug:'azizi-developments',area:'Sharjah',areaSlug:'sharjah',emirate:'Sharjah',launchStatus:'Pre-launch information subject to developer confirmation',statusSlug:'pre-launch',propertyTypes:['Townhouses','Villas'],propertyTypeSlugs:['townhouses','villas'],bedrooms:['3','4','5','6'],image:'/assets/azizi-florence/hero.webp',imageAlt:'Azizi Florence townhouse and villa community exterior',summary:'A buyer-focused guide to the published residence mix, location context and process for requesting current details.',startingPrice:null,handover:null,paymentPlan:'Request the current verified milestone schedule',currentAvailability:'UNVERIFIED',verification:{status:'PUBLISHED_INFORMATION',lastReviewed:'2026-08-26',source:{type:'DEVELOPER_DOCUMENT',url:'/projects/azizi-florence/manifest.json'},confidence:'verified',recheckAfter:'2026-09-26',stale:false,pendingFields:['Current unit availability','Release-specific commercial terms']}}]);
+
+export const PLATFORM_ROUTES = Object.freeze(['/', '/projects', ...STATUS_GROUPS.map(x=>`/${x.slug}`), '/areas', ...AREAS.map(x=>`/areas/${x.slug}`), '/developers', ...DEVELOPERS.map(x=>`/developers/${x.slug}`), '/property-types', ...PROPERTY_TYPES.map(x=>`/property-types/${x.slug}`), '/compare','/services/private-buyer-advisory','/services/mortgage-solutions','/services/equity-solutions','/services/reselling','/services/renting','/list-your-property','/sell','/list-for-rent','/insights']);
+export const DISCOVERY_GROUPS = Object.freeze({statuses:STATUS_GROUPS,areas:AREAS,developers:DEVELOPERS,propertyTypes:PROPERTY_TYPES});
+export const SERVICE_PAGES = Object.freeze({'private-buyer-advisory':{title:'Private Buyer Advisory'},'mortgage-solutions':{title:'Mortgage Solutions'},'equity-solutions':{title:'Equity Solutions'},reselling:{title:'Reselling'},renting:{title:'Renting'}});
+export function projectsFor({status,area,developer,propertyType}={}){return PUBLISHED_PROJECTS.filter(p=>(!status||p.statusSlug===status)&&(!area||p.areaSlug===area)&&(!developer||p.developerSlug===developer)&&(!propertyType||p.propertyTypeSlugs.includes(propertyType)));}

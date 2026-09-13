@@ -22,36 +22,396 @@
       "destination": "/recently-launched.html"
     },
     {
+      "source": "/under-construction",
+      "destination": "/under-construction.html"
+    },
+    {
       "source": "/ready-properties",
       "destination": "/ready-properties.html"
+    },
+    {
+      "source": "/completed",
+      "destination": "/completed.html"
+    },
+    {
+      "source": "/resale",
+      "destination": "/resale.html"
+    },
+    {
+      "source": "/rent",
+      "destination": "/rent.html"
+    },
+    {
+      "source": "/commercial",
+      "destination": "/commercial.html"
     },
     {
       "source": "/areas",
       "destination": "/areas.html"
     },
     {
+      "source": "/areas/downtown-dubai",
+      "destination": "/areas-downtown-dubai.html"
+    },
+    {
+      "source": "/areas/business-bay",
+      "destination": "/areas-business-bay.html"
+    },
+    {
+      "source": "/areas/dubai-marina",
+      "destination": "/areas-dubai-marina.html"
+    },
+    {
+      "source": "/areas/jbr",
+      "destination": "/areas-jbr.html"
+    },
+    {
+      "source": "/areas/palm-jumeirah",
+      "destination": "/areas-palm-jumeirah.html"
+    },
+    {
+      "source": "/areas/palm-jebel-ali",
+      "destination": "/areas-palm-jebel-ali.html"
+    },
+    {
+      "source": "/areas/dubai-hills-estate",
+      "destination": "/areas-dubai-hills-estate.html"
+    },
+    {
+      "source": "/areas/dubai-creek-harbour",
+      "destination": "/areas-dubai-creek-harbour.html"
+    },
+    {
+      "source": "/areas/dubai-harbour",
+      "destination": "/areas-dubai-harbour.html"
+    },
+    {
+      "source": "/areas/dubai-islands",
+      "destination": "/areas-dubai-islands.html"
+    },
+    {
+      "source": "/areas/jumeirah-village-circle",
+      "destination": "/areas-jumeirah-village-circle.html"
+    },
+    {
+      "source": "/areas/jumeirah-village-triangle",
+      "destination": "/areas-jumeirah-village-triangle.html"
+    },
+    {
+      "source": "/areas/al-furjan",
+      "destination": "/areas-al-furjan.html"
+    },
+    {
+      "source": "/areas/al-jaddaf",
+      "destination": "/areas-al-jaddaf.html"
+    },
+    {
+      "source": "/areas/meydan",
+      "destination": "/areas-meydan.html"
+    },
+    {
+      "source": "/areas/mohammed-bin-rashid-city",
+      "destination": "/areas-mohammed-bin-rashid-city.html"
+    },
+    {
+      "source": "/areas/district-one",
+      "destination": "/areas-district-one.html"
+    },
+    {
+      "source": "/areas/dubai-south",
+      "destination": "/areas-dubai-south.html"
+    },
+    {
+      "source": "/areas/expo-city",
+      "destination": "/areas-expo-city.html"
+    },
+    {
+      "source": "/areas/dubai-production-city",
+      "destination": "/areas-dubai-production-city.html"
+    },
+    {
+      "source": "/areas/dubai-sports-city",
+      "destination": "/areas-dubai-sports-city.html"
+    },
+    {
+      "source": "/areas/motor-city",
+      "destination": "/areas-motor-city.html"
+    },
+    {
+      "source": "/areas/dubailand",
+      "destination": "/areas-dubailand.html"
+    },
+    {
+      "source": "/areas/dubai-land-residence-complex",
+      "destination": "/areas-dubai-land-residence-complex.html"
+    },
+    {
+      "source": "/areas/arjan",
+      "destination": "/areas-arjan.html"
+    },
+    {
+      "source": "/areas/dubai-science-park",
+      "destination": "/areas-dubai-science-park.html"
+    },
+    {
+      "source": "/areas/dubai-maritime-city",
+      "destination": "/areas-dubai-maritime-city.html"
+    },
+    {
+      "source": "/areas/mina-rashid",
+      "destination": "/areas-mina-rashid.html"
+    },
+    {
+      "source": "/areas/dubai-design-district",
+      "destination": "/areas-dubai-design-district.html"
+    },
+    {
+      "source": "/areas/city-walk",
+      "destination": "/areas-city-walk.html"
+    },
+    {
+      "source": "/areas/bluewaters",
+      "destination": "/areas-bluewaters.html"
+    },
+    {
+      "source": "/areas/jumeirah-golf-estates",
+      "destination": "/areas-jumeirah-golf-estates.html"
+    },
+    {
+      "source": "/areas/arabian-ranches",
+      "destination": "/areas-arabian-ranches.html"
+    },
+    {
+      "source": "/areas/the-valley",
+      "destination": "/areas-the-valley.html"
+    },
+    {
+      "source": "/areas/the-oasis",
+      "destination": "/areas-the-oasis.html"
+    },
+    {
+      "source": "/areas/emirates-living",
+      "destination": "/areas-emirates-living.html"
+    },
+    {
+      "source": "/areas/tilal-al-ghaf",
+      "destination": "/areas-tilal-al-ghaf.html"
+    },
+    {
+      "source": "/areas/damac-hills",
+      "destination": "/areas-damac-hills.html"
+    },
+    {
+      "source": "/areas/damac-hills-2",
+      "destination": "/areas-damac-hills-2.html"
+    },
+    {
+      "source": "/areas/damac-lagoons",
+      "destination": "/areas-damac-lagoons.html"
+    },
+    {
+      "source": "/areas/dubai-investment-park",
+      "destination": "/areas-dubai-investment-park.html"
+    },
+    {
+      "source": "/areas/dubai-silicon-oasis",
+      "destination": "/areas-dubai-silicon-oasis.html"
+    },
+    {
+      "source": "/areas/international-city",
+      "destination": "/areas-international-city.html"
+    },
+    {
+      "source": "/areas/town-square",
+      "destination": "/areas-town-square.html"
+    },
+    {
+      "source": "/areas/remraam",
+      "destination": "/areas-remraam.html"
+    },
+    {
       "source": "/areas/sharjah",
       "destination": "/areas-sharjah.html"
+    },
+    {
+      "source": "/areas/abu-dhabi",
+      "destination": "/areas-abu-dhabi.html"
+    },
+    {
+      "source": "/areas/ras-al-khaimah",
+      "destination": "/areas-ras-al-khaimah.html"
     },
     {
       "source": "/developers",
       "destination": "/developers.html"
     },
     {
+      "source": "/developers/emaar",
+      "destination": "/developers-emaar.html"
+    },
+    {
+      "source": "/developers/dubai-holding",
+      "destination": "/developers-dubai-holding.html"
+    },
+    {
+      "source": "/developers/meraas",
+      "destination": "/developers-meraas.html"
+    },
+    {
+      "source": "/developers/nakheel",
+      "destination": "/developers-nakheel.html"
+    },
+    {
+      "source": "/developers/sobha-realty",
+      "destination": "/developers-sobha-realty.html"
+    },
+    {
+      "source": "/developers/aldar",
+      "destination": "/developers-aldar.html"
+    },
+    {
+      "source": "/developers/arada",
+      "destination": "/developers-arada.html"
+    },
+    {
+      "source": "/developers/damac",
+      "destination": "/developers-damac.html"
+    },
+    {
+      "source": "/developers/binghatti",
+      "destination": "/developers-binghatti.html"
+    },
+    {
+      "source": "/developers/danube",
+      "destination": "/developers-danube.html"
+    },
+    {
+      "source": "/developers/deyaar",
+      "destination": "/developers-deyaar.html"
+    },
+    {
       "source": "/developers/azizi-developments",
       "destination": "/developers-azizi-developments.html"
+    },
+    {
+      "source": "/developers/alef",
+      "destination": "/developers-alef.html"
+    },
+    {
+      "source": "/developers/omniyat",
+      "destination": "/developers-omniyat.html"
+    },
+    {
+      "source": "/developers/select-group",
+      "destination": "/developers-select-group.html"
+    },
+    {
+      "source": "/developers/ellington",
+      "destination": "/developers-ellington.html"
+    },
+    {
+      "source": "/developers/mag",
+      "destination": "/developers-mag.html"
+    },
+    {
+      "source": "/developers/samana",
+      "destination": "/developers-samana.html"
+    },
+    {
+      "source": "/developers/majid-al-futtaim",
+      "destination": "/developers-majid-al-futtaim.html"
+    },
+    {
+      "source": "/developers/wasl",
+      "destination": "/developers-wasl.html"
+    },
+    {
+      "source": "/developers/expo-city-dubai",
+      "destination": "/developers-expo-city-dubai.html"
+    },
+    {
+      "source": "/developers/reportage",
+      "destination": "/developers-reportage.html"
+    },
+    {
+      "source": "/developers/imtiaz",
+      "destination": "/developers-imtiaz.html"
+    },
+    {
+      "source": "/developers/object-1",
+      "destination": "/developers-object-1.html"
+    },
+    {
+      "source": "/developers/tiger",
+      "destination": "/developers-tiger.html"
+    },
+    {
+      "source": "/developers/prescott",
+      "destination": "/developers-prescott.html"
+    },
+    {
+      "source": "/developers/ahs",
+      "destination": "/developers-ahs.html"
+    },
+    {
+      "source": "/developers/beyond",
+      "destination": "/developers-beyond.html"
+    },
+    {
+      "source": "/developers/leos",
+      "destination": "/developers-leos.html"
+    },
+    {
+      "source": "/developers/vincitore",
+      "destination": "/developers-vincitore.html"
+    },
+    {
+      "source": "/developers/taraf",
+      "destination": "/developers-taraf.html"
     },
     {
       "source": "/property-types",
       "destination": "/property-types.html"
     },
     {
-      "source": "/property-types/townhouses",
-      "destination": "/property-types-townhouses.html"
+      "source": "/property-types/apartments",
+      "destination": "/property-types-apartments.html"
     },
     {
       "source": "/property-types/villas",
       "destination": "/property-types-villas.html"
+    },
+    {
+      "source": "/property-types/townhouses",
+      "destination": "/property-types-townhouses.html"
+    },
+    {
+      "source": "/property-types/penthouses",
+      "destination": "/property-types-penthouses.html"
+    },
+    {
+      "source": "/property-types/duplexes",
+      "destination": "/property-types-duplexes.html"
+    },
+    {
+      "source": "/property-types/branded-residences",
+      "destination": "/property-types-branded-residences.html"
+    },
+    {
+      "source": "/property-types/plots",
+      "destination": "/property-types-plots.html"
+    },
+    {
+      "source": "/property-types/commercial",
+      "destination": "/property-types-commercial.html"
+    },
+    {
+      "source": "/property-types/office-spaces",
+      "destination": "/property-types-office-spaces.html"
+    },
+    {
+      "source": "/property-types/retail",
+      "destination": "/property-types-retail.html"
     },
     {
       "source": "/compare",
@@ -68,6 +428,26 @@
     {
       "source": "/services/equity-solutions",
       "destination": "/services-equity-solutions.html"
+    },
+    {
+      "source": "/services/reselling",
+      "destination": "/services-reselling.html"
+    },
+    {
+      "source": "/services/renting",
+      "destination": "/services-renting.html"
+    },
+    {
+      "source": "/list-your-property",
+      "destination": "/list-your-property.html"
+    },
+    {
+      "source": "/sell",
+      "destination": "/sell.html"
+    },
+    {
+      "source": "/list-for-rent",
+      "destination": "/list-for-rent.html"
     },
     {
       "source": "/insights",
@@ -104,10 +484,6 @@
     {
       "source": "/dubai/:path*",
       "destination": "/api/acquisition?route=page&path=dubai/:path*"
-    },
-    {
-      "source": "/developers/:path*",
-      "destination": "/api/acquisition?route=page&path=developers/:path*"
     },
     {
       "source": "/projects/:path*",
