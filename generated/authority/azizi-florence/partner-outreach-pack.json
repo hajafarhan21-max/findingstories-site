@@ -1,0 +1,51 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "generated_status": "prepared",
+  "external_action_performed": false,
+  "automatic_sending": false,
+  "templates": [
+    {
+      "role": "broker",
+      "template": "Hello [name] — I am sharing a buyer-focused Azizi Florence guide only because it may help your broker audience assess the residence mix, location and questions around current terms. Finding Stories can provide private advisory context; no partnership or endorsement is implied. If relevant to a buyer you already support, please use this tracked resource: https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=partner&utm_campaign=azizi-florence-project-launch&utm_content=project_reference",
+      "destination_url": "https://www.finding-stories.com/azizi-florence",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=partner&utm_campaign=azizi-florence-project-launch&utm_content=project_reference",
+      "status": "needs_relationship",
+      "sent": false
+    },
+    {
+      "role": "property advisor",
+      "template": "Hello [name] — I am sharing a buyer-focused Azizi Florence guide only because it may help your property advisor audience assess the residence mix, location and questions around current terms. Finding Stories can provide private advisory context; no partnership or endorsement is implied. If relevant to a buyer you already support, please use this tracked resource: https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=partner&utm_campaign=azizi-florence-project-launch&utm_content=project_reference",
+      "destination_url": "https://www.finding-stories.com/azizi-florence",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=partner&utm_campaign=azizi-florence-project-launch&utm_content=project_reference",
+      "status": "needs_relationship",
+      "sent": false
+    },
+    {
+      "role": "investor community",
+      "template": "Hello [name] — I am sharing a buyer-focused Azizi Florence guide only because it may help your investor community audience assess the residence mix, location and questions around current terms. Finding Stories can provide private advisory context; no partnership or endorsement is implied. If relevant to a buyer you already support, please use this tracked resource: https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=partner&utm_campaign=azizi-florence-project-launch&utm_content=project_reference",
+      "destination_url": "https://www.finding-stories.com/azizi-florence",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=partner&utm_campaign=azizi-florence-project-launch&utm_content=project_reference",
+      "status": "needs_relationship",
+      "sent": false
+    },
+    {
+      "role": "relocation professional",
+      "template": "Hello [name] — I am sharing a buyer-focused Azizi Florence guide only because it may help your relocation professional audience assess the residence mix, location and questions around current terms. Finding Stories can provide private advisory context; no partnership or endorsement is implied. If relevant to a buyer you already support, please use this tracked resource: https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=partner&utm_campaign=azizi-florence-project-launch&utm_content=project_reference",
+      "destination_url": "https://www.finding-stories.com/azizi-florence",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=partner&utm_campaign=azizi-florence-project-launch&utm_content=project_reference",
+      "status": "needs_relationship",
+      "sent": false
+    },
+    {
+      "role": "mortgage advisor",
+      "template": "Hello [name] — I am sharing a buyer-focused Azizi Florence guide only because it may help your mortgage advisor audience assess the residence mix, location and questions around current terms. Finding Stories can provide private advisory context; no partnership or endorsement is implied. If relevant to a buyer you already support, please use this tracked resource: https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=partner&utm_campaign=azizi-florence-project-launch&utm_content=project_reference",
+      "destination_url": "https://www.finding-stories.com/azizi-florence",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=partner&utm_campaign=azizi-florence-project-launch&utm_content=project_reference",
+      "status": "needs_relationship",
+      "sent": false
+    }
+  ]
+}

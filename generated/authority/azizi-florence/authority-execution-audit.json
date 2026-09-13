@@ -1,0 +1,105 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "generated_status": "prepared",
+  "external_action_performed": false,
+  "findings": [
+    {
+      "severity": "P0",
+      "finding": "No defect found in protected lead, attribution or technical SEO systems; they were not changed.",
+      "resolution": "none_required"
+    },
+    {
+      "severity": "P1",
+      "finding": "Authority outputs stopped at review-first preparation and lacked a prioritized revenue execution board.",
+      "resolution": "Added deterministic execution generator and operational outputs."
+    },
+    {
+      "severity": "P1",
+      "finding": "Existing targets are opportunity categories, not verified owned accounts, publishers, contacts or submission routes.",
+      "resolution": "Retained needs_verification gates; platform domains do not establish account ownership."
+    },
+    {
+      "severity": "P1",
+      "finding": "Social, editorial, partner, profile, daily and human-ready execution copy was incomplete.",
+      "resolution": "Added publication-ready and relationship-first assets with authorization gates."
+    },
+    {
+      "severity": "P2",
+      "finding": "Analytics could be integrated into static reporting in a future authorized workflow.",
+      "resolution": "Deferred; unavailable metrics remain null."
+    }
+  ],
+  "verification": {
+    "reviewed_at": "2026-09-13",
+    "environment_result": "linkedin.com and instagram.com returned HTTP 200 during public domain checks; this verifies only platform-domain availability, not Finding Stories account existence or ownership.",
+    "targets": [
+      {
+        "target_name": "Finding Stories LinkedIn account",
+        "exact_domain": "linkedin.com",
+        "platform_or_category": "platform",
+        "legitimacy": "public_platform_domain_reachable",
+        "relevance": "Professional buyer education and project analysis",
+        "finding_stories_account_owned": false,
+        "usable_now": false,
+        "verification_status": "needs_verification",
+        "reason": "No exact Finding Stories profile URL or ownership evidence exists."
+      },
+      {
+        "target_name": "Finding Stories Instagram account",
+        "exact_domain": "instagram.com",
+        "platform_or_category": "platform",
+        "legitimacy": "public_platform_domain_reachable",
+        "relevance": "Visual project education for relevant prospective buyers",
+        "finding_stories_account_owned": false,
+        "usable_now": false,
+        "verification_status": "needs_verification",
+        "reason": "No exact Finding Stories profile URL or ownership evidence exists."
+      },
+      {
+        "target_name": "Developer project reference opportunity",
+        "exact_domain": null,
+        "platform_or_category": "candidate_category",
+        "legitimacy": "not_verifiable_without_named_target",
+        "relevance": "Potential factual developer reference for an approved project",
+        "finding_stories_account_owned": false,
+        "usable_now": false,
+        "verification_status": "needs_verification",
+        "reason": "No exact domain, contact or submission URL exists."
+      },
+      {
+        "target_name": "Relevant UAE property editorial opportunity",
+        "exact_domain": null,
+        "platform_or_category": "candidate_category",
+        "legitimacy": "not_verifiable_without_named_target",
+        "relevance": "Buyer-focused project evaluation and due diligence",
+        "finding_stories_account_owned": false,
+        "usable_now": false,
+        "verification_status": "needs_verification",
+        "reason": "No exact domain, contact or submission URL exists."
+      },
+      {
+        "target_name": "Legitimate UAE business or property directory opportunity",
+        "exact_domain": null,
+        "platform_or_category": "candidate_category",
+        "legitimacy": "not_verifiable_without_named_target",
+        "relevance": "Accurate business or project discovery where category and audience fit are proven",
+        "finding_stories_account_owned": false,
+        "usable_now": false,
+        "verification_status": "needs_verification",
+        "reason": "No exact domain, contact or submission URL exists."
+      }
+    ]
+  },
+  "ai_search_citability": {
+    "concise": true,
+    "factual": true,
+    "attributable": true,
+    "entity_consistent": true,
+    "source_aware": true,
+    "source": "projects/azizi-florence/manifest.json",
+    "note": "All public-facing summaries identify Finding Stories role, qualify mutable facts and avoid hidden or AI-only content."
+  }
+}

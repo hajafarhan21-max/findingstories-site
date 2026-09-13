@@ -1,0 +1,45 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "generated_status": "prepared",
+  "external_action_performed": false,
+  "operator_capacity": "one operator",
+  "actions": [
+    {
+      "order": 1,
+      "category": "social publish",
+      "action_id": "social-linkedin-introduction",
+      "action": "Verify account ownership, approve and publish the project-introduction post.",
+      "status": "needs_login"
+    },
+    {
+      "order": 2,
+      "category": "authority verification",
+      "action_id": "editorial-target-verification",
+      "action": "Research one publication and record evidence; do not send until approved.",
+      "status": "needs_verification"
+    },
+    {
+      "order": 3,
+      "category": "outreach",
+      "action_id": "partner-first-referral",
+      "action": "Relationship owner selects a role template and adds truthful context.",
+      "status": "needs_relationship"
+    },
+    {
+      "order": 4,
+      "category": "profile",
+      "action_id": "directory-opportunity-verification",
+      "action": "Name and verify one directory; reject unmoderated or irrelevant candidates.",
+      "status": "needs_verification"
+    },
+    {
+      "order": 5,
+      "category": "performance review",
+      "action": "Record only available Search Console, referral and conversion metrics; retain null for unavailable values and do not request indexing again.",
+      "status": "needs_login"
+    }
+  ]
+}

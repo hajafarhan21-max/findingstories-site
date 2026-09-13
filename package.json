@@ -24,6 +24,7 @@
     "seo:generate": "node scripts/generate-seo.mjs",
     "distribution:generate": "node scripts/generate-distribution.mjs",
     "authority:generate": "node scripts/generate-authority.mjs",
+    "authority:execute": "node scripts/generate-authority-execution.mjs",
     "seo:verify": "node scripts/verify-production-seo.mjs"
   },
   "dependencies": {

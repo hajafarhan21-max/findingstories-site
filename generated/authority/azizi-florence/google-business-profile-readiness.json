@@ -1,0 +1,33 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "generated_status": "prepared",
+  "external_action_performed": false,
+  "create_or_claim_automatically": false,
+  "readiness": "blocked",
+  "checklist": [
+    {
+      "missing_information": "Verified public business name and legal operating basis",
+      "used_for": "Business identity and eligibility",
+      "evidence_needed": "Current official registration or equivalent ownership evidence."
+    },
+    {
+      "missing_information": "Real customer-facing location or truthful service-area eligibility",
+      "used_for": "Address/service-area configuration",
+      "evidence_needed": "Operational evidence meeting current Google eligibility rules; do not use a virtual or fabricated office."
+    },
+    {
+      "missing_information": "Verified business phone and authorized owner",
+      "used_for": "Customer contact and profile verification",
+      "evidence_needed": "Business-controlled phone and owner authorization."
+    },
+    {
+      "missing_information": "Accurate operating hours",
+      "used_for": "Public profile hours",
+      "evidence_needed": "Documented hours during which customers can receive service."
+    }
+  ],
+  "schema_instruction": "Do not add LocalBusiness schema unless these facts are truthfully supported and approved."
+}
