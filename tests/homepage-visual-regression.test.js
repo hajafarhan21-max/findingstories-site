@@ -36,6 +36,8 @@ test('approved brand binaries materialize byte-for-byte from tracked text source
   const {promisify} = await import('node:util');
   const {MATERIALIZED_BRAND_ASSETS} = await import('../scripts/materialize-brand-assets.mjs');
   const hash = value => createHash('sha256').update(value).digest('hex');
+  for(const asset of MATERIALIZED_BRAND_ASSETS)await rm(asset.output,{force:true});
+  await promisify(execFile)(process.execPath,['scripts/materialize-brand-assets.mjs']);
   for(const asset of MATERIALIZED_BRAND_ASSETS){
     const encoded = (await readFile(asset.source,'utf8')).replace(/\s/g,'');
     const expected = Buffer.from(encoded,'base64');
