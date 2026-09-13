@@ -72,3 +72,4 @@ CREATE INDEX IF NOT EXISTS leads_next_follow_up_at_idx ON leads (next_follow_up_
 \ir migrations/010_crm_foundation.sql
 \ir migrations/019_florence_revenue_funnel.sql
 \ir migrations/020_lead_numbers.sql
+\ir migrations/021_newsletter.sql

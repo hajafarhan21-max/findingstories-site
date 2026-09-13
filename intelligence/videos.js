@@ -1,0 +1,1 @@
+export function approvedEmbeddableVideos(items){return items.filter(item=>item.public===true&&item.embeddable===true&&item.verificationState==='APPROVED'&&item.publicationState==='PUBLISHED'&&item.videoId&&item.channelTitle)}
