@@ -8,3 +8,6 @@ dist/
 # Materialized from tracked text sources by scripts/materialize-florence-assets.mjs
 /public/assets/azizi-florence/amenities-background.webp
 /public/assets/azizi-florence/location-map.png
+
+# Approved brand artwork materialized from tracked text sources.
+/public/assets/brand/*.png
