@@ -7,6 +7,7 @@ export const dldTransactionSchema=z.object({
   sourceId:z.string().min(1),
   transactionDate:z.string().date(),
   transactionType:nullableText,
+  transactionSubtype:nullableText,
   registrationType:nullableText,
   freehold:nullableText,
   usage:nullableText,
@@ -22,6 +23,11 @@ export const dldTransactionSchema=z.object({
   project:nullableText,
   buyerCount:z.number().int().nonnegative().nullable(),
   sellerCount:z.number().int().nonnegative().nullable()
+  ,nearestMetro:nullableText,nearestMall:nullableText,nearestLandmark:nullableText
+  ,transactionSizeSqft:nullableNumber,propertySizeSqft:nullableNumber,aedPerSqft:nullableNumber
+  ,sourceAreaName:nullableText,canonicalAreaName:nullableText,canonicalAreaSlug:nullableText
+  ,areaMappingStatus:z.enum(['EXACT','ALIAS_VERIFIED','UNMAPPED']),areaMappingMethod:nullableText
+  ,projectMappingStatus:z.enum(['EXACT','ALIAS_VERIFIED','UNMAPPED']),canonicalProject:nullableText,canonicalProjectSlug:nullableText,developer:nullableText
 }).strict();
 
 export const dldPageSchema=z.object({

@@ -1,0 +1,6 @@
+[
+  {"source_area":"AL BARSHAA SOUTH THIRD","canonical_name":"Al Barsha South","canonical_slug":"al-barsha-south","status":"ALIAS_VERIFIED","verified_at":"2026-09-13","verification_source":"Owner-reviewed DLD area mapping"},
+  {"source_area":"BUSINESS BAY","canonical_name":"Business Bay","canonical_slug":"business-bay","status":"EXACT","verified_at":"2026-09-13","verification_source":"Finding Stories area catalog"},
+  {"source_area":"DUBAI MARINA","canonical_name":"Dubai Marina","canonical_slug":"dubai-marina","status":"EXACT","verified_at":"2026-09-13","verification_source":"Finding Stories area catalog"},
+  {"source_area":"PALM JUMEIRAH","canonical_name":"Palm Jumeirah","canonical_slug":"palm-jumeirah","status":"EXACT","verified_at":"2026-09-13","verification_source":"Finding Stories area catalog"}
+]

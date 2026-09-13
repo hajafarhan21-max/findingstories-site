@@ -4,6 +4,9 @@ node_modules/
 .env.local
 dist/
 *.log
+data-import/dld/current/*.csv
+data-import/dld/archive/*.csv
+data-import/dld/**/*.partial
 
 # Materialized from tracked text sources by scripts/materialize-florence-assets.mjs
 /public/assets/azizi-florence/amenities-background.webp

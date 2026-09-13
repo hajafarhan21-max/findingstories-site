@@ -1,0 +1,5 @@
+{
+  "schema_version": "1.0",
+  "imports": [],
+  "policy": "Raw official CSV files are local-only and must not be committed. Each completed import appends source URL, retrieval time, SHA-256 checksum, accepted row count and covered period."
+}
