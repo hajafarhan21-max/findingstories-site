@@ -10,7 +10,7 @@ export async function loadPublicProjects(root='projects'){
     if(manifest.status==='approved'&&!manifest.seo)throw new Error(`Approved project ${manifest.project.slug} is missing SEO metadata`);
     if(manifest.status==='approved'&&manifest.seo.indexable&&!manifest.seo.organic_search)throw new Error(`Approved project ${manifest.project.slug} is missing quality-gated organic search inputs`);
     if(manifest.seo?.organic_search?.supporting_pages?.length)throw new Error(`Supporting pages for ${manifest.project.slug} require a separate reviewed publishing implementation`);
-    if(manifest.status==='approved'&&manifest.seo.indexable)projects.push(Object.freeze({...manifest.project,...manifest.seo}));
+    if(manifest.status==='approved'&&manifest.seo.indexable)projects.push(Object.freeze({...manifest.project,...manifest.seo,...(manifest.distribution?{distribution:manifest.distribution}:{})}));
   }
   return projects;
 }

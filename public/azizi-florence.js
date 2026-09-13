@@ -92,3 +92,10 @@ if(mapViewer){
   stage.addEventListener('pointerup',release);stage.addEventListener('pointercancel',release);
   document.addEventListener('keydown',event=>{if(event.key==='Escape'&&mapViewer.classList.contains('is-open'))close();});
 }
+
+const copyProjectLink=document.querySelector('[data-copy-project-link]');
+if(copyProjectLink)copyProjectLink.addEventListener('click',async()=>{
+  const url=`${location.origin}${context.page_url}?utm_source=website&utm_medium=referral&utm_campaign=azizi-florence-project-launch&utm_content=copy_link`;
+  await window.navigator.clipboard.writeText(url);
+  document.querySelector('[data-copy-status]').textContent='Project link copied.';
+});

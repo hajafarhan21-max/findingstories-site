@@ -22,6 +22,7 @@
     "project:agent": "node scripts/project-agent.mjs",
     "project:qa": "node scripts/project-agent.mjs",
     "seo:generate": "node scripts/generate-seo.mjs",
+    "distribution:generate": "node scripts/generate-distribution.mjs",
     "seo:verify": "node scripts/verify-production-seo.mjs"
   },
   "dependencies": {
