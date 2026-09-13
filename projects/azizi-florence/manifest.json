@@ -46,6 +46,14 @@
     "campaign_id": "azizi-florence",
     "project_id": "azizi-florence"
   },
+  "platform": {
+    "identity": { "development": null, "area": "Sharjah", "emirate": "Sharjah", "project_status": "Published guide", "launch_status": "Pre-launch information subject to developer confirmation", "sales_status": null },
+    "commercial": { "starting_price": null, "currency": "AED", "price_range": null, "payment_plan": "Request the current verified milestone schedule", "eoi_information": "An enquiry to Finding Stories is not an official developer EOI.", "reservation_requirements": null, "service_charge": null, "handover": null, "post_handover_plan": null },
+    "product": { "property_types": ["Townhouses", "Villas"], "unit_types": ["3 and 4 bedroom townhouses", "4, 5 and 6 bedroom villas"], "bedroom_configurations": ["3 bedroom", "4 bedroom", "5 bedroom", "6 bedroom"], "size_ranges": [], "furnishing_status": null, "branded_residence": false, "positioning": [] },
+    "experience": { "summary": "A buyer-focused guide to the published residence mix, location context and process for requesting current details.", "buyer_suitability": "For buyers considering townhouse or villa living in Sharjah; individual suitability requires an advisor review.", "investor_suitability": "Suitability depends on objectives, budget, time horizon and current confirmed release terms; outcomes are not guaranteed.", "amenities": [], "views": [], "connectivity": [] },
+    "acquisition": { "whatsapp_context": "Azizi Florence private enquiry", "lead_form_context": "Azizi Florence buyer guide", "project_source": "approved-manifest", "status_badge": "Pre-launch", "featured": true, "priority": 1 },
+    "governance": { "verification_status": "PUBLISHED", "source_references": ["Approved project manifest", "Verified production project records"], "approved_fields": ["identity", "residence mix", "location", "buyer guidance"], "pending_fields": ["Current unit availability", "Release-specific commercial terms"], "last_reviewed": "2026-08-26", "reviewer": "Finding Stories project approval workflow", "publish_state": "PUBLISHED", "data_confidence": "verified" }
+  },
   "seo": {
     "indexable": true,
     "title": "Azizi Florence Sharjah | Townhouses & Villas",

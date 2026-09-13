@@ -31,6 +31,21 @@ const distribution = z.object({
   directory_summary:z.string().min(50), citation_summary:z.string().min(50), outreach_summary:z.string().min(50), press_summary:z.string().min(50),
   approved_external_links:z.array(z.string().url()).default([]), source_of_truth_notes:z.string().min(30)
 }).strict();
+const governance = z.object({
+  verification_status:z.enum(['DRAFT','SOURCE_PENDING','VERIFIED','APPROVED','PUBLISHED','STALE','ARCHIVED']),
+  source_references:z.array(z.string().min(3)).min(1), approved_fields:z.array(z.string().min(1)),
+  pending_fields:z.array(z.string().min(1)), last_reviewed:z.string().date(), reviewer:z.string().min(2),
+  publish_state:z.enum(['DRAFT','SOURCE_PENDING','VERIFIED','APPROVED','PUBLISHED','STALE','ARCHIVED']),
+  data_confidence:z.enum(['low','moderate','verified'])
+}).strict();
+const platform = z.object({
+  identity:z.object({development:z.string().nullable(),area:z.string().min(2),emirate:z.string().min(2),project_status:z.string().min(2),launch_status:z.string().min(2),sales_status:z.string().nullable()}).strict(),
+  commercial:z.object({starting_price:z.number().positive().nullable(),currency:z.literal('AED'),price_range:z.string().nullable(),payment_plan:z.string().nullable(),eoi_information:z.string().nullable(),reservation_requirements:z.string().nullable(),service_charge:z.string().nullable(),handover:z.string().nullable(),post_handover_plan:z.string().nullable()}).strict(),
+  product:z.object({property_types:z.array(z.string().min(2)).min(1),unit_types:z.array(z.string().min(2)).min(1),bedroom_configurations:z.array(z.string().min(2)).min(1),size_ranges:z.array(z.string()),furnishing_status:z.string().nullable(),branded_residence:z.boolean(),positioning:z.array(z.string())}).strict(),
+  experience:z.object({summary:z.string().min(40),buyer_suitability:z.string().min(30),investor_suitability:z.string().min(30),amenities:z.array(z.string()),views:z.array(z.string()),connectivity:z.array(z.string())}).strict(),
+  acquisition:z.object({whatsapp_context:z.string().min(10),lead_form_context:z.string().min(10),project_source:z.string().min(3),status_badge:z.string().min(2),featured:z.boolean(),priority:z.number().int().min(0)}).strict(),
+  governance
+}).strict();
 
 export const projectManifestSchema = z.object({
   schema_version: z.literal(1), status: z.enum(['draft','ready_for_preview','approved']),
@@ -44,6 +59,7 @@ export const projectManifestSchema = z.object({
     organic_search:organicSearch.optional()
   }).strict().optional(),
   distribution:distribution.optional(),
+  platform:platform.optional(),
   facts: z.record(z.string(), fact), assets: z.array(asset), rejected_assets: z.array(z.object({ path:z.string(), observed_content:z.string(), reason:z.string() }).strict()).default([]),
   lead: z.object({ endpoint:z.literal('/api/leads'), campaign_id:z.string().min(1), project_id:z.string().min(1), whatsapp_number:z.string().regex(/^\d{8,15}$/).optional() }).strict()
 }).strict();

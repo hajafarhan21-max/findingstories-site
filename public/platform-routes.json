@@ -1,0 +1,23 @@
+{
+  "generated_at": "2026-09-13T14:43:52.040Z",
+  "routes": [
+    "/",
+    "/projects",
+    "/new-launches",
+    "/pre-launch",
+    "/recently-launched",
+    "/ready-properties",
+    "/areas",
+    "/areas/sharjah",
+    "/developers",
+    "/developers/azizi-developments",
+    "/property-types",
+    "/property-types/townhouses",
+    "/property-types/villas",
+    "/compare",
+    "/services/private-buyer-advisory",
+    "/services/mortgage-solutions",
+    "/services/equity-solutions",
+    "/insights"
+  ]
+}

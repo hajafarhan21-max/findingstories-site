@@ -1,0 +1,24 @@
+{
+  "order_after_brand_foundation": true,
+  "earliest_sequence": 10,
+  "project": "Azizi Florence",
+  "status": "DRAFT_REVIEW_REQUIRED",
+  "published": false,
+  "source": "projects/azizi-florence/manifest.json",
+  "campaign_components": [
+    "Project overview",
+    "Published residence mix",
+    "Commercial facts only when current and verified",
+    "Payment-plan guidance",
+    "Buyer suitability",
+    "Sharjah location context",
+    "FAQ",
+    "Enquiry CTA; not an official EOI"
+  ],
+  "blockers": [
+    "Human approval",
+    "Current release-specific commercial reconfirmation",
+    "Asset rights confirmation",
+    "LinkedIn administrator publication"
+  ]
+}

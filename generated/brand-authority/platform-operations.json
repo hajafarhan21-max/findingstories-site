@@ -1,0 +1,58 @@
+{
+  "generated_at": "2026-09-13T14:43:51.427Z",
+  "auto_publish": false,
+  "project_publishing_queue": [],
+  "missing_data_queue": [
+    {
+      "project": "Azizi Florence",
+      "field": "Current unit availability",
+      "status": "VERIFICATION_REQUIRED"
+    },
+    {
+      "project": "Azizi Florence",
+      "field": "Release-specific commercial terms",
+      "status": "VERIFICATION_REQUIRED"
+    }
+  ],
+  "stale_data_queue": [],
+  "seo_readiness": {
+    "platform_routes": "READY",
+    "published_projects": 1
+  },
+  "social_readiness": {
+    "brand_posts": 9,
+    "approved": 0,
+    "published": 0,
+    "status": "HUMAN_APPROVAL_REQUIRED"
+  },
+  "project_launch_readiness": [
+    {
+      "project": "Azizi Florence",
+      "brand_foundation_complete": false,
+      "status": "BLOCKED_BY_BRAND_SEQUENCE_AND_HUMAN_APPROVAL"
+    }
+  ],
+  "verification_blockers": [
+    "Human approval",
+    "Current release-specific commercial reconfirmation",
+    "Asset rights confirmation",
+    "LinkedIn administrator publication"
+  ],
+  "lead_attribution_health": {
+    "status": "PROTECTED_TEST_REQUIRED",
+    "endpoint": "/api/leads",
+    "first_touch": true,
+    "latest_touch": true,
+    "context_fields": [
+      "entry page",
+      "current page",
+      "project",
+      "developer",
+      "area",
+      "CTA",
+      "UTM",
+      "channel"
+    ]
+  },
+  "content_refresh_candidates": []
+}

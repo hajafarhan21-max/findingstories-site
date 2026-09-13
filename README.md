@@ -1,5 +1,7 @@
 # Finding Stories AI — Phase 1
 
+> **Current platform documentation:** See [`docs/premium-property-platform.md`](docs/premium-property-platform.md) for the premium discovery architecture, project/developer/area publishing workflow, verification governance, social process, SEO/acquisition integration, protected systems and deployment checklist.
+
 Phase 1 adds a conversational lead adviser and a private, AI-qualified CRM to the existing single-page Finding Stories website without changing its visual identity or removing its Web3Forms delivery.
 
 ## Discovered architecture
