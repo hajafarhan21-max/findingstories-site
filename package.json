@@ -30,7 +30,8 @@
     "social:generate": "node scripts/generate-social-provisioning.mjs",
     "social:validate": "node scripts/validate-social-provisioning.mjs",
     "brand:generate": "node scripts/generate-brand-authority.mjs",
-    "seo:verify": "node scripts/verify-production-seo.mjs"
+    "seo:verify": "node scripts/verify-production-seo.mjs",
+    "dld:import": "node scripts/import-dld-csv.mjs"
     ,"intelligence:generate": "node scripts/generate-intelligence.mjs"
   },
   "dependencies": {
