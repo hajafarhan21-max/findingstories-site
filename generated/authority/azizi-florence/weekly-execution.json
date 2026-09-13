@@ -1,0 +1,52 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_required": true,
+  "external_action_performed": false,
+  "approval_owner": "Finding Stories authorized operator",
+  "buyer_intent": "Azizi Florence project details and availability",
+  "landing_page": "https://www.finding-stories.com/azizi-florence",
+  "cta": "Request current availability or speak with an advisor",
+  "conversion_events": [
+    "whatsapp",
+    "enquiry_started",
+    "successful lead submission"
+  ],
+  "attribution_note": "Existing first/latest-touch UTM capture carries source data into the lead record and notification; do not alter canonical links.",
+  "quality_limit": "One operator; quality over volume.",
+  "actions": [
+    {
+      "quantity": 2,
+      "type": "citation/profile",
+      "gate": "Only verified and approved targets; otherwise use time to verify candidates."
+    },
+    {
+      "quantity": 2,
+      "type": "relationship outreach",
+      "gate": "Individual relevance and authorized sender approval."
+    },
+    {
+      "quantity": 2,
+      "type": "useful social distributions",
+      "gate": "Verified business account, fact and image-rights review."
+    },
+    {
+      "quantity": 1,
+      "type": "editorial authority asset",
+      "gate": "Tailored to a real audience; no fake-news framing."
+    },
+    {
+      "quantity": 1,
+      "type": "citation verification pass",
+      "gate": "Only a public live URL can become live."
+    },
+    {
+      "quantity": 1,
+      "type": "Search Console review",
+      "gate": "Record index state, impressions, queries, clicks, CTR and position; do not repeatedly request indexing."
+    }
+  ],
+  "success_measure": "Qualified organic/referral enquiries first; citations and reach are diagnostic measures."
+}

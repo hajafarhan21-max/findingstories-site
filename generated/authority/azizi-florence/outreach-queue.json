@@ -1,0 +1,41 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_required": true,
+  "external_action_performed": false,
+  "approval_owner": "Finding Stories authorized operator",
+  "buyer_intent": "Azizi Florence project details and availability",
+  "landing_page": "https://www.finding-stories.com/azizi-florence",
+  "cta": "Request current availability or speak with an advisor",
+  "conversion_events": [
+    "whatsapp",
+    "enquiry_started",
+    "successful lead submission"
+  ],
+  "attribution_note": "Existing first/latest-touch UTM capture carries source data into the lead record and notification; do not alter canonical links.",
+  "items": [],
+  "blocked_candidates": [
+    {
+      "target_name": "Finding Stories LinkedIn account",
+      "reason": "needs_verification"
+    },
+    {
+      "target_name": "Finding Stories Instagram account",
+      "reason": "needs_verification"
+    },
+    {
+      "target_name": "Developer project reference opportunity",
+      "reason": "needs_verification"
+    },
+    {
+      "target_name": "Relevant UAE property editorial opportunity",
+      "reason": "needs_verification"
+    },
+    {
+      "target_name": "Legitimate UAE business or property directory opportunity",
+      "reason": "needs_verification"
+    }
+  ]
+}

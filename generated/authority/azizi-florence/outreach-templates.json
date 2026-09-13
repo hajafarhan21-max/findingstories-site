@@ -1,0 +1,29 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_required": true,
+  "external_action_performed": false,
+  "approval_owner": "Finding Stories authorized operator",
+  "buyer_intent": "Azizi Florence project details and availability",
+  "landing_page": "https://www.finding-stories.com/azizi-florence",
+  "cta": "Request current availability or speak with an advisor",
+  "conversion_events": [
+    "whatsapp",
+    "enquiry_started",
+    "successful lead submission"
+  ],
+  "attribution_note": "Existing first/latest-touch UTM capture carries source data into the lead record and notification; do not alter canonical links.",
+  "status": "prepared",
+  "send_automatically": false,
+  "templates": {
+    "publisher_outreach": "Hello [name] — your [specific audience/resource] may benefit from a reviewed buyer guide to [project]. It covers [relevant verified facts] and clearly qualifies changing terms. May I send a tailored summary for editorial review?",
+    "directory_submission": "Hello — please review the attached verified Finding Stories business data for [directory/category]. We are requesting an accurate profile because your audience uses this resource for [specific reason]. No listing or link is assumed until you approve and publish it.",
+    "developer_reference_request": "Hello [name] — Finding Stories has prepared a buyer-focused guide to [project]. Could you confirm the appropriate public sources and whether referencing this reviewed resource would be useful to buyers? We will not imply official status or a relationship without written approval.",
+    "partner_citation_request": "Hello [name] — our shared audience may find [specific buyer resource] useful. If it fits an existing, documented relationship, could we review accurate contextual wording together? No reciprocal or dofollow link is requested.",
+    "event_community_listing": "Hello [organizer] — Finding Stories is [verified participation/context]. Would an accurate listing help attendees looking for [specific topic]? We can provide concise reviewed copy after confirming participation, image rights and your listing rules.",
+    "editorial_pitch": "Hello [editor] — I am proposing [specific angle] for your [audience/section]. Finding Stories can provide source-noted project facts and buyer questions, with all mutable terms qualified. Editorial control remains yours; this is not an independent-news claim or paid-link request.",
+    "existing_relationship": "Hello [name] — based on our existing documented work on [context], would a factual reference to [resource] help your audience with [specific need]? Please review the wording and destination; we will only describe the relationship as both parties approve."
+  }
+}

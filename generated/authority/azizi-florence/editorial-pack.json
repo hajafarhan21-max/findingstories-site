@@ -1,0 +1,57 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_required": true,
+  "external_action_performed": false,
+  "approval_owner": "Finding Stories authorized operator",
+  "buyer_intent": "Azizi Florence project details and availability",
+  "landing_page": "https://www.finding-stories.com/azizi-florence",
+  "cta": "Request current availability or speak with an advisor",
+  "conversion_events": [
+    "whatsapp",
+    "enquiry_started",
+    "successful lead submission"
+  ],
+  "attribution_note": "Existing first/latest-touch UTM capture carries source data into the lead record and notification; do not alter canonical links.",
+  "status": "prepared",
+  "not_independent_journalism": true,
+  "summaries": {
+    "words_50": "Azizi Florence is a Sharjah collection of townhouses and villas presented with verified project information and private buyer guidance from Finding Stories. Buyers can review the residence mix, location and payment-plan context, then request current information privately. Prices, terms, completion timing and unit availability can change and must be reconfirmed.",
+    "words_100": "Azizi Florence is a residential project in Sharjah by Azizi Developments, with 3 and 4 bedroom townhouses and 4, 5 and 6 bedroom villas. Finding Stories provides verified project context and private advisory support. Prices, terms, completion timing and availability must be reconfirmed before commitment. The residence mix gives buyers a choice between townhouses and villas, so comparisons should consider household needs, layout preferences, budget and intended holding period rather than headline positioning alone. A review-ready Finding Stories briefing covers Azizi Florence in Sharjah, including its townhouse and villa mix, verified location context, payment-plan guidance and buyer enquiry route. Release-specific.",
+    "words_250": "Azizi Florence is a residential project in Sharjah by Azizi Developments, with 3 and 4 bedroom townhouses and 4, 5 and 6 bedroom villas. Finding Stories provides verified project context and private advisory support. Prices, terms, completion timing and availability must be reconfirmed before commitment. The residence mix gives buyers a choice between townhouses and villas, so comparisons should consider household needs, layout preferences, budget and intended holding period rather than headline positioning alone. A review-ready Finding Stories briefing covers Azizi Florence in Sharjah, including its townhouse and villa mix, verified location context, payment-plan guidance and buyer enquiry route. Release-specific terms require reconfirmation. Buyers should verify the exact unit, floor plan, plot or built-up area, current price, fees, payment milestones and contractual documents before deciding. Location analysis should consider the buyer's regular journeys and priorities using the reviewed map, while avoiding unsupported travel-time promises. The available payment-plan context is a starting point for questions, not a substitute for the current developer schedule or independent financial and legal review. Finding Stories offers private buyer-focused advisory context and a route to request current availability. An enquiry is not itself an official EOI, reservation or booking. Prices, terms, completion timing and unit availability can change and must be reconfirmed before commitment. This briefing is promotional advisory source material, not independent journalism, and any publisher should apply its own editorial review. Images must use approved assets with rights and credit requirements confirmed before publication. Project updates should be issued only after the underlying approved."
+  },
+  "key_verified_facts": {
+    "developer": "Azizi Developments",
+    "location": "Sharjah, UAE",
+    "residence_mix": [
+      "Townhouses",
+      "Villas"
+    ],
+    "starting_price_context": "Verified unit-level starting prices are shown on the live project page when current records are available.",
+    "payment_plan_context": "A verified payment plan is available; request the current milestone schedule from a Finding Stories advisor.",
+    "completion_context": "Completion information is shown only when present in current verified project records and must be reconfirmed."
+  },
+  "buyer_relevance": "Useful for buyers comparing residence types, budget, timing, payment structure and current release terms.",
+  "developer_context": "The approved project source identifies Azizi Developments as developer.",
+  "finding_stories_context": "Finding Stories provides buyer-focused project context and private advisory support; it does not claim independent publisher status or official developer representation.",
+  "image_guidance": {
+    "reference": "/assets/azizi-florence/hero.webp",
+    "alt": "Azizi Florence townhouse and villa community exterior",
+    "instruction": "Confirm usage rights, caption and any required credit before external use."
+  },
+  "source_notes": {
+    "manifest": "projects/azizi-florence/manifest.json",
+    "basis": "Project identity and SEO facts are approved in this manifest; dynamic prices, payment milestones and handover remain sourced from verified production records and must not be hard-coded into distribution copy.",
+    "mutable_claim_rule": "Reconfirm prices, availability, payment terms, release status and completion immediately before publication."
+  },
+  "disclaimer": "Prices, terms, completion timing and unit availability can change and must be reconfirmed before commitment.",
+  "story_angles": [
+    "How buyers can evaluate Azizi Florence",
+    "Understanding Azizi Florence's townhouse and villa mix",
+    "What to verify before registering interest in Azizi Florence",
+    "Understanding the Azizi Florence payment structure",
+    "Sharjah, UAE location and connectivity considerations"
+  ]
+}
