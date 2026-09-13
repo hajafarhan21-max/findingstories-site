@@ -1,0 +1,33 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_required": true,
+  "external_action_performed": false,
+  "approval_owner": "Finding Stories authorized operator",
+  "buyer_intent": "Azizi Florence project details and availability",
+  "landing_page": "https://www.finding-stories.com/azizi-florence",
+  "cta": "Request current availability or speak with an advisor",
+  "conversion_events": [
+    "whatsapp",
+    "enquiry_started",
+    "successful lead submission"
+  ],
+  "attribution_note": "Existing first/latest-touch UTM capture carries source data into the lead record and notification; do not alter canonical links.",
+  "workflow": [
+    "Set status pending only after a real placement is expected",
+    "Open and inspect the public live URL",
+    "Confirm source domain, destination, anchor/context and link attribute",
+    "Set live only when evidence is present",
+    "Recheck and mark removed, changed or unreachable accurately"
+  ],
+  "allowed_statuses": [
+    "pending",
+    "live",
+    "removed",
+    "changed",
+    "unreachable"
+  ],
+  "records": []
+}

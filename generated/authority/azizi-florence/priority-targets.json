@@ -1,0 +1,216 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_required": true,
+  "external_action_performed": false,
+  "approval_owner": "Finding Stories authorized operator",
+  "buyer_intent": "Azizi Florence project details and availability",
+  "landing_page": "https://www.finding-stories.com/azizi-florence",
+  "cta": "Request current availability or speak with an advisor",
+  "conversion_events": [
+    "whatsapp",
+    "enquiry_started",
+    "successful lead submission"
+  ],
+  "attribution_note": "Existing first/latest-touch UTM capture carries source data into the lead record and notification; do not alter canonical links.",
+  "scoring_model": {
+    "principle": "Relevance, legitimacy, buyer intent, discoverability and referral potential outrank volume. Unverified targets cannot receive a tier.",
+    "tiers": {
+      "A": "High-priority legitimate opportunity",
+      "B": "Useful secondary opportunity",
+      "C": "Experimental or low priority",
+      "Reject": "Unsafe, irrelevant or manipulative",
+      "Unscored": "Evidence missing"
+    }
+  },
+  "targets": [
+    {
+      "target_name": "Finding Stories LinkedIn account",
+      "target_type": "social_profile",
+      "domain": "linkedin.com",
+      "submission_url": null,
+      "country": "UAE",
+      "market": "UAE property advisory",
+      "project_relevance": "Professional buyer education and project analysis",
+      "authority_reason": "A business-controlled professional profile can distribute useful advisory material once ownership is evidenced.",
+      "relationship_status": "unconfirmed",
+      "contact_method": "MISSING",
+      "contact_reference": "MISSING",
+      "submission_method": "Human publication through an authorized account",
+      "content_required": "LinkedIn educational post",
+      "link_type": "unknown",
+      "expected_destination": "project",
+      "utm_source": "linkedin",
+      "utm_medium": "organic_social",
+      "utm_campaign": "azizi-florence-project-launch",
+      "verification_status": "needs_verification",
+      "last_verified_at": null,
+      "submitted_at": null,
+      "published_at": null,
+      "live_url": null,
+      "status": "needs_verification",
+      "notes": "Opportunity only. Verify the account URL, ownership and publishing approval before use.",
+      "priority": {
+        "score": 0,
+        "tier": "Unscored",
+        "reason": "Evidence gate: target must be verified before prioritization."
+      }
+    },
+    {
+      "target_name": "Finding Stories Instagram account",
+      "target_type": "social_profile",
+      "domain": "instagram.com",
+      "submission_url": null,
+      "country": "UAE",
+      "market": "UAE property advisory",
+      "project_relevance": "Visual project education for relevant prospective buyers",
+      "authority_reason": "A business-controlled profile can support factual project discovery once ownership is evidenced.",
+      "relationship_status": "unconfirmed",
+      "contact_method": "MISSING",
+      "contact_reference": "MISSING",
+      "submission_method": "Human publication through an authorized account",
+      "content_required": "Approved caption and licensed project visual",
+      "link_type": "unknown",
+      "expected_destination": "project",
+      "utm_source": "instagram",
+      "utm_medium": "organic_social",
+      "utm_campaign": "azizi-florence-project-launch",
+      "verification_status": "needs_verification",
+      "last_verified_at": null,
+      "submitted_at": null,
+      "published_at": null,
+      "live_url": null,
+      "status": "needs_verification",
+      "notes": "Opportunity only. Verify the account URL, ownership and image rights before use.",
+      "priority": {
+        "score": 0,
+        "tier": "Unscored",
+        "reason": "Evidence gate: target must be verified before prioritization."
+      }
+    },
+    {
+      "target_name": "Developer project reference opportunity",
+      "target_type": "developer_owned_channel",
+      "domain": null,
+      "submission_url": null,
+      "country": "UAE",
+      "market": "UAE property",
+      "project_relevance": "Potential factual developer reference for an approved project",
+      "authority_reason": "A developer-approved reference could improve fact consistency and qualified discovery.",
+      "relationship_status": "unconfirmed",
+      "contact_method": "MISSING",
+      "contact_reference": "MISSING",
+      "submission_method": "Relationship-first request after authorization",
+      "content_required": "Factual project resource summary",
+      "link_type": "unknown",
+      "expected_destination": "project",
+      "utm_source": "developer_name",
+      "utm_medium": "partner",
+      "utm_campaign": "azizi-florence-project-launch",
+      "verification_status": "needs_verification",
+      "last_verified_at": null,
+      "submitted_at": null,
+      "published_at": null,
+      "live_url": null,
+      "status": "needs_verification",
+      "notes": "Opportunity category, not a relationship or listing. Identify and verify an appropriate official channel manually.",
+      "priority": {
+        "score": 0,
+        "tier": "Unscored",
+        "reason": "Evidence gate: target must be verified before prioritization."
+      }
+    },
+    {
+      "target_name": "Relevant UAE property editorial opportunity",
+      "target_type": "editorial_publication",
+      "domain": null,
+      "submission_url": null,
+      "country": "UAE",
+      "market": "UAE property",
+      "project_relevance": "Buyer-focused project evaluation and due diligence",
+      "authority_reason": "A legitimate editorial audience may benefit from independently reviewed buyer guidance.",
+      "relationship_status": "unconfirmed",
+      "contact_method": "MISSING",
+      "contact_reference": "MISSING",
+      "submission_method": "Individual editorial pitch after publication verification",
+      "content_required": "Tailored editorial angle and source notes",
+      "link_type": "editorial_discretion",
+      "expected_destination": "project",
+      "utm_source": "publication_domain",
+      "utm_medium": "editorial",
+      "utm_campaign": "azizi-florence-project-launch",
+      "verification_status": "needs_verification",
+      "last_verified_at": null,
+      "submitted_at": null,
+      "published_at": null,
+      "live_url": null,
+      "status": "needs_verification",
+      "notes": "Research a real publication and record evidence before promotion to verified. No publisher or contact is asserted here.",
+      "priority": {
+        "score": 0,
+        "tier": "Unscored",
+        "reason": "Evidence gate: target must be verified before prioritization."
+      }
+    },
+    {
+      "target_name": "Legitimate UAE business or property directory opportunity",
+      "target_type": "directory",
+      "domain": null,
+      "submission_url": null,
+      "country": "UAE",
+      "market": "UAE business/property",
+      "project_relevance": "Accurate business or project discovery where category and audience fit are proven",
+      "authority_reason": "A moderated, relevant directory can provide entity consistency and referral discovery.",
+      "relationship_status": "unconfirmed",
+      "contact_method": "MISSING",
+      "contact_reference": "MISSING",
+      "submission_method": "Human submission after moderation and entitlement checks",
+      "content_required": "Verified business submission data",
+      "link_type": "unknown",
+      "expected_destination": "project",
+      "utm_source": "directory_domain",
+      "utm_medium": "directory",
+      "utm_campaign": "azizi-florence-project-launch",
+      "verification_status": "needs_verification",
+      "last_verified_at": null,
+      "submitted_at": null,
+      "published_at": null,
+      "live_url": null,
+      "status": "needs_verification",
+      "notes": "Reject bulk, irrelevant or unmoderated directories. A named target must be verified before preparation.",
+      "priority": {
+        "score": 0,
+        "tier": "Unscored",
+        "reason": "Evidence gate: target must be verified before prioritization."
+      }
+    }
+  ],
+  "anchor_text": [
+    {
+      "category": "brand",
+      "text": "Finding Stories"
+    },
+    {
+      "category": "project",
+      "text": "Azizi Florence"
+    },
+    {
+      "category": "descriptive",
+      "text": "Azizi Florence project guide"
+    },
+    {
+      "category": "descriptive",
+      "text": "Azizi Florence buyer information"
+    },
+    {
+      "category": "descriptive",
+      "text": "Azizi Florence prices and payment plan"
+    },
+    {
+      "category": "url",
+      "text": "https://www.finding-stories.com/azizi-florence"
+    }
+  ]
+}

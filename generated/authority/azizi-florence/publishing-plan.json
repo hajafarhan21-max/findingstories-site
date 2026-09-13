@@ -1,0 +1,128 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_required": true,
+  "external_action_performed": false,
+  "approval_owner": "Finding Stories authorized operator",
+  "buyer_intent": "Azizi Florence project details and availability",
+  "landing_page": "https://www.finding-stories.com/azizi-florence",
+  "cta": "Request current availability or speak with an advisor",
+  "conversion_events": [
+    "whatsapp",
+    "enquiry_started",
+    "successful lead submission"
+  ],
+  "attribution_note": "Existing first/latest-touch UTM capture carries source data into the lead record and notification; do not alter canonical links.",
+  "social_assets": "social-pack.json",
+  "editorial_asset": "editorial-pack.json",
+  "recommended_sequence": [
+    "Verify account ownership and visual rights",
+    "Publish one educational LinkedIn angle after human approval",
+    "Publish one complementary visual/social item after human approval",
+    "Tailor one editorial asset to a verified recipient",
+    "Log public evidence; never infer publication from preparation"
+  ],
+  "linkedin_angles": [
+    {
+      "sequence": 1,
+      "angle": "Project introduction",
+      "hook": "What should a buyer establish before considering Azizi Florence? Start with the verified residence mix, location context and current release terms.",
+      "body": "What should a buyer establish before considering Azizi Florence? Start with the verified residence mix, location context and current release terms. Considering a townhouse or villa in Sharjah? Our Azizi Florence buyer guide brings verified project information into one considered overview: residence types, location context, payment-plan guidance and a clear route to request current availability. Finding Stories provides independent buyer-focused advisory support and will reconfirm release-specific details before any commitment. Explore the guide and speak privately with an advisor.",
+      "cta": "Review the source-noted buyer guide or speak privately with an advisor.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_angle_1",
+      "disclaimer": "Prices, terms, completion timing and unit availability can change and must be reconfirmed before commitment.",
+      "status": "prepared"
+    },
+    {
+      "sequence": 2,
+      "angle": "Buyer guide",
+      "hook": "A useful project guide should help buyers frame decisions—not create urgency. Here are the facts and questions we would review for Azizi Florence.",
+      "body": "A useful project guide should help buyers frame decisions—not create urgency. Here are the facts and questions we would review for Azizi Florence. Considering a townhouse or villa in Sharjah? Our Azizi Florence buyer guide brings verified project information into one considered overview: residence types, location context, payment-plan guidance and a clear route to request current availability. Finding Stories provides independent buyer-focused advisory support and will reconfirm release-specific details before any commitment. Explore the guide and speak privately with an advisor.",
+      "cta": "Review the source-noted buyer guide or speak privately with an advisor.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_angle_2",
+      "disclaimer": "Prices, terms, completion timing and unit availability can change and must be reconfirmed before commitment.",
+      "status": "prepared"
+    },
+    {
+      "sequence": 3,
+      "angle": "Payment-plan explanation",
+      "hook": "A payment-plan headline is only the start. Buyers should verify current milestones, dates, fees and how the schedule fits their own cash flow.",
+      "body": "A payment-plan headline is only the start. Buyers should verify current milestones, dates, fees and how the schedule fits their own cash flow. Considering a townhouse or villa in Sharjah? Our Azizi Florence buyer guide brings verified project information into one considered overview: residence types, location context, payment-plan guidance and a clear route to request current availability. Finding Stories provides independent buyer-focused advisory support and will reconfirm release-specific details before any commitment. Explore the guide and speak privately with an advisor.",
+      "cta": "Review the source-noted buyer guide or speak privately with an advisor.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_angle_3",
+      "disclaimer": "Prices, terms, completion timing and unit availability can change and must be reconfirmed before commitment.",
+      "status": "prepared"
+    },
+    {
+      "sequence": 4,
+      "angle": "Townhouse and villa comparison",
+      "hook": "Azizi Florence includes townhouses and villas. The useful comparison is household fit, layout, budget and objectives—not a universal winner.",
+      "body": "Azizi Florence includes townhouses and villas. The useful comparison is household fit, layout, budget and objectives—not a universal winner. Considering a townhouse or villa in Sharjah? Our Azizi Florence buyer guide brings verified project information into one considered overview: residence types, location context, payment-plan guidance and a clear route to request current availability. Finding Stories provides independent buyer-focused advisory support and will reconfirm release-specific details before any commitment. Explore the guide and speak privately with an advisor.",
+      "cta": "Review the source-noted buyer guide or speak privately with an advisor.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_angle_4",
+      "disclaimer": "Prices, terms, completion timing and unit availability can change and must be reconfirmed before commitment.",
+      "status": "prepared"
+    },
+    {
+      "sequence": 5,
+      "angle": "Location and connectivity analysis",
+      "hook": "Location claims should be tested against the journeys that matter to the individual buyer. Review the verified map and confirm current routes without relying on unsupported travel times.",
+      "body": "Location claims should be tested against the journeys that matter to the individual buyer. Review the verified map and confirm current routes without relying on unsupported travel times. Considering a townhouse or villa in Sharjah? Our Azizi Florence buyer guide brings verified project information into one considered overview: residence types, location context, payment-plan guidance and a clear route to request current availability. Finding Stories provides independent buyer-focused advisory support and will reconfirm release-specific details before any commitment. Explore the guide and speak privately with an advisor.",
+      "cta": "Review the source-noted buyer guide or speak privately with an advisor.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_angle_5",
+      "disclaimer": "Prices, terms, completion timing and unit availability can change and must be reconfirmed before commitment.",
+      "status": "prepared"
+    },
+    {
+      "sequence": 6,
+      "angle": "EOI and process explanation",
+      "hook": "An enquiry is not an official EOI or booking. Ask what documents, payment, refund terms and developer confirmation apply before taking the next step.",
+      "body": "An enquiry is not an official EOI or booking. Ask what documents, payment, refund terms and developer confirmation apply before taking the next step. Considering a townhouse or villa in Sharjah? Our Azizi Florence buyer guide brings verified project information into one considered overview: residence types, location context, payment-plan guidance and a clear route to request current availability. Finding Stories provides independent buyer-focused advisory support and will reconfirm release-specific details before any commitment. Explore the guide and speak privately with an advisor.",
+      "cta": "Review the source-noted buyer guide or speak privately with an advisor.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_angle_6",
+      "disclaimer": "Prices, terms, completion timing and unit availability can change and must be reconfirmed before commitment.",
+      "status": "prepared"
+    },
+    {
+      "sequence": 7,
+      "angle": "Who this project may suit",
+      "hook": "This project may merit review for buyers seeking a Sharjah townhouse or villa, but suitability depends on budget, use case, horizon and confirmed terms.",
+      "body": "This project may merit review for buyers seeking a Sharjah townhouse or villa, but suitability depends on budget, use case, horizon and confirmed terms. Considering a townhouse or villa in Sharjah? Our Azizi Florence buyer guide brings verified project information into one considered overview: residence types, location context, payment-plan guidance and a clear route to request current availability. Finding Stories provides independent buyer-focused advisory support and will reconfirm release-specific details before any commitment. Explore the guide and speak privately with an advisor.",
+      "cta": "Review the source-noted buyer guide or speak privately with an advisor.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_angle_7",
+      "disclaimer": "Prices, terms, completion timing and unit availability can change and must be reconfirmed before commitment.",
+      "status": "prepared"
+    },
+    {
+      "sequence": 8,
+      "angle": "Investor due-diligence checklist",
+      "hook": "Before commitment, verify the unit, dimensions, current price, fees, payment schedule, completion guidance, contracts and exit assumptions with appropriate advisers.",
+      "body": "Before commitment, verify the unit, dimensions, current price, fees, payment schedule, completion guidance, contracts and exit assumptions with appropriate advisers. Considering a townhouse or villa in Sharjah? Our Azizi Florence buyer guide brings verified project information into one considered overview: residence types, location context, payment-plan guidance and a clear route to request current availability. Finding Stories provides independent buyer-focused advisory support and will reconfirm release-specific details before any commitment. Explore the guide and speak privately with an advisor.",
+      "cta": "Review the source-noted buyer guide or speak privately with an advisor.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_angle_8",
+      "disclaimer": "Prices, terms, completion timing and unit availability can change and must be reconfirmed before commitment.",
+      "status": "prepared"
+    },
+    {
+      "sequence": 9,
+      "angle": "Verified project update",
+      "hook": "Update template: state exactly what verified source changed, when it was checked and what still requires reconfirmation. Do not imply demand or urgency.",
+      "body": "Update template: state exactly what verified source changed, when it was checked and what still requires reconfirmation. Do not imply demand or urgency. Considering a townhouse or villa in Sharjah? Our Azizi Florence buyer guide brings verified project information into one considered overview: residence types, location context, payment-plan guidance and a clear route to request current availability. Finding Stories provides independent buyer-focused advisory support and will reconfirm release-specific details before any commitment. Explore the guide and speak privately with an advisor.",
+      "cta": "Review the source-noted buyer guide or speak privately with an advisor.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_angle_9",
+      "disclaimer": "Prices, terms, completion timing and unit availability can change and must be reconfirmed before commitment.",
+      "status": "prepared"
+    }
+  ],
+  "approval_boundaries": [
+    "Publishing social content",
+    "Sending outreach",
+    "Submitting profiles",
+    "Claiming Google Business Profile",
+    "Contacting developers or journalists",
+    "Using third-party logos or images",
+    "Representing business relationships"
+  ]
+}
