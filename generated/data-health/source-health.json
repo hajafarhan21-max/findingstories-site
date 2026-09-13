@@ -1,10 +1,20 @@
 {
-  "generatedAt": "2026-09-13T19:17:17.276Z",
+  "generatedAt": "2026-09-13T19:52:20.436Z",
   "sources": [
     {
       "id": "dld",
-      "status": "unavailable",
-      "lastAttemptAt": "2026-09-13T19:17:17.271Z"
+      "configured": false,
+      "authenticated": false,
+      "reachable": false,
+      "last_attempt": "2026-09-13T19:52:20.421Z",
+      "last_success": null,
+      "freshness": null,
+      "records_received": 0,
+      "records_accepted": 0,
+      "records_rejected": 0,
+      "last_known_good_available": false,
+      "status": "READY_FOR_CREDENTIALS",
+      "failure_reason": "credentials_not_configured"
     }
   ]
 }
