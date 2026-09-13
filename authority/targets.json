@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "last_reviewed_at": null,
+  "last_reviewed_at": "2026-09-13",
   "targets": [
     {
       "target_name": "Finding Stories LinkedIn account",
@@ -27,7 +27,11 @@
       "published_at": null,
       "live_url": null,
       "status": "needs_verification",
-      "notes": "Opportunity only. Verify the account URL, ownership and publishing approval before use."
+      "notes": "Opportunity only. Verify the account URL, ownership and publishing approval before use.",
+      "opportunity_kind": "platform_candidate",
+      "domain_verification": "public_platform_domain_reachable_2026-09-13",
+      "account_ownership_verification": "needs_verification",
+      "usable_status": "not_usable_until_exact_profile_and_ownership_are_verified"
     },
     {
       "target_name": "Finding Stories Instagram account",
@@ -54,7 +58,11 @@
       "published_at": null,
       "live_url": null,
       "status": "needs_verification",
-      "notes": "Opportunity only. Verify the account URL, ownership and image rights before use."
+      "notes": "Opportunity only. Verify the account URL, ownership and image rights before use.",
+      "opportunity_kind": "platform_candidate",
+      "domain_verification": "public_platform_domain_reachable_2026-09-13",
+      "account_ownership_verification": "needs_verification",
+      "usable_status": "not_usable_until_exact_profile_and_ownership_are_verified"
     },
     {
       "target_name": "Developer project reference opportunity",
@@ -81,7 +89,11 @@
       "published_at": null,
       "live_url": null,
       "status": "needs_verification",
-      "notes": "Opportunity category, not a relationship or listing. Identify and verify an appropriate official channel manually."
+      "notes": "Opportunity category, not a relationship or listing. Identify and verify an appropriate official channel manually.",
+      "opportunity_kind": "unnamed_candidate_category",
+      "domain_verification": "needs_named_target",
+      "account_ownership_verification": "not_applicable",
+      "usable_status": "not_usable_until_exact_domain_relevance_and_action_route_are_verified"
     },
     {
       "target_name": "Relevant UAE property editorial opportunity",
@@ -108,7 +120,11 @@
       "published_at": null,
       "live_url": null,
       "status": "needs_verification",
-      "notes": "Research a real publication and record evidence before promotion to verified. No publisher or contact is asserted here."
+      "notes": "Research a real publication and record evidence before promotion to verified. No publisher or contact is asserted here.",
+      "opportunity_kind": "unnamed_candidate_category",
+      "domain_verification": "needs_named_target",
+      "account_ownership_verification": "not_applicable",
+      "usable_status": "not_usable_until_exact_domain_relevance_and_action_route_are_verified"
     },
     {
       "target_name": "Legitimate UAE business or property directory opportunity",
@@ -135,7 +151,11 @@
       "published_at": null,
       "live_url": null,
       "status": "needs_verification",
-      "notes": "Reject bulk, irrelevant or unmoderated directories. A named target must be verified before preparation."
+      "notes": "Reject bulk, irrelevant or unmoderated directories. A named target must be verified before preparation.",
+      "opportunity_kind": "unnamed_candidate_category",
+      "domain_verification": "needs_named_target",
+      "account_ownership_verification": "not_applicable",
+      "usable_status": "not_usable_until_exact_domain_relevance_and_action_route_are_verified"
     }
   ]
 }

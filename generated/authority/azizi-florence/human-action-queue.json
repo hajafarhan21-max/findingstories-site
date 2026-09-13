@@ -1,0 +1,128 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "generated_status": "prepared",
+  "external_action_performed": false,
+  "actions": [
+    {
+      "id": "social-linkedin-introduction",
+      "action": "Verify account ownership, approve and publish the project-introduction post.",
+      "platform": "linkedin",
+      "reason_human_required": "Authorized account owner and content approver.",
+      "exact_content_ready_to_use": "social-revenue-pack.json#/linkedin_posts/0",
+      "exact_destination_url": "https://www.finding-stories.com/azizi-florence",
+      "exact_tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_introduction",
+      "exact_evidence_to_capture": "Owned account URL, public post URL, screenshot and publication time.",
+      "completion_checklist": [
+        "Confirm the target and entitlement.",
+        "Approve facts, copy and any asset rights.",
+        "Perform the action through an authorized account only.",
+        "Capture the real public URL or private completion evidence.",
+        "Update status without inferring publication, traffic or leads."
+      ]
+    },
+    {
+      "id": "whatsapp-qualified-share",
+      "action": "Send the audience-matched message to one relevant existing contact.",
+      "platform": "whatsapp",
+      "reason_human_required": "Authorized advisor selects a consented, contextually relevant recipient.",
+      "exact_content_ready_to_use": "social-revenue-pack.json#/whatsapp_messages",
+      "exact_destination_url": "https://www.finding-stories.com/azizi-florence",
+      "exact_tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=whatsapp&utm_medium=whatsapp_share&utm_campaign=azizi-florence-project-launch&utm_content=direct_share",
+      "exact_evidence_to_capture": "Internal send record without exposing personal data in repository; attributed session or response when available.",
+      "completion_checklist": [
+        "Confirm the target and entitlement.",
+        "Approve facts, copy and any asset rights.",
+        "Perform the action through an authorized account only.",
+        "Capture the real public URL or private completion evidence.",
+        "Update status without inferring publication, traffic or leads."
+      ]
+    },
+    {
+      "id": "social-instagram-guide",
+      "action": "Verify ownership and publish the residence-mix feed asset with an approved visual.",
+      "platform": "instagram",
+      "reason_human_required": "Authorized account owner, copy approval and image-rights confirmation.",
+      "exact_content_ready_to_use": "social-revenue-pack.json#/instagram/feed_captions/0",
+      "exact_destination_url": "https://www.finding-stories.com/azizi-florence",
+      "exact_tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=instagram&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=feed_residence_mix",
+      "exact_evidence_to_capture": "Owned account URL, rights confirmation, live post URL and screenshot.",
+      "completion_checklist": [
+        "Confirm the target and entitlement.",
+        "Approve facts, copy and any asset rights.",
+        "Perform the action through an authorized account only.",
+        "Capture the real public URL or private completion evidence.",
+        "Update status without inferring publication, traffic or leads."
+      ]
+    },
+    {
+      "id": "editorial-target-verification",
+      "action": "Identify and verify one real publication whose current audience fits one prepared angle.",
+      "platform": "editorial",
+      "reason_human_required": "Human verifies publication, current section, contact route and approves outreach.",
+      "exact_content_ready_to_use": "editorial-pitches.json",
+      "exact_destination_url": "https://www.finding-stories.com/azizi-florence",
+      "exact_tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=publication_domain&utm_medium=editorial&utm_campaign=azizi-florence-project-launch&utm_content=project_reference",
+      "exact_evidence_to_capture": "Publication domain, relevant recent coverage URL, public contact route and review date.",
+      "completion_checklist": [
+        "Confirm the target and entitlement.",
+        "Approve facts, copy and any asset rights.",
+        "Perform the action through an authorized account only.",
+        "Capture the real public URL or private completion evidence.",
+        "Update status without inferring publication, traffic or leads."
+      ]
+    },
+    {
+      "id": "partner-first-referral",
+      "action": "Select one documented relationship and tailor the matching partner template.",
+      "platform": "partner",
+      "reason_human_required": "Relationship owner confirms context and approves the one-to-one message.",
+      "exact_content_ready_to_use": "partner-outreach-pack.json",
+      "exact_destination_url": "https://www.finding-stories.com/azizi-florence",
+      "exact_tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=partner&utm_campaign=azizi-florence-project-launch&utm_content=project_reference",
+      "exact_evidence_to_capture": "Internal relationship basis, approved copy and send outcome; no personal data in generated files.",
+      "completion_checklist": [
+        "Confirm the target and entitlement.",
+        "Approve facts, copy and any asset rights.",
+        "Perform the action through an authorized account only.",
+        "Capture the real public URL or private completion evidence.",
+        "Update status without inferring publication, traffic or leads."
+      ]
+    },
+    {
+      "id": "directory-opportunity-verification",
+      "action": "Verify a moderated, relevant directory and its business eligibility requirements.",
+      "platform": "directory",
+      "reason_human_required": "Human verifies target, entitlement and business identity fields.",
+      "exact_content_ready_to_use": "profile-execution.json",
+      "exact_destination_url": "https://www.finding-stories.com/azizi-florence",
+      "exact_tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=directory_name&utm_medium=directory&utm_campaign=azizi-florence-project-launch&utm_content=project_profile",
+      "exact_evidence_to_capture": "Exact domain, submission policy, category fit, required fields and review date.",
+      "completion_checklist": [
+        "Confirm the target and entitlement.",
+        "Approve facts, copy and any asset rights.",
+        "Perform the action through an authorized account only.",
+        "Capture the real public URL or private completion evidence.",
+        "Update status without inferring publication, traffic or leads."
+      ]
+    },
+    {
+      "id": "google-business-profile-readiness",
+      "action": "Verify GBP eligibility and missing business identity information only if the business chooses to pursue a profile.",
+      "platform": "google_business_profile",
+      "reason_human_required": "Repository data cannot prove real-world eligibility, location, phone or ownership.",
+      "exact_content_ready_to_use": "google-business-profile-readiness.json",
+      "exact_destination_url": "https://www.finding-stories.com",
+      "exact_tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=directory_name&utm_medium=directory&utm_campaign=azizi-florence-project-launch&utm_content=project_profile",
+      "exact_evidence_to_capture": "Eligibility evidence and each verified business field; do not create a profile during this campaign.",
+      "completion_checklist": [
+        "Review the four missing-information items.",
+        "Collect documentary evidence.",
+        "Obtain business-owner approval.",
+        "Do not use a fake address, office or service area."
+      ]
+    }
+  ]
+}

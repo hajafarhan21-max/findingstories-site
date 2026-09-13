@@ -3,50 +3,55 @@
   "project_slug": "azizi-florence",
   "campaign": "azizi-florence-project-launch",
   "canonical_url": "https://www.finding-stories.com/azizi-florence",
-  "review_required": true,
+  "generated_status": "prepared",
   "external_action_performed": false,
-  "approval_owner": "Finding Stories authorized operator",
-  "buyer_intent": "Azizi Florence project details and availability",
-  "landing_page": "https://www.finding-stories.com/azizi-florence",
-  "cta": "Request current availability or speak with an advisor",
-  "conversion_events": [
-    "whatsapp",
-    "enquiry_started",
-    "successful lead submission"
-  ],
-  "attribution_note": "Existing first/latest-touch UTM capture carries source data into the lead record and notification; do not alter canonical links.",
-  "quality_limit": "One operator; quality over volume.",
-  "actions": [
+  "volume_guardrail": "Maximum three social posts, two profile/authority actions, two relationship actions, one editorial asset, one citation pass and one Search Console review.",
+  "days": [
     {
-      "quantity": 2,
-      "type": "citation/profile",
-      "gate": "Only verified and approved targets; otherwise use time to verify candidates."
+      "day": 1,
+      "actions": [
+        "Verify the Finding Stories LinkedIn account and approve the introduction post.",
+        "Record the Search Console Florence status and available impressions, clicks, queries, CTR and position; do not request indexing."
+      ]
     },
     {
-      "quantity": 2,
-      "type": "relationship outreach",
-      "gate": "Individual relevance and authorized sender approval."
+      "day": 2,
+      "actions": [
+        "Publish the approved LinkedIn introduction through the authorized account, or retain needs_login.",
+        "Verify one relevant editorial publication and contact route."
+      ]
     },
     {
-      "quantity": 2,
-      "type": "useful social distributions",
-      "gate": "Verified business account, fact and image-rights review."
+      "day": 3,
+      "actions": [
+        "Tailor one relationship-first partner message to a documented contact; obtain approval before sending."
+      ]
     },
     {
-      "quantity": 1,
-      "type": "editorial authority asset",
-      "gate": "Tailored to a real audience; no fake-news framing."
+      "day": 4,
+      "actions": [
+        "Verify one moderated directory and its eligibility requirements.",
+        "Prepare the location/connectivity LinkedIn post for approval."
+      ]
     },
     {
-      "quantity": 1,
-      "type": "citation verification pass",
-      "gate": "Only a public live URL can become live."
+      "day": 5,
+      "actions": [
+        "Send at most one approved editorial pitch to the verified recipient.",
+        "Publish one approved Instagram or LinkedIn asset; do not exceed three social posts this week."
+      ]
     },
     {
-      "quantity": 1,
-      "type": "Search Console review",
-      "gate": "Record index state, impressions, queries, clicks, CTR and position; do not repeatedly request indexing."
+      "day": 6,
+      "actions": [
+        "Perform citation verification: only public URLs with complete evidence may be live."
+      ]
+    },
+    {
+      "day": 7,
+      "actions": [
+        "Review attributable sessions, WhatsApp clicks, lead starts/success and qualified enquiries; leave unavailable data null."
+      ]
     }
-  ],
-  "success_measure": "Qualified organic/referral enquiries first; citations and reach are diagnostic measures."
+  ]
 }

@@ -1,0 +1,32 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "generated_status": "prepared",
+  "external_action_performed": false,
+  "opportunities": [
+    {
+      "target_name": "Legitimate UAE business or property directory opportunity",
+      "exact_business_name": "Finding Stories",
+      "target_website": null,
+      "business_website": "https://www.finding-stories.com",
+      "category": "Real estate advisory",
+      "description": "Finding Stories publishes factual, buyer-focused guides to approved UAE property projects and provides private advisory support.",
+      "project_url": "https://www.finding-stories.com/azizi-florence",
+      "homepage_url": "https://www.finding-stories.com",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=directory_name&utm_medium=directory&utm_campaign=azizi-florence-project-launch&utm_content=project_profile",
+      "missing_required_fields": [
+        "Exact eligible directory domain",
+        "Current submission policy and URL",
+        "Verified contact details",
+        "Verified legal entity",
+        "Verified office address if required",
+        "Verified opening hours if required"
+      ],
+      "human_verification_required": true,
+      "submission_readiness": "blocked_pending_target_and_identity_verification",
+      "submitted": false
+    }
+  ]
+}
