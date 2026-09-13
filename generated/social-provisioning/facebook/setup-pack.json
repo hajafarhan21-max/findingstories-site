@@ -1,0 +1,96 @@
+{
+  "platform": "facebook",
+  "generated_from": "Finding Stories brand brief and approved project manifests",
+  "external_action_performed": false,
+  "display_name": "Finding Stories",
+  "preferred_username": "findingstories",
+  "fallback_usernames": [
+    "findingstoriesuae",
+    "findingstories.ae",
+    "findingstoriesrealestate"
+  ],
+  "handle_availability": "NOT_CHECKED",
+  "business_category": "Real Estate Service",
+  "bio": "Independent UAE property advisory. Verified project information, buyer guidance and private advisory.",
+  "long_description": "Finding Stories is an independent UAE property advisory focused on verified project information, considered buyer guidance and private advisory. Explore current buyer guides and speak with an advisor.",
+  "website": "https://www.finding-stories.com",
+  "contact_cta": "Contact us / WhatsApp when ownership is confirmed",
+  "location_market": "United Arab Emirates (UAE)",
+  "profile_image_requirement": "Square logo, at least 320 × 320 px",
+  "cover_banner_requirement": "Page cover, recommended 1640 × 624 px",
+  "first_introduction_post": {
+    "copy": "Finding Stories is an independent UAE property advisory focused on verified project information, considered buyer guidance and private advisory. Explore current buyer guides and speak with an advisor.",
+    "cta": "Explore Finding Stories",
+    "tracked_link": "https://www.finding-stories.com/?utm_source=facebook&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=profile_intro",
+    "published": false
+  },
+  "azizi_florence_first_project_post": {
+    "copy": "Azizi Florence brings together 3 and 4 bedroom townhouses and 4, 5 and 6 bedroom villas in Sharjah. Finding Stories has prepared a buyer-focused overview covering verified project information, location, payment-plan guidance and how to request current availability. Terms and availability remain subject to reconfirmation.",
+    "cta": "Review verified project information and request current details privately.",
+    "tracked_link": "https://www.finding-stories.com/azizi-florence?utm_source=facebook&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=project_introduction",
+    "published": false,
+    "disclaimer": "Finding Stories provides independent buyer-focused advisory support and does not claim official developer representation. Prices, terms, completion timing and availability must be reconfirmed before commitment."
+  },
+  "recommended_profile_fields": [
+    "Display name",
+    "Username (only after availability check)",
+    "Business category",
+    "Bio / description",
+    "Canonical website",
+    "UAE market/service area",
+    "Owner-approved contact option",
+    "Logo and cover image"
+  ],
+  "compliance_disclaimer": "Finding Stories provides independent buyer-focused advisory support and does not claim official developer representation. Prices, terms, completion timing and availability must be reconfirmed before commitment.",
+  "direct_api_readiness": {
+    "classifications": [
+      "DIRECT_API_SUPPORTED",
+      "DIRECT_API_REQUIRES_APP_APPROVAL",
+      "DIRECT_API_REQUIRES_BUSINESS_VERIFICATION"
+    ],
+    "credentials_issued": false,
+    "official_api_only": true,
+    "notes": "Access remains subject to the platform’s current eligibility, review, verification and permission requirements."
+  },
+  "human_signup_checklist": [
+    "HUMAN_REQUIRED: Sign in with an owner-controlled identity and accept platform terms.",
+    "HUMAN_REQUIRED: Complete OTP, CAPTCHA, email, phone, identity, business or administrator checks when requested.",
+    "Check preferred and fallback usernames in order; do not record one until claimed.",
+    "Apply the prepared profile fields and owner-approved contact details.",
+    "Record the account URL/ID and dated evidence only after the platform displays them.",
+    "Request official API access only after profile ownership is confirmed."
+  ],
+  "state": {
+    "platform": "facebook",
+    "account_type": "Facebook Page",
+    "desired_handle": "findingstories",
+    "fallback_handles": [
+      "findingstoriesuae",
+      "findingstories.ae",
+      "findingstoriesrealestate"
+    ],
+    "account_url": null,
+    "account_id": null,
+    "owner_email": null,
+    "owner_verified": false,
+    "phone_verified": false,
+    "business_verified": false,
+    "profile_created": false,
+    "profile_completed": false,
+    "website_added": false,
+    "bio_added": false,
+    "logo_added": false,
+    "cover_added": false,
+    "category_selected": false,
+    "contact_details_added": false,
+    "admin_confirmed": false,
+    "api_access_possible": true,
+    "publishing_capability": "REVIEW_ONLY",
+    "analytics_capability": "REVIEW_ONLY",
+    "verification_status": "UNVERIFIED",
+    "blocking_step": "Human owner must create or identify the account and complete platform verification.",
+    "human_required_action": "Create or identify the Facebook Facebook Page; complete any platform-requested OTP, CAPTCHA, identity, ownership or administrator verification; then record evidence without committing credentials.",
+    "last_checked_at": null,
+    "status": "READY_FOR_HUMAN_SIGNUP"
+  }
+}

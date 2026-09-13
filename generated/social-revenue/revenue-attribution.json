@@ -1,0 +1,30 @@
+{
+  "canonical_origin": "https://www.finding-stories.com",
+  "medium": "organic_social",
+  "campaign": "azizi-florence-project-launch",
+  "sources": {
+    "linkedin": "linkedin",
+    "instagram": "instagram",
+    "facebook": "facebook",
+    "x": "x",
+    "youtube": "youtube",
+    "google-business-profile": "google_business_profile"
+  },
+  "funnel": [
+    "social profile/post",
+    "project landing page",
+    "WhatsApp or enquiry form",
+    "existing durable lead capture",
+    "existing Gmail notification",
+    "advisor follow-up",
+    "meeting / EOI / booking",
+    "revenue"
+  ],
+  "protected_infrastructure_unchanged": true,
+  "outcomes": {
+    "leads": null,
+    "meetings": null,
+    "bookings": null,
+    "revenue": null
+  }
+}

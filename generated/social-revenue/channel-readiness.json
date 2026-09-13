@@ -1,0 +1,40 @@
+{
+  "channels": [
+    {
+      "platform": "linkedin",
+      "status": "READY_FOR_HUMAN_SIGNUP",
+      "publishing_capability": "REVIEW_ONLY",
+      "blocking_step": "Human owner must create or identify the account and complete platform verification."
+    },
+    {
+      "platform": "instagram",
+      "status": "READY_FOR_HUMAN_SIGNUP",
+      "publishing_capability": "REVIEW_ONLY",
+      "blocking_step": "Human owner must create or identify the account and complete platform verification."
+    },
+    {
+      "platform": "facebook",
+      "status": "READY_FOR_HUMAN_SIGNUP",
+      "publishing_capability": "REVIEW_ONLY",
+      "blocking_step": "Human owner must create or identify the account and complete platform verification."
+    },
+    {
+      "platform": "x",
+      "status": "READY_FOR_HUMAN_SIGNUP",
+      "publishing_capability": "REVIEW_ONLY",
+      "blocking_step": "Human owner must create or identify the account and complete platform verification."
+    },
+    {
+      "platform": "youtube",
+      "status": "READY_FOR_HUMAN_SIGNUP",
+      "publishing_capability": "REVIEW_ONLY",
+      "blocking_step": "Human owner must create or identify the account and complete platform verification."
+    },
+    {
+      "platform": "google-business-profile",
+      "status": "READY_FOR_HUMAN_SIGNUP",
+      "publishing_capability": "REVIEW_ONLY",
+      "blocking_step": "Human owner must create or identify the account and complete platform verification."
+    }
+  ]
+}
