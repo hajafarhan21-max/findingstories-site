@@ -1,0 +1,36 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/azizi-florence/manifest.json",
+    "generated/distribution/azizi-florence.json",
+    "generated/authority/azizi-florence"
+  ],
+  "external_action_performed": false,
+  "data_status": "unavailable",
+  "source": "Existing lead persistence and attribution fields; this output does not replace the CRM.",
+  "report_fields": {
+    "lead_number": "leads.lead_number",
+    "project": "project/campaign attribution",
+    "source": "first/latest-touch attribution",
+    "medium": "UTM attribution",
+    "campaign": "UTM attribution",
+    "content": "UTM attribution",
+    "landing_page": "captured landing page",
+    "lead_created_at": "leads.created_at",
+    "qualification_summary": "leads.qualification_summary",
+    "lead_status": "leads.status",
+    "meeting_status": "leads.meeting_at and leads.status",
+    "revenue_stage": "partial: existing lead status and persisted campaign outcomes where recorded"
+  },
+  "rows": [],
+  "unavailable_values": {
+    "lead_status": null,
+    "meeting_status": null,
+    "revenue_stage": null
+  },
+  "note": "The schema supports lead status and meeting evidence, but no authorized Florence lead export was read. Report values remain null rather than inferring any lead, meeting, EOI, booking or revenue outcome."
+}

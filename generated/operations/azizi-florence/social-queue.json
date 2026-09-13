@@ -1,0 +1,135 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/azizi-florence/manifest.json",
+    "generated/distribution/azizi-florence.json",
+    "generated/authority/azizi-florence"
+  ],
+  "external_action_performed": false,
+  "channel_status": {
+    "LinkedIn": "NEEDS_ACCOUNT_VERIFICATION",
+    "Instagram": "NEEDS_ACCOUNT_VERIFICATION",
+    "Facebook": "NEEDS_ACCOUNT_VERIFICATION",
+    "X": "NEEDS_ACCOUNT_VERIFICATION",
+    "WhatsApp": "NEEDS_HUMAN_APPROVAL"
+  },
+  "queue": [
+    {
+      "post_order": 1,
+      "channel": "LinkedIn",
+      "topic": "introduction",
+      "asset": "generated/authority/azizi-florence/social-revenue-pack.json#/linkedin_posts/0",
+      "copy": "Considering Azizi Florence? Finding Stories has brought the key buyer questions into one guide: the townhouses and villas mix, Sharjah, UAE context, payment-plan guidance and a route to request current availability.\n\nThis is an advisory starting point, not a prompt to rush. We reconfirm release-specific details before commitment.\n\nReview the guide, then speak privately with an advisor about fit.\n\nhttps://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_introduction",
+      "cta": "Review the buyer guide and ask an advisor to confirm current information.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_introduction",
+      "intended_buyer_intent": "Azizi Florence project details and availability",
+      "publish_status": "NEEDS_ACCOUNT_VERIFICATION",
+      "evidence_url": null,
+      "review_date": "2026-09-14"
+    },
+    {
+      "post_order": 2,
+      "channel": "LinkedIn",
+      "topic": "price_residence_mix",
+      "asset": "generated/authority/azizi-florence/social-revenue-pack.json#/linkedin_posts/1",
+      "copy": "Azizi Florence includes 3 and 4 bedroom townhouses and 4, 5 and 6 bedroom villas. Rather than relying on a headline price, compare the exact residence, layout, current price, fees and intended use.\n\nVerified unit-level starting prices are shown on the live project page when current records are available. Prices, terms, completion timing and unit availability can change and must be reconfirmed before commitment.\n\nUse our guide to frame a current, unit-specific conversation.\n\nhttps://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_price_residence_mix",
+      "cta": "Request current availability and residence-specific pricing.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_price_residence_mix",
+      "intended_buyer_intent": "Azizi Florence project details and availability",
+      "publish_status": "NEEDS_ACCOUNT_VERIFICATION",
+      "evidence_url": null,
+      "review_date": "2026-09-15"
+    },
+    {
+      "post_order": 3,
+      "channel": "LinkedIn",
+      "topic": "payment_plan",
+      "asset": "generated/authority/azizi-florence/social-revenue-pack.json#/linkedin_posts/2",
+      "copy": "A payment-plan headline is only the start of the decision. For Azizi Florence, buyers should confirm the current milestone schedule, dates, fees and how the cash-flow profile fits their circumstances.\n\nA verified payment plan is available; request the current milestone schedule from a Finding Stories advisor. An enquiry is not an official EOI, reservation or booking.\n\nFinding Stories can help you request and review the current information.\n\nhttps://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_payment_plan",
+      "cta": "Discuss the current payment plan privately with an advisor.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_payment_plan",
+      "intended_buyer_intent": "Azizi Florence project details and availability",
+      "publish_status": "NEEDS_ACCOUNT_VERIFICATION",
+      "evidence_url": null,
+      "review_date": "2026-09-16"
+    },
+    {
+      "post_order": 4,
+      "channel": "LinkedIn",
+      "topic": "buyer_suitability",
+      "asset": "generated/authority/azizi-florence/social-revenue-pack.json#/linkedin_posts/3",
+      "copy": "Who may find Azizi Florence worth reviewing? Buyers considering a Sharjah, UAE townhouses or villas can use the project guide as a due-diligence starting point.\n\nSuitability still depends on budget, household needs, intended use, time horizon and confirmed contractual terms. Verify the exact unit, dimensions, price, fees, payment milestones and documents before deciding.\n\nAsk Finding Stories for buyer-focused context—not a one-size-fits-all answer.\n\nhttps://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_buyer_suitability",
+      "cta": "Review the guide and ask for a suitability conversation.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_buyer_suitability",
+      "intended_buyer_intent": "Azizi Florence project details and availability",
+      "publish_status": "NEEDS_ACCOUNT_VERIFICATION",
+      "evidence_url": null,
+      "review_date": "2026-09-17"
+    },
+    {
+      "post_order": 5,
+      "channel": "LinkedIn",
+      "topic": "location_connectivity",
+      "asset": "generated/authority/azizi-florence/social-revenue-pack.json#/linkedin_posts/4",
+      "copy": "Location should be tested against the journeys that matter to you. Azizi Florence is presented in Sharjah, UAE; the buyer guide includes the approved location map so you can review the surrounding road and city context.\n\nWe avoid unsupported travel-time promises. Confirm current routes against your own work, school and lifestyle priorities before deciding.\n\nhttps://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_location_connectivity",
+      "cta": "Open the location guide and ask an advisor about your priorities.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=linkedin&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=linkedin_location_connectivity",
+      "intended_buyer_intent": "Azizi Florence project details and availability",
+      "publish_status": "NEEDS_ACCOUNT_VERIFICATION",
+      "evidence_url": null,
+      "review_date": "2026-09-18"
+    },
+    {
+      "post_order": 6,
+      "channel": "Instagram",
+      "asset": "generated/authority/azizi-florence/social-revenue-pack.json#/channels/instagram",
+      "copy": "Explore Azizi Florence in Sharjah: 3 and 4 bedroom townhouses plus 4, 5 and 6 bedroom villas. Review verified project context, location and payment-plan guidance through Finding Stories. Prices, terms and availability are reconfirmed on enquiry. #SharjahProperty #UAEProperty #FindingStories\n\nFinding Stories offers buyer-focused advisory context; it does not represent the developer.\n\nhttps://www.finding-stories.com/azizi-florence?utm_source=instagram&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=feed_residence_mix",
+      "cta": "Review the buyer guide and request current information privately.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=instagram&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=feed_residence_mix",
+      "intended_buyer_intent": "Azizi Florence project details and availability",
+      "publish_status": "NEEDS_ACCOUNT_VERIFICATION",
+      "evidence_url": null,
+      "review_date": "2026-09-19"
+    },
+    {
+      "post_order": 7,
+      "channel": "Facebook",
+      "asset": "generated/authority/azizi-florence/social-revenue-pack.json#/channels/facebook",
+      "copy": "Explore Azizi Florence townhouses and villas in Sharjah through a buyer-focused guide from Finding Stories. Review verified residence types, location context and payment-plan guidance, then request current availability privately. Details remain subject to reconfirmation.\n\nhttps://www.finding-stories.com/azizi-florence?utm_source=facebook&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=project_post",
+      "cta": "Review the buyer guide and request current information privately.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=facebook&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=project_post",
+      "intended_buyer_intent": "Azizi Florence project details and availability",
+      "publish_status": "NEEDS_ACCOUNT_VERIFICATION",
+      "evidence_url": null,
+      "review_date": "2026-09-19"
+    },
+    {
+      "post_order": 8,
+      "channel": "X",
+      "asset": "generated/authority/azizi-florence/social-revenue-pack.json#/channels/x",
+      "copy": "Explore Azizi Florence townhouses and villas in Sharjah with verified project context and private buyer guidance from Finding Stories. Prices, terms and availability are reconfirmed on enquiry.\n\nhttps://www.finding-stories.com/azizi-florence?utm_source=x&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=project_post",
+      "cta": "Review the buyer guide and request current information privately.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=x&utm_medium=organic_social&utm_campaign=azizi-florence-project-launch&utm_content=project_post",
+      "intended_buyer_intent": "Azizi Florence project details and availability",
+      "publish_status": "NEEDS_ACCOUNT_VERIFICATION",
+      "evidence_url": null,
+      "review_date": "2026-09-19"
+    },
+    {
+      "post_order": 9,
+      "channel": "WhatsApp",
+      "asset": "generated/authority/azizi-florence/social-revenue-pack.json#/channels/whatsapp",
+      "copy": "A useful buyer guide to Azizi Florence: https://www.finding-stories.com/azizi-florence?utm_source=whatsapp&utm_medium=whatsapp_share&utm_campaign=azizi-florence-project-launch&utm_content=direct_share",
+      "cta": "Review the buyer guide and request current information privately.",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=whatsapp&utm_medium=whatsapp_share&utm_campaign=azizi-florence-project-launch&utm_content=direct_share",
+      "intended_buyer_intent": "Azizi Florence project details and availability",
+      "publish_status": "NEEDS_HUMAN_APPROVAL",
+      "evidence_url": null,
+      "review_date": "2026-09-19"
+    }
+  ]
+}

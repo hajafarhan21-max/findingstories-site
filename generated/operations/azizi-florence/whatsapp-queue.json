@@ -1,0 +1,61 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/azizi-florence/manifest.json",
+    "generated/distribution/azizi-florence.json",
+    "generated/authority/azizi-florence"
+  ],
+  "external_action_performed": false,
+  "auto_send": false,
+  "messages": [
+    {
+      "audience": "buyer",
+      "asset": "generated/authority/azizi-florence/social-revenue-pack.json#/whatsapp_messages/end_user_focused",
+      "copy": "Considering Azizi Florence as a home? Review the residence choices and location context, then ask us to confirm current unit details and terms. https://www.finding-stories.com/azizi-florence?utm_source=whatsapp&utm_medium=whatsapp_share&utm_campaign=azizi-florence-project-launch&utm_content=end_user_share",
+      "canonical_url": "https://www.finding-stories.com/azizi-florence",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=whatsapp&utm_medium=whatsapp_share&utm_campaign=azizi-florence-project-launch&utm_content=buyer_share",
+      "status": "NEEDS_HUMAN_APPROVAL",
+      "evidence_url": null
+    },
+    {
+      "audience": "investor",
+      "asset": "generated/authority/azizi-florence/social-revenue-pack.json#/whatsapp_messages/investor_focused",
+      "copy": "If you are assessing Azizi Florence, this Finding Stories guide covers the verified residence mix, location and payment-plan context. Investment suitability depends on your objectives and confirmed terms; outcomes are not guaranteed. https://www.finding-stories.com/azizi-florence?utm_source=whatsapp&utm_medium=whatsapp_share&utm_campaign=azizi-florence-project-launch&utm_content=investor_share",
+      "canonical_url": "https://www.finding-stories.com/azizi-florence",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=whatsapp&utm_medium=whatsapp_share&utm_campaign=azizi-florence-project-launch&utm_content=investor_share",
+      "status": "NEEDS_HUMAN_APPROVAL",
+      "evidence_url": null
+    },
+    {
+      "audience": "referral",
+      "asset": "generated/authority/azizi-florence/social-revenue-pack.json#/whatsapp_messages/send_to_referral",
+      "copy": "Sharing a buyer-focused Finding Stories guide that may be relevant to someone comparing townhouses and villas in Sharjah, UAE. No obligation—current details are confirmed on request. https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=referral&utm_campaign=azizi-florence-project-launch&utm_content=project_referral",
+      "canonical_url": "https://www.finding-stories.com/azizi-florence",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=whatsapp&utm_medium=whatsapp_share&utm_campaign=azizi-florence-project-launch&utm_content=referral_share",
+      "status": "NEEDS_HUMAN_APPROVAL",
+      "evidence_url": null
+    },
+    {
+      "audience": "follow-up",
+      "asset": "generated/authority/azizi-florence/social-revenue-pack.json#/whatsapp_messages/follow_up",
+      "copy": "Following up with the Azizi Florence guide in case it is useful. If you share your preferred residence type and priorities, a Finding Stories advisor can help confirm current information. https://www.finding-stories.com/azizi-florence?utm_source=whatsapp&utm_medium=whatsapp_share&utm_campaign=azizi-florence-project-launch&utm_content=follow_up",
+      "canonical_url": "https://www.finding-stories.com/azizi-florence",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=whatsapp&utm_medium=whatsapp_share&utm_campaign=azizi-florence-project-launch&utm_content=follow_up_share",
+      "status": "NEEDS_HUMAN_APPROVAL",
+      "evidence_url": null
+    },
+    {
+      "audience": "warm lead",
+      "asset": "generated/authority/azizi-florence/social-revenue-pack.json#/whatsapp_messages/short_share",
+      "copy": "A useful buyer guide to Azizi Florence: https://www.finding-stories.com/azizi-florence?utm_source=whatsapp&utm_medium=whatsapp_share&utm_campaign=azizi-florence-project-launch&utm_content=direct_share",
+      "canonical_url": "https://www.finding-stories.com/azizi-florence",
+      "tracked_url": "https://www.finding-stories.com/azizi-florence?utm_source=whatsapp&utm_medium=whatsapp_share&utm_campaign=azizi-florence-project-launch&utm_content=direct_share",
+      "status": "NEEDS_HUMAN_APPROVAL",
+      "evidence_url": null
+    }
+  ]
+}

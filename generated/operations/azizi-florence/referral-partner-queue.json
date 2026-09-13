@@ -1,0 +1,70 @@
+{
+  "project": "Azizi Florence",
+  "project_slug": "azizi-florence",
+  "campaign": "azizi-florence-project-launch",
+  "canonical_url": "https://www.finding-stories.com/azizi-florence",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/azizi-florence/manifest.json",
+    "generated/distribution/azizi-florence.json",
+    "generated/authority/azizi-florence"
+  ],
+  "external_action_performed": false,
+  "partnership_claimed": false,
+  "queue": [
+    {
+      "relationship_category": "brokers",
+      "target": null,
+      "verification_status": "needs_verification",
+      "relationship_status": "candidate",
+      "copy": "Sharing a buyer-focused Azizi Florence guide that may help an eligible client compare the verified project context. No partnership or endorsement is implied. Current details are reconfirmed on request: https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=referral&utm_campaign=azizi-florence-project-launch&utm_content=brokers_share",
+      "send_status": "not_sent",
+      "evidence": null
+    },
+    {
+      "relationship_category": "property advisors",
+      "target": null,
+      "verification_status": "needs_verification",
+      "relationship_status": "candidate",
+      "copy": "Sharing a buyer-focused Azizi Florence guide that may help an eligible client compare the verified project context. No partnership or endorsement is implied. Current details are reconfirmed on request: https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=referral&utm_campaign=azizi-florence-project-launch&utm_content=property_advisors_share",
+      "send_status": "not_sent",
+      "evidence": null
+    },
+    {
+      "relationship_category": "relocation professionals",
+      "target": null,
+      "verification_status": "needs_verification",
+      "relationship_status": "candidate",
+      "copy": "Sharing a buyer-focused Azizi Florence guide that may help an eligible client compare the verified project context. No partnership or endorsement is implied. Current details are reconfirmed on request: https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=referral&utm_campaign=azizi-florence-project-launch&utm_content=relocation_professionals_share",
+      "send_status": "not_sent",
+      "evidence": null
+    },
+    {
+      "relationship_category": "mortgage advisors",
+      "target": null,
+      "verification_status": "needs_verification",
+      "relationship_status": "candidate",
+      "copy": "Sharing a buyer-focused Azizi Florence guide that may help an eligible client compare the verified project context. No partnership or endorsement is implied. Current details are reconfirmed on request: https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=referral&utm_campaign=azizi-florence-project-launch&utm_content=mortgage_advisors_share",
+      "send_status": "not_sent",
+      "evidence": null
+    },
+    {
+      "relationship_category": "investor communities",
+      "target": null,
+      "verification_status": "needs_verification",
+      "relationship_status": "candidate",
+      "copy": "Sharing a buyer-focused Azizi Florence guide that may help an eligible client compare the verified project context. No partnership or endorsement is implied. Current details are reconfirmed on request: https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=referral&utm_campaign=azizi-florence-project-launch&utm_content=investor_communities_share",
+      "send_status": "not_sent",
+      "evidence": null
+    },
+    {
+      "relationship_category": "professional networks",
+      "target": null,
+      "verification_status": "needs_verification",
+      "relationship_status": "candidate",
+      "copy": "Sharing a buyer-focused Azizi Florence guide that may help an eligible client compare the verified project context. No partnership or endorsement is implied. Current details are reconfirmed on request: https://www.finding-stories.com/azizi-florence?utm_source=partner_name&utm_medium=referral&utm_campaign=azizi-florence-project-launch&utm_content=professional_networks_share",
+      "send_status": "not_sent",
+      "evidence": null
+    }
+  ]
+}
