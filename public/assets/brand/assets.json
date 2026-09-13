@@ -1,0 +1,13 @@
+{
+  "brand": "Finding Stories",
+  "approved_assets": {
+    "master_logo": "/assets/brand/finding-stories-master-logo.png",
+    "monogram": "/assets/brand/finding-stories-monogram.png",
+    "premium_banner": "/assets/brand/premium-finding-stories-banner.png"
+  },
+  "homepage_usage": {
+    "header": "master_logo",
+    "footer": "master_logo",
+    "premium_banner": "registered_only"
+  }
+}

@@ -8,7 +8,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "node --test --test-concurrency=1",
-    "assets:materialize": "node scripts/materialize-florence-assets.mjs",
+    "assets:materialize": "node scripts/materialize-florence-assets.mjs && node scripts/materialize-brand-assets.mjs",
     "prebuild": "npm run assets:materialize && npm run platform:generate && npm run seo:generate",
     "build": "node scripts/build-browser.mjs && node scripts/build.mjs",
     "build:browser": "node scripts/build-browser.mjs",
