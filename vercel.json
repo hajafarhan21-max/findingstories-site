@@ -6,6 +6,78 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/projects",
+      "destination": "/projects.html"
+    },
+    {
+      "source": "/new-launches",
+      "destination": "/new-launches.html"
+    },
+    {
+      "source": "/pre-launch",
+      "destination": "/pre-launch.html"
+    },
+    {
+      "source": "/recently-launched",
+      "destination": "/recently-launched.html"
+    },
+    {
+      "source": "/ready-properties",
+      "destination": "/ready-properties.html"
+    },
+    {
+      "source": "/areas",
+      "destination": "/areas.html"
+    },
+    {
+      "source": "/areas/sharjah",
+      "destination": "/areas-sharjah.html"
+    },
+    {
+      "source": "/developers",
+      "destination": "/developers.html"
+    },
+    {
+      "source": "/developers/azizi-developments",
+      "destination": "/developers-azizi-developments.html"
+    },
+    {
+      "source": "/property-types",
+      "destination": "/property-types.html"
+    },
+    {
+      "source": "/property-types/townhouses",
+      "destination": "/property-types-townhouses.html"
+    },
+    {
+      "source": "/property-types/villas",
+      "destination": "/property-types-villas.html"
+    },
+    {
+      "source": "/compare",
+      "destination": "/compare.html"
+    },
+    {
+      "source": "/services/private-buyer-advisory",
+      "destination": "/services-private-buyer-advisory.html"
+    },
+    {
+      "source": "/services/mortgage-solutions",
+      "destination": "/services-mortgage-solutions.html"
+    },
+    {
+      "source": "/services/equity-solutions",
+      "destination": "/services-equity-solutions.html"
+    },
+    {
+      "source": "/insights",
+      "destination": "/insights.html"
+    },
+    {
+      "source": "/projects/azizi-florence",
+      "destination": "/api/acquisition?route=azizi-florence"
+    },
+    {
       "source": "/open-house",
       "destination": "/open-house.html"
     },

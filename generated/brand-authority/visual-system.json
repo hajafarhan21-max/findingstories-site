@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "mode": "SPECIFICATION_ONLY",
+  "palette": {
+    "ivory": "#F5F0E7",
+    "cream": "#FBF8F2",
+    "champagne": "#AA8750",
+    "charcoal": "#1B1B19",
+    "warm_gray": "#6F6B63"
+  },
+  "typography": {
+    "display": "Italiana or approved editorial serif",
+    "body": "DM Sans or approved refined sans-serif"
+  },
+  "grid": {
+    "safe_margin": "7%",
+    "spacing": "8-point system",
+    "logo_clearspace": "minimum one wordmark cap-height"
+  },
+  "motion": {
+    "duration_ms": 260,
+    "easing": "cubic-bezier(.2,.75,.25,1)",
+    "rule": "Use only soft reveal and restrained crop movement; supply a static equivalent."
+  },
+  "accessibility": {
+    "minimum_body_size_px": 28,
+    "contrast": "WCAG AA",
+    "alt_text_required": true
+  },
+  "categories": [
+    "brand_manifesto",
+    "educational_carousel",
+    "market_insight",
+    "project_launch",
+    "area_spotlight",
+    "developer_spotlight",
+    "payment_plan_explainer",
+    "buyer_checklist",
+    "comparison",
+    "mortgage_education",
+    "equity_solutions_education",
+    "advisory_cta"
+  ],
+  "formats": {
+    "linkedin_single": {
+      "width": 1200,
+      "height": 1200
+    },
+    "linkedin_carousel": {
+      "width": 1080,
+      "height": 1350
+    },
+    "instagram_portrait": {
+      "width": 1080,
+      "height": 1350
+    },
+    "story": {
+      "width": 1080,
+      "height": 1920
+    },
+    "x_landscape": {
+      "width": 1600,
+      "height": 900
+    }
+  },
+  "rules": [
+    "One idea per frame",
+    "No unverified numeric claim",
+    "No fake scarcity",
+    "Source note on every factual project frame",
+    "Never place critical copy in the outer safe margin"
+  ]
+}

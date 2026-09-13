@@ -1,0 +1,250 @@
+{
+  "handle": "findingstoriesuae",
+  "auto_publish": false,
+  "external_action_performed": false,
+  "posts": [
+    {
+      "sequence": 1,
+      "platform": "LinkedIn",
+      "theme": "Introducing Finding Stories",
+      "hook": "Property discovery should begin with perspective—not pressure.",
+      "body": "Finding Stories is a curated UAE property discovery and private advisory platform. We bring approved project information, clear unknowns and buyer-focused comparison into one considered journey.",
+      "platform_ready_copy": "Property discovery should begin with perspective—not pressure.\n\nFinding Stories is a curated UAE property discovery and private advisory platform. We bring approved project information, clear unknowns and buyer-focused comparison into one considered journey.\n\nDiscover Finding Stories: https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_1\n\n#FindingStories #UAEProperty",
+      "cta": "Discover Finding Stories",
+      "suggested_visual_concept": "A quiet architectural crop with the Finding Stories wordmark",
+      "recommended_dimensions": {
+        "single_image": "1200×1200 px",
+        "carousel": "1080×1350 px per page"
+      },
+      "image_text_hierarchy": {
+        "primary": "Property discovery should begin with perspective—not pressure.",
+        "secondary": "Introducing Finding Stories",
+        "footer": "Finding Stories · Real estate with perspective"
+      },
+      "alt_text": "Finding Stories introducing finding stories visual in warm ivory, champagne gold and charcoal.",
+      "utm_destination": "https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_1",
+      "objective": "Introducing Finding Stories",
+      "audience": "Brand-aware UAE property buyers",
+      "funnel_stage": "awareness",
+      "claims_basis": "Brand process and approved platform behaviour only; no market statistics or outcome claims.",
+      "internal_approval_state": "DRAFT_REVIEW_REQUIRED",
+      "published": false
+    },
+    {
+      "sequence": 2,
+      "platform": "LinkedIn",
+      "theme": "Why Finding Stories exists",
+      "hook": "More listings do not always create more clarity.",
+      "body": "Finding Stories exists to help buyers narrow the market thoughtfully. We organise source-backed facts, avoid unsupported rankings and create a private route from discovery to an informed conversation.",
+      "platform_ready_copy": "More listings do not always create more clarity.\n\nFinding Stories exists to help buyers narrow the market thoughtfully. We organise source-backed facts, avoid unsupported rankings and create a private route from discovery to an informed conversation.\n\nExplore our approach: https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_2\n\n#FindingStories #UAEProperty",
+      "cta": "Explore our approach",
+      "suggested_visual_concept": "Editorial manifesto: clarity before commitment",
+      "recommended_dimensions": {
+        "single_image": "1200×1200 px",
+        "carousel": "1080×1350 px per page"
+      },
+      "image_text_hierarchy": {
+        "primary": "More listings do not always create more clarity.",
+        "secondary": "Why Finding Stories exists",
+        "footer": "Finding Stories · Real estate with perspective"
+      },
+      "alt_text": "Finding Stories why finding stories exists visual in warm ivory, champagne gold and charcoal.",
+      "utm_destination": "https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_2",
+      "objective": "Why Finding Stories exists",
+      "audience": "Buyers overwhelmed by portal volume",
+      "funnel_stage": "awareness",
+      "claims_basis": "Brand process and approved platform behaviour only; no market statistics or outcome claims.",
+      "internal_approval_state": "DRAFT_REVIEW_REQUIRED",
+      "published": false
+    },
+    {
+      "sequence": 3,
+      "platform": "LinkedIn",
+      "theme": "How we evaluate opportunities",
+      "hook": "A launch deserves questions before it deserves attention.",
+      "body": "We look for a clear source trail, publication approval, meaningful buyer information and transparent gaps. Commercial details that can change are reconfirmed; unknowns are never filled with promotional assumptions.",
+      "platform_ready_copy": "A launch deserves questions before it deserves attention.\n\nWe look for a clear source trail, publication approval, meaningful buyer information and transparent gaps. Commercial details that can change are reconfirmed; unknowns are never filled with promotional assumptions.\n\nSee published opportunities: https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_3\n\n#FindingStories #UAEProperty",
+      "cta": "See published opportunities",
+      "suggested_visual_concept": "Four-panel evaluation framework",
+      "recommended_dimensions": {
+        "single_image": "1200×1200 px",
+        "carousel": "1080×1350 px per page"
+      },
+      "image_text_hierarchy": {
+        "primary": "A launch deserves questions before it deserves attention.",
+        "secondary": "How we evaluate opportunities",
+        "footer": "Finding Stories · Real estate with perspective"
+      },
+      "alt_text": "Finding Stories how we evaluate opportunities visual in warm ivory, champagne gold and charcoal.",
+      "utm_destination": "https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_3",
+      "objective": "How we evaluate opportunities",
+      "audience": "Research-led buyers and investors",
+      "funnel_stage": "consideration",
+      "claims_basis": "Brand process and approved platform behaviour only; no market statistics or outcome claims.",
+      "internal_approval_state": "DRAFT_REVIEW_REQUIRED",
+      "published": false
+    },
+    {
+      "sequence": 4,
+      "platform": "LinkedIn",
+      "theme": "What verified information means",
+      "hook": "“Verified” is a process, not a decorative badge.",
+      "body": "For Finding Stories, verification means a fact has an identified source and review state. It does not mean price or availability can never change. Mutable details still require current confirmation before commitment.",
+      "platform_ready_copy": "“Verified” is a process, not a decorative badge.\n\nFor Finding Stories, verification means a fact has an identified source and review state. It does not mean price or availability can never change. Mutable details still require current confirmation before commitment.\n\nRead the verification approach: https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_4\n\n#FindingStories #UAEProperty",
+      "cta": "Read the verification approach",
+      "suggested_visual_concept": "Verification record with source, date and pending fields",
+      "recommended_dimensions": {
+        "single_image": "1200×1200 px",
+        "carousel": "1080×1350 px per page"
+      },
+      "image_text_hierarchy": {
+        "primary": "“Verified” is a process, not a decorative badge.",
+        "secondary": "What verified information means",
+        "footer": "Finding Stories · Real estate with perspective"
+      },
+      "alt_text": "Finding Stories what verified information means visual in warm ivory, champagne gold and charcoal.",
+      "utm_destination": "https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_4",
+      "objective": "What verified information means",
+      "audience": "Due-diligence focused buyers",
+      "funnel_stage": "consideration",
+      "claims_basis": "Brand process and approved platform behaviour only; no market statistics or outcome claims.",
+      "internal_approval_state": "DRAFT_REVIEW_REQUIRED",
+      "published": false
+    },
+    {
+      "sequence": 5,
+      "platform": "LinkedIn",
+      "theme": "UAE buyer education",
+      "hook": "Begin with the decision, not the development.",
+      "body": "Before browsing, define why you are buying, your workable budget, intended timing and non-negotiables. This brief creates a more useful filter than popularity, urgency or an unsupported forecast.",
+      "platform_ready_copy": "Begin with the decision, not the development.\n\nBefore browsing, define why you are buying, your workable budget, intended timing and non-negotiables. This brief creates a more useful filter than popularity, urgency or an unsupported forecast.\n\nShape a private buyer brief: https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_5\n\n#FindingStories #UAEProperty",
+      "cta": "Shape a private buyer brief",
+      "suggested_visual_concept": "Buyer brief checklist carousel",
+      "recommended_dimensions": {
+        "single_image": "1200×1200 px",
+        "carousel": "1080×1350 px per page"
+      },
+      "image_text_hierarchy": {
+        "primary": "Begin with the decision, not the development.",
+        "secondary": "UAE buyer education",
+        "footer": "Finding Stories · Real estate with perspective"
+      },
+      "alt_text": "Finding Stories uae buyer education visual in warm ivory, champagne gold and charcoal.",
+      "utm_destination": "https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_5",
+      "objective": "UAE buyer education",
+      "audience": "First-time and returning UAE buyers",
+      "funnel_stage": "education",
+      "claims_basis": "Brand process and approved platform behaviour only; no market statistics or outcome claims.",
+      "internal_approval_state": "DRAFT_REVIEW_REQUIRED",
+      "published": false
+    },
+    {
+      "sequence": 6,
+      "platform": "LinkedIn",
+      "theme": "Thinking about payment plans",
+      "hook": "A payment plan is more than its headline split.",
+      "body": "Review when each payment is due, what event triggers it, what remains payable at handover and which terms need reconfirmation. Consider the full obligation against your own circumstances; seek authorised financial advice where needed.",
+      "platform_ready_copy": "A payment plan is more than its headline split.\n\nReview when each payment is due, what event triggers it, what remains payable at handover and which terms need reconfirmation. Consider the full obligation against your own circumstances; seek authorised financial advice where needed.\n\nDiscuss the questions to ask: https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_6\n\n#FindingStories #UAEProperty",
+      "cta": "Discuss the questions to ask",
+      "suggested_visual_concept": "Milestone timeline explainer without invented figures",
+      "recommended_dimensions": {
+        "single_image": "1200×1200 px",
+        "carousel": "1080×1350 px per page"
+      },
+      "image_text_hierarchy": {
+        "primary": "A payment plan is more than its headline split.",
+        "secondary": "Thinking about payment plans",
+        "footer": "Finding Stories · Real estate with perspective"
+      },
+      "alt_text": "Finding Stories thinking about payment plans visual in warm ivory, champagne gold and charcoal.",
+      "utm_destination": "https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_6",
+      "objective": "Thinking about payment plans",
+      "audience": "Off-plan buyers",
+      "funnel_stage": "education",
+      "claims_basis": "Brand process and approved platform behaviour only; no market statistics or outcome claims.",
+      "internal_approval_state": "DRAFT_REVIEW_REQUIRED",
+      "published": false
+    },
+    {
+      "sequence": 7,
+      "platform": "LinkedIn",
+      "theme": "How to compare new launches",
+      "hook": "Compare like with like—and keep unknowns visible.",
+      "body": "Put area, developer, residence mix, verified price, size, payment milestones, handover position and buyer suitability into the same view. An honest “pending verification” is more useful than a guessed answer.",
+      "platform_ready_copy": "Compare like with like—and keep unknowns visible.\n\nPut area, developer, residence mix, verified price, size, payment milestones, handover position and buyer suitability into the same view. An honest “pending verification” is more useful than a guessed answer.\n\nOpen project comparison: https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_7\n\n#FindingStories #UAEProperty",
+      "cta": "Open project comparison",
+      "suggested_visual_concept": "Neutral comparison grid",
+      "recommended_dimensions": {
+        "single_image": "1200×1200 px",
+        "carousel": "1080×1350 px per page"
+      },
+      "image_text_hierarchy": {
+        "primary": "Compare like with like—and keep unknowns visible.",
+        "secondary": "How to compare new launches",
+        "footer": "Finding Stories · Real estate with perspective"
+      },
+      "alt_text": "Finding Stories how to compare new launches visual in warm ivory, champagne gold and charcoal.",
+      "utm_destination": "https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_7",
+      "objective": "How to compare new launches",
+      "audience": "Active launch comparers",
+      "funnel_stage": "consideration",
+      "claims_basis": "Brand process and approved platform behaviour only; no market statistics or outcome claims.",
+      "internal_approval_state": "DRAFT_REVIEW_REQUIRED",
+      "published": false
+    },
+    {
+      "sequence": 8,
+      "platform": "LinkedIn",
+      "theme": "Private buyer advisory",
+      "hook": "Your brief should lead the conversation.",
+      "body": "Private advisory starts with purpose, budget, timing and preferences. Finding Stories helps you interpret published opportunities and coordinate appropriate next steps without promising availability, approval or investment outcomes.",
+      "platform_ready_copy": "Your brief should lead the conversation.\n\nPrivate advisory starts with purpose, budget, timing and preferences. Finding Stories helps you interpret published opportunities and coordinate appropriate next steps without promising availability, approval or investment outcomes.\n\nRequest private guidance: https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_8\n\n#FindingStories #UAEProperty",
+      "cta": "Request private guidance",
+      "suggested_visual_concept": "Minimal portrait-free advisory pathway",
+      "recommended_dimensions": {
+        "single_image": "1200×1200 px",
+        "carousel": "1080×1350 px per page"
+      },
+      "image_text_hierarchy": {
+        "primary": "Your brief should lead the conversation.",
+        "secondary": "Private buyer advisory",
+        "footer": "Finding Stories · Real estate with perspective"
+      },
+      "alt_text": "Finding Stories private buyer advisory visual in warm ivory, champagne gold and charcoal.",
+      "utm_destination": "https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_8",
+      "objective": "Private buyer advisory",
+      "audience": "Qualified buyers seeking support",
+      "funnel_stage": "conversion",
+      "claims_basis": "Brand process and approved platform behaviour only; no market statistics or outcome claims.",
+      "internal_approval_state": "DRAFT_REVIEW_REQUIRED",
+      "published": false
+    },
+    {
+      "sequence": 9,
+      "platform": "LinkedIn",
+      "theme": "Discovering early opportunities",
+      "hook": "Early access should still come with clear boundaries.",
+      "body": "Our pre-launch discovery experience distinguishes published facts from items that remain subject to developer confirmation. An enquiry to Finding Stories is not, by itself, an official developer EOI.",
+      "platform_ready_copy": "Early access should still come with clear boundaries.\n\nOur pre-launch discovery experience distinguishes published facts from items that remain subject to developer confirmation. An enquiry to Finding Stories is not, by itself, an official developer EOI.\n\nExplore pre-launch opportunities: https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_9\n\n#FindingStories #UAEProperty",
+      "cta": "Explore pre-launch opportunities",
+      "suggested_visual_concept": "Pre-launch status card and verification cues",
+      "recommended_dimensions": {
+        "single_image": "1200×1200 px",
+        "carousel": "1080×1350 px per page"
+      },
+      "image_text_hierarchy": {
+        "primary": "Early access should still come with clear boundaries.",
+        "secondary": "Discovering early opportunities",
+        "footer": "Finding Stories · Real estate with perspective"
+      },
+      "alt_text": "Finding Stories discovering early opportunities visual in warm ivory, champagne gold and charcoal.",
+      "utm_destination": "https://www.finding-stories.com/?utm_source=linkedin&utm_medium=organic_social&utm_campaign=brand_foundation&utm_content=post_9",
+      "objective": "Discovering early opportunities",
+      "audience": "Pre-launch and EOI researchers",
+      "funnel_stage": "conversion",
+      "claims_basis": "Brand process and approved platform behaviour only; no market statistics or outcome claims.",
+      "internal_approval_state": "DRAFT_REVIEW_REQUIRED",
+      "published": false
+    }
+  ]
+}
