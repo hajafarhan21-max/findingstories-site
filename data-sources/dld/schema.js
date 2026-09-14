@@ -26,8 +26,8 @@ export const dldTransactionSchema=z.object({
   ,nearestMetro:nullableText,nearestMall:nullableText,nearestLandmark:nullableText
   ,transactionSizeSqft:nullableNumber,propertySizeSqft:nullableNumber,aedPerSqft:nullableNumber
   ,sourceAreaName:nullableText,canonicalAreaName:nullableText,canonicalAreaSlug:nullableText
-  ,areaMappingStatus:z.enum(['EXACT','ALIAS_VERIFIED','UNMAPPED']),areaMappingMethod:nullableText
-  ,projectMappingStatus:z.enum(['EXACT','ALIAS_VERIFIED','UNMAPPED']),canonicalProject:nullableText,canonicalProjectSlug:nullableText,developer:nullableText
+  ,areaMappingStatus:z.enum(['EXACT','VERIFIED_ALIAS','UNMAPPED']),areaMappingMethod:nullableText
+  ,projectMappingStatus:z.enum(['EXACT','VERIFIED_ALIAS','UNMAPPED']),projectMappingMethod:nullableText,canonicalProject:nullableText,canonicalProjectSlug:nullableText,developer:nullableText
   ,additionalOfficialFields:z.record(z.string(),nullableText).optional()
 }).strict();
 

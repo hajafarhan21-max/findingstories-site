@@ -1,8 +1,10 @@
 import {mkdir,writeFile} from 'node:fs/promises';
 import {fetchDldSnapshot} from '../data-sources/dld/adapter.js';
 import {aggregateDldTransactions} from '../data-sources/dld/aggregate.js';
+import {generateDldMappingReview} from '../data-sources/dld/mapping-review.js';
 const date=new Date().toISOString().slice(0,10),dir=`generated/intelligence/${date}`;await mkdir(dir,{recursive:true});
 const snapshot=await fetchDldSnapshot();
+await generateDldMappingReview(snapshot.records);
 const aggregation=snapshot.status==='verified'?aggregateDldTransactions(snapshot.records):null;
 const empty=(type,extra={})=>({generatedAt:new Date().toISOString(),type,...extra,items:[]});
 const files={
