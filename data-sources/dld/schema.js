@@ -28,6 +28,7 @@ export const dldTransactionSchema=z.object({
   ,sourceAreaName:nullableText,canonicalAreaName:nullableText,canonicalAreaSlug:nullableText
   ,areaMappingStatus:z.enum(['EXACT','ALIAS_VERIFIED','UNMAPPED']),areaMappingMethod:nullableText
   ,projectMappingStatus:z.enum(['EXACT','ALIAS_VERIFIED','UNMAPPED']),canonicalProject:nullableText,canonicalProjectSlug:nullableText,developer:nullableText
+  ,additionalOfficialFields:z.record(z.string(),nullableText).optional()
 }).strict();
 
 export const dldPageSchema=z.object({
