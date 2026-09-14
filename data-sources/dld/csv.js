@@ -1,12 +1,17 @@
 import {createReadStream} from 'node:fs';
 
 export const REQUIRED_HEADER_GROUPS=[['transaction_id','transaction_number','transactionId','id'],['instance_date','transaction_date','transactionDate']];
-const canonical=value=>value.trim().replace(/^\uFEFF/,'');
+// DLD's downloaded CSV uses upper-case snake-case headers, while older exports
+// and the API have used lower-case and camel-case variants. Header matching is
+// intentionally case-insensitive; the raw file is never rewritten.
+const canonical=value=>value.trim().replace(/^\uFEFF/,'').toLocaleLowerCase('en-US');
+const canonicalGroup=group=>group.map(canonical);
 
 export function validateDldHeaders(headers){
-  const missing=REQUIRED_HEADER_GROUPS.filter(group=>!group.some(name=>headers.includes(name)));
+  const normalized=headers.map(canonical);
+  const missing=REQUIRED_HEADER_GROUPS.filter(group=>!canonicalGroup(group).some(name=>normalized.includes(name)));
   if(missing.length)throw new Error(`Missing required DLD CSV header(s): ${missing.map(group=>group.join('|')).join(', ')}`);
-  if(new Set(headers).size!==headers.length)throw new Error('Duplicate DLD CSV headers are not allowed');
+  if(new Set(normalized).size!==normalized.length)throw new Error('Duplicate DLD CSV headers are not allowed');
   return true;
 }
 
