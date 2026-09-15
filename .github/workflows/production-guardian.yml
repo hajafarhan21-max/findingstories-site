@@ -7,7 +7,9 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: production-guardian
+  # Share the lifecycle lock with production.yml so a manual guardian cannot
+  # prepare/clean the TEST fixture while Production is using it.
+  group: production-verification
   cancel-in-progress: false
 
 permissions:
@@ -17,9 +19,7 @@ permissions:
 jobs:
   acceptance:
     name: Guard production
-    if: >-
-      github.event_name == 'workflow_dispatch' ||
-      github.event.workflow_run.conclusion == 'success'
+    if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
@@ -31,6 +31,11 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v7
+      - name: Require successful Production workflow
+        if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion != 'success'
+        run: |
+          echo 'The triggering Production workflow did not pass; Production Guardian cannot report success.'
+          exit 1
       - uses: actions/setup-node@v7
         with:
           node-version: 22
@@ -38,6 +43,7 @@ jobs:
       - run: npm ci
       - name: Verify production health and public routes
         id: smoke
+        if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
         continue-on-error: true
         run: |
           set -o pipefail

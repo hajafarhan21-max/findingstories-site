@@ -63,11 +63,11 @@ export async function persistRsvp(sql, r, phone) {
     ), lead_created AS (
       INSERT INTO leads(submission_id,name,phone,email,purpose,budget,property_type,preferred_areas,payment_method,
         purchase_timeline,owns_uae_property,additional_requirements,consent,source,landing_page,referrer,
-        utm_source,utm_medium,utm_campaign,qualification_status)
+        utm_source,utm_medium,utm_campaign,qualification_status,is_test)
       SELECT i.id,${safeText(r.full_name,100)}::text,${phone}::text,${r.email||null}::text,${r.purpose||null}::text,${r.budget||null}::text,
         ${r.property_type||null}::text,${r.preferred_area||null}::text,${r.payment_method||null}::text,${r.purchase_timeline||null}::text,
         ${r.owns_uae_property||null}::text,${safeText(r.additional_requirements)||null}::text,TRUE,'event-rsvp','/open-house',
-        ${r.referrer||null}::text,${r.utm_source||null}::text,${r.utm_medium||null}::text,${r.utm_campaign||null}::text,'pending'
+        ${r.referrer||null}::text,${r.utm_source||null}::text,${r.utm_medium||null}::text,${r.utm_campaign||null}::text,'pending',i.is_test
       FROM inserted i ON CONFLICT (submission_id) WHERE submission_id IS NOT NULL DO NOTHING RETURNING id
     ), activity AS (
       INSERT INTO event_rsvp_activity(rsvp_id,activity_type,details)

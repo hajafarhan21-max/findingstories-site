@@ -47,7 +47,7 @@ test('production acceptance prepares its fixture and archives its two synthetic 
   assert.doesNotMatch(script,/ADMIN_PASSWORD|\/api\/admin\/login|Cookie/);
   assert.match(script,/Authorization:`Bearer \$\{secret\}`/);
   assert.match(script,/patch\(\{action:'prepare'\}\)/);
-  assert.match(script,/for\(const item of created\.reverse\(\)\)/);
+  assert.match(script,/for\(const item of created\.toReversed\(\)\)/);
   assert.match(script,/booked_count\),before,'archival must restore exact initial capacity'/);
   assert.match(script,/try\{[\s\S]+\}finally\{/);
   assert.match(workflow,/secrets\.ACCEPTANCE_TEST_SECRET/);
@@ -64,7 +64,7 @@ test('acceptance repairs the expired-fixture response that produced undefined in
   assert.equal(expiredResponse.event?.is_test,undefined);
   assert.throws(()=>assert.equal(expiredResponse.event?.is_test,true),/undefined/);
   assert.match(endpoint,/value\.action==='prepare'[\s\S]{0,300}ensureTestEvent\(sql\)/);
-  assert.ok(script.indexOf("patch({action:'prepare'})")<script.indexOf("publicRequest('/api/events/slots?test=true')"));
+  assert.ok(script.indexOf("patch({action:'prepare'})")<script.indexOf('prepared.data.event_id'));
 });
 
 test('acceptance requests tolerate cold starts and retry safe inspection failures',async()=>{
@@ -96,6 +96,10 @@ test('production guardian is deployment-triggered, TEST-constrained, and reconci
   ]);
   assert.match(workflow,/workflow_run:[\s\S]*workflows: \[Production\]/);
   assert.match(workflow,/workflow_dispatch:/);
+  assert.match(workflow,/if: always\(\)/);
+  assert.match(workflow,/Require successful Production workflow/);
+  assert.match(workflow,/github\.event\.workflow_run\.conclusion != 'success'/);
+  assert.match(workflow,/group: production-verification/);
   assert.match(workflow,/issues: write/);
   assert.match(workflow,/ACCEPTANCE_TEST_SECRET: \$\{\{ secrets\.ACCEPTANCE_TEST_SECRET \}\}/);
   assert.match(workflow,/npm run smoke:production/);
@@ -107,4 +111,16 @@ test('production guardian is deployment-triggered, TEST-constrained, and reconci
   assert.match(reconciler,/issue','close/);
   assert.match(reconciler,/issue','reopen/);
   assert.match(operations,/Every read and mutation is constrained by both TEST-event and TEST-RSVP predicates/);
+});
+
+test('capacity cleanup uses the post-archive invariant despite data-modifying CTE snapshots',async()=>{
+  const [lifecycle,rsvp,endpoint]=await Promise.all([
+    readFile('api/_lib/acceptance.js','utf8'),readFile('api/events/rsvp.js','utf8'),readFile('api/acceptance/events.js','utf8')
+  ]);
+  assert.match(lifecycle,/authoritative value is[\s\S]*non-archived RSVPs/);
+  assert.match(lifecycle,/NOT EXISTS \(SELECT 1 FROM archived WHERE archived\.id=active\.id\)/);
+  assert.match(lifecycle,/NOT EXISTS \(SELECT 1 FROM stale WHERE stale\.id=active\.id\)/);
+  assert.match(rsvp,/qualification_status,is_test\)/);
+  assert.match(rsvp,/'pending',i\.is_test/);
+  assert.match(endpoint,/l\.submission_id=r\.id AND l\.is_test=TRUE/);
 });

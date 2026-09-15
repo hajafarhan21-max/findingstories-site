@@ -1,5 +1,5 @@
 import { isAcceptance } from '../_lib/auth.js';
-import { acceptanceQuerySchema, acceptanceUpdateSchema } from '../_lib/acceptance.js';
+import { acceptanceQuerySchema, acceptanceUpdateSchema, archiveTestRsvp, prepareTestFixture } from '../_lib/acceptance.js';
 import { database, ensureTestEvent } from '../_lib/db.js';
 import { json, method, parseJson } from '../_lib/http.js';
 
@@ -13,9 +13,9 @@ async function inspect(sql,eventId,res){
     sql`SELECT r.id,r.event_id,r.full_name,r.phone,r.email,r.purpose,r.budget,r.property_type,r.preferred_area,
       r.purchase_timeline,r.preferred_slot,r.confirmed_slot,r.status,r.assigned_to,r.lead_score,r.temperature,
       r.qualification_summary,r.next_action,r.qualification_status,r.qualification_source,r.attendance_status,
-      r.next_follow_up_at,r.created_at,r.updated_at,r.is_test,r.archived_at,l.id crm_lead_id,l.qualification_status crm_qualification_status
+      r.next_follow_up_at,r.created_at,r.updated_at,r.is_test,r.archived_at,l.id crm_lead_id,l.is_test crm_lead_is_test,l.qualification_status crm_qualification_status
       FROM event_rsvps r JOIN events e ON e.id=r.event_id AND e.is_test=TRUE
-      LEFT JOIN leads l ON l.submission_id=r.id WHERE r.event_id=${eventId}::uuid AND r.is_test=TRUE ORDER BY r.created_at DESC LIMIT 250`,
+      LEFT JOIN leads l ON l.submission_id=r.id AND l.is_test=TRUE WHERE r.event_id=${eventId}::uuid AND r.is_test=TRUE ORDER BY r.created_at DESC LIMIT 250`,
     sql`SELECT s.id,s.starts_at,s.ends_at,s.capacity,s.booked_count,s.capacity-s.booked_count remaining
       FROM event_slots s JOIN events e ON e.id=s.event_id AND e.is_test=TRUE WHERE s.event_id=${eventId}::uuid ORDER BY s.starts_at`,
     sql`SELECT a.id,a.rsvp_id,a.activity_type,a.details,a.created_by,a.created_at FROM event_rsvp_activity a
@@ -56,7 +56,13 @@ async function update(sql,value,res){
     // public slots GET read-only while ensuring acceptance never depends on an
     // expired TEST event left over from an earlier deployment.
     await ensureTestEvent(sql);
-    return json(res,200,{ok:true,is_test:true});
+    const cleanup=await prepareTestFixture(sql);
+    const events=await sql`SELECT e.id FROM events e WHERE e.is_test=TRUE AND e.active AND e.status='TEST'
+      AND e.ends_on >= (NOW() AT TIME ZONE e.timezone)::date AND EXISTS (SELECT 1 FROM event_slots s
+        WHERE s.event_id=e.id AND s.active AND s.starts_at>NOW() AND s.booked_count<s.capacity)
+      ORDER BY e.starts_on,e.created_at LIMIT 1`;
+    if(!events.length)return json(res,409,{error:'A future TEST fixture with available capacity could not be prepared.'});
+    return json(res,200,{ok:true,is_test:true,event_id:events[0].id,cleanup:cleanup[0]});
   } else if(value.action==='meeting'){
     rows=await sql`SELECT confirm_event_slot(r.id,${value.slot_id}::uuid,'acceptance-test') ok FROM event_rsvps r
       JOIN events e ON e.id=r.event_id AND e.is_test=TRUE JOIN event_slots s ON s.id=${value.slot_id}::uuid AND s.event_id=e.id
@@ -73,15 +79,7 @@ async function update(sql,value,res){
     rows=await sql`INSERT INTO event_rsvp_activity(rsvp_id,activity_type,details,created_by)
       SELECT r.id,${type},${details}::jsonb,'acceptance-test' FROM event_rsvps r JOIN events e ON e.id=r.event_id AND e.is_test=TRUE
       WHERE r.id=${value.rsvp_id}::uuid AND r.is_test=TRUE AND r.archived_at IS NULL RETURNING id,rsvp_id,activity_type,details,created_by,created_at`;
-  } else if(value.action==='archive') rows=await sql`WITH archived AS (
-      UPDATE event_rsvps r SET archived_at=NOW(),updated_at=NOW() FROM events e
-      WHERE r.id=${value.rsvp_id}::uuid AND r.is_test=TRUE AND r.archived_at IS NULL AND e.id=r.event_id AND e.is_test=TRUE
-      RETURNING r.id,r.event_id,r.confirmed_slot,r.is_test,r.archived_at
-    ), occupancy AS (
-      UPDATE event_slots s SET booked_count=(SELECT COUNT(*)::int FROM event_rsvps active
-        WHERE active.confirmed_slot=s.id AND active.archived_at IS NULL)
-      FROM archived a WHERE s.event_id=a.event_id RETURNING s.id
-    ) SELECT id,is_test,archived_at,(SELECT COUNT(*)::int FROM occupancy) recalculated_slots FROM archived`;
+  } else if(value.action==='archive') rows=await archiveTestRsvp(sql,value.rsvp_id);
   if(!rows?.length)return json(res,404,{error:'Synthetic TEST RSVP not found.'});
   return json(res,200,{ok:true,result:rows[0]});
 }
