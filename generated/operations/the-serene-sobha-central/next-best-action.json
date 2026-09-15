@@ -1,0 +1,24 @@
+{
+  "project": "The Serene at Sobha Central",
+  "project_slug": "the-serene-sobha-central",
+  "campaign": "the-serene-sobha-central-project-launch",
+  "canonical_url": "https://www.finding-stories.com/projects/the-serene-sobha-central",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/the-serene-sobha-central/manifest.json",
+    "generated/distribution/the-serene-sobha-central.json",
+    "generated/authority/the-serene-sobha-central"
+  ],
+  "external_action_performed": false,
+  "selection_rule": "Highest transparent net score among today actions; ties favor direct qualified-enquiry potential and execution readiness.",
+  "action": "Verify the Finding Stories LinkedIn account, approve the project-overview post, and publish it through the authorized account.",
+  "why": "The complete advisory post has the strongest ready path from professional discovery to an attributable enquiry.",
+  "buyer_intent": "The Serene at Sobha Central project details",
+  "expected_business_value": "Create attributable professional-channel discovery with a direct path to WhatsApp or form enquiry.",
+  "dependency": "Authorized account owner, copy approval and asset-rights confirmation.",
+  "human_required": true,
+  "asset": "generated/authority/the-serene-sobha-central/social-revenue-pack.json#/linkedin_posts/0",
+  "tracked_url": "https://www.finding-stories.com/projects/the-serene-sobha-central?utm_source=linkedin&utm_medium=organic_social&utm_campaign=the-serene-sobha-central-project-launch&utm_content=linkedin_introduction",
+  "success_metric": "Attributed LinkedIn sessions, WhatsApp clicks, lead_form_start and lead_success.",
+  "review_condition": "Review after 24 hours if published, or immediately after an ownership/approval blocker is recorded."
+}

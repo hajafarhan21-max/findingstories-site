@@ -1,0 +1,218 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "project": {
+    "slug": "w-residences-dubai-harbour",
+    "name": "W Residences Dubai Harbour",
+    "developer": "Arada",
+    "path": "/projects/w-residences-dubai-harbour"
+  },
+  "facts": {
+    "developer": {
+      "value": "Arada",
+      "source": "https://www.arada.com/en/w-residences-dubai-harbour/",
+      "verified": true
+    },
+    "location": {
+      "value": "Dubai Harbour, Dubai",
+      "source": "https://www.arada.com/en/w-residences-dubai-harbour/",
+      "verified": true
+    },
+    "project_status": {
+      "value": "Launched / under construction",
+      "source": "https://www.arada.com/en/w-residences-dubai-harbour/",
+      "verified": true
+    },
+    "property_types": {
+      "value": "Apartments, Penthouses",
+      "source": "https://www.arada.com/en/w-residences-dubai-harbour/",
+      "verified": true
+    },
+    "unit_mix": {
+      "value": "1 to 4 bedroom residences and 5 bedroom penthouses",
+      "source": "https://www.arada.com/en/w-residences-dubai-harbour/",
+      "verified": true
+    }
+  },
+  "assets": [],
+  "rejected_assets": [],
+  "lead": {
+    "endpoint": "/api/leads",
+    "campaign_id": "w-residences-dubai-harbour-project-launch",
+    "project_id": "w-residences-dubai-harbour"
+  },
+  "platform": {
+    "identity": {
+      "development": null,
+      "area": "Dubai Harbour",
+      "emirate": "Dubai",
+      "project_status": "Launched / under construction",
+      "launch_status": "Launched / under construction",
+      "sales_status": null
+    },
+    "commercial": {
+      "starting_price": null,
+      "currency": "AED",
+      "price_range": null,
+      "payment_plan": null,
+      "eoi_information": null,
+      "reservation_requirements": null,
+      "service_charge": null,
+      "handover": null,
+      "post_handover_plan": null
+    },
+    "product": {
+      "property_types": [
+        "Apartments",
+        "Penthouses"
+      ],
+      "unit_types": [
+        "1 to 4 bedroom residences and 5 bedroom penthouses"
+      ],
+      "bedroom_configurations": [
+        "1 bedroom",
+        "2 bedroom",
+        "3 bedroom",
+        "4 bedroom",
+        "5 bedroom"
+      ],
+      "size_ranges": [],
+      "furnishing_status": null,
+      "branded_residence": false,
+      "positioning": []
+    },
+    "experience": {
+      "summary": "Branded residences at Dubai Harbour, with the published mix separated from live availability.",
+      "buyer_suitability": "For buyers comparing the verified location and residence mix; suitability requires an individual review.",
+      "investor_suitability": "Suitability depends on objectives, budget, time horizon and current confirmed terms; outcomes are not guaranteed.",
+      "amenities": [],
+      "views": [],
+      "connectivity": []
+    },
+    "acquisition": {
+      "whatsapp_context": "W Residences Dubai Harbour private enquiry",
+      "lead_form_context": "W Residences Dubai Harbour buyer guide",
+      "project_source": "https://www.arada.com/en/w-residences-dubai-harbour/",
+      "status_badge": "Launched / under construction",
+      "featured": false,
+      "priority": 10
+    },
+    "governance": {
+      "verification_status": "PUBLISHED",
+      "source_references": [
+        "https://www.arada.com/en/w-residences-dubai-harbour/"
+      ],
+      "approved_fields": [
+        "developer",
+        "location",
+        "project status",
+        "property types",
+        "unit mix"
+      ],
+      "pending_fields": [
+        "starting price",
+        "payment plan",
+        "handover",
+        "current availability"
+      ],
+      "last_reviewed": "2026-09-15",
+      "reviewer": "Finding Stories project approval workflow",
+      "publish_state": "PUBLISHED",
+      "data_confidence": "verified"
+    }
+  },
+  "seo": {
+    "indexable": true,
+    "title": "W Residences Dubai Harbour by Arada | Buyer Guide",
+    "description": "Review verified W Residences Dubai Harbour project facts, residence types and Dubai Harbour context, then request current availability, payment plans or floor plans.",
+    "primary_intent": "W Residences Dubai Harbour project details",
+    "secondary_intents": [
+      "W Residences Dubai Harbour availability",
+      "W Residences Dubai Harbour payment plan",
+      "W Residences Dubai Harbour floor plans"
+    ],
+    "location": "Dubai Harbour, Dubai",
+    "unit_types": [
+      "1 to 4 bedroom residences and 5 bedroom penthouses"
+    ],
+    "launch_status": "Launched / under construction",
+    "faq": [
+      {
+        "question": "Is current availability at W Residences Dubai Harbour confirmed?",
+        "answer": "No. Finding Stories will reconfirm current W Residences Dubai Harbour availability with the developer when you enquire."
+      },
+      {
+        "question": "Can I request W Residences Dubai Harbour payment plans and floor plans?",
+        "answer": "Yes. Request the latest developer-confirmed documents through the protected enquiry form."
+      }
+    ],
+    "organic_search": {
+      "property_types": [
+        "Apartments",
+        "Penthouses"
+      ],
+      "unit_configurations": [
+        "1 to 4 bedroom residences and 5 bedroom penthouses"
+      ],
+      "verified_pricing": false,
+      "payment_plan": false,
+      "completion_handover": false,
+      "location_facts": true,
+      "investment_considerations": [
+        "Current terms and exact unit availability require developer reconfirmation."
+      ],
+      "internal_link_context": [
+        "Dubai Harbour",
+        "Arada",
+        "Apartments",
+        "Penthouses"
+      ],
+      "cta_mappings": {
+        "price": "Request Details",
+        "payment_plan": "Get Payment Plan",
+        "floor_plan": "Request Floor Plans",
+        "availability": "Check Current Availability",
+        "consultation": "Book Private Consultation",
+        "location": "Request Details",
+        "eoi": "Request Details",
+        "investment": "Book Private Consultation",
+        "residence": "Check Current Availability"
+      },
+      "supporting_pages": []
+    },
+    "hero_image": "/assets/brand/finding-stories-monogram.png",
+    "hero_alt": "Finding Stories verified guide for W Residences Dubai Harbour"
+  },
+  "distribution": {
+    "share_title": "W Residences Dubai Harbour | Verified Buyer Guide",
+    "share_description": "Review verified W Residences Dubai Harbour residence types and location context, with current commercial terms reconfirmed privately by Finding Stories.",
+    "share_image": "/assets/brand/finding-stories-monogram.png",
+    "short_project_summary": "Branded residences at Dubai Harbour, with the published mix separated from live availability.",
+    "long_project_summary": "Branded residences at Dubai Harbour, with the published mix separated from live availability. Prices, payment plans, handover and current availability are unavailable until reconfirmed.",
+    "verified_developer_name": "Arada",
+    "verified_location_name": "Dubai Harbour, Dubai",
+    "property_types": [
+      "Apartments",
+      "Penthouses"
+    ],
+    "availability_disclaimer": "Prices, terms, completion timing and availability can change and must be reconfirmed before commitment.",
+    "brochure_available": false,
+    "floor_plan_available": false,
+    "whatsapp_share_copy": "Review the verified W Residences Dubai Harbour buyer guide and request current details privately:",
+    "social_copy_short": "Branded residences at Dubai Harbour, with the published mix separated from live availability.",
+    "social_copy_medium": "Branded residences at Dubai Harbour, with the published mix separated from live availability. Current terms and availability require reconfirmation.",
+    "social_copy_long": "Branded residences at Dubai Harbour, with the published mix separated from live availability. Finding Stories publishes only reviewed facts; unavailable; request current developer-confirmed details.",
+    "linkedin_copy": "Branded residences at Dubai Harbour, with the published mix separated from live availability. Finding Stories separates verified project facts from commercial details that still require developer reconfirmation. Request a private buyer review before making a commitment.",
+    "instagram_caption": "Branded residences at Dubai Harbour, with the published mix separated from live availability. Current terms and availability require reconfirmation. #UAEProperty #FindingStories",
+    "facebook_copy": "Branded residences at Dubai Harbour, with the published mix separated from live availability. Review verified facts and request current terms privately from Finding Stories.",
+    "x_copy": "W Residences Dubai Harbour in Dubai Harbour: verified residence context, with current commercial terms reconfirmed privately by Finding Stories.",
+    "directory_summary": "Branded residences at Dubai Harbour, with the published mix separated from live availability. Current commercial terms and availability are not asserted.",
+    "citation_summary": "W Residences Dubai Harbour is a apartments and penthouses project by Arada in Dubai Harbour, Dubai.",
+    "outreach_summary": "Finding Stories has published a source-reviewed buyer guide for W Residences Dubai Harbour, using the official developer record.",
+    "press_summary": "A review-ready Finding Stories briefing covers W Residences Dubai Harbour, its verified location and residence mix without asserting live inventory.",
+    "approved_external_links": [
+      "https://www.arada.com/en/w-residences-dubai-harbour/"
+    ],
+    "source_of_truth_notes": "Facts were retrieved from the official developer record on 2026-09-15; unavailable commercial fields are deliberately omitted."
+  }
+}

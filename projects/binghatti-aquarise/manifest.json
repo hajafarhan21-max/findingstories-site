@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "project": {
+    "slug": "binghatti-aquarise",
+    "name": "Binghatti Aquarise",
+    "developer": "Binghatti",
+    "path": "/projects/binghatti-aquarise"
+  },
+  "facts": {
+    "developer": {
+      "value": "Binghatti",
+      "source": "https://www.binghatti.com/en/project/binghatti-aquarise",
+      "verified": true
+    },
+    "location": {
+      "value": "Business Bay, Dubai",
+      "source": "https://www.binghatti.com/en/project/binghatti-aquarise",
+      "verified": true
+    },
+    "project_status": {
+      "value": "Launched / off-plan",
+      "source": "https://www.binghatti.com/en/project/binghatti-aquarise",
+      "verified": true
+    },
+    "property_types": {
+      "value": "Apartments",
+      "source": "https://www.binghatti.com/en/project/binghatti-aquarise",
+      "verified": true
+    },
+    "unit_mix": {
+      "value": "Studios and 1 to 4 bedroom residences",
+      "source": "https://www.binghatti.com/en/project/binghatti-aquarise",
+      "verified": true
+    }
+  },
+  "assets": [],
+  "rejected_assets": [],
+  "lead": {
+    "endpoint": "/api/leads",
+    "campaign_id": "binghatti-aquarise-project-launch",
+    "project_id": "binghatti-aquarise"
+  },
+  "platform": {
+    "identity": {
+      "development": null,
+      "area": "Business Bay",
+      "emirate": "Dubai",
+      "project_status": "Launched / off-plan",
+      "launch_status": "Launched / off-plan",
+      "sales_status": null
+    },
+    "commercial": {
+      "starting_price": null,
+      "currency": "AED",
+      "price_range": null,
+      "payment_plan": null,
+      "eoi_information": null,
+      "reservation_requirements": null,
+      "service_charge": null,
+      "handover": null,
+      "post_handover_plan": null
+    },
+    "product": {
+      "property_types": [
+        "Apartments"
+      ],
+      "unit_types": [
+        "Studios and 1 to 4 bedroom residences"
+      ],
+      "bedroom_configurations": [
+        "Studio",
+        "1 bedroom",
+        "2 bedroom",
+        "3 bedroom",
+        "4 bedroom"
+      ],
+      "size_ranges": [],
+      "furnishing_status": null,
+      "branded_residence": false,
+      "positioning": []
+    },
+    "experience": {
+      "summary": "A Business Bay project for buyers comparing a broad apartment mix and seeking current release details.",
+      "buyer_suitability": "For buyers comparing the verified location and residence mix; suitability requires an individual review.",
+      "investor_suitability": "Suitability depends on objectives, budget, time horizon and current confirmed terms; outcomes are not guaranteed.",
+      "amenities": [],
+      "views": [],
+      "connectivity": []
+    },
+    "acquisition": {
+      "whatsapp_context": "Binghatti Aquarise private enquiry",
+      "lead_form_context": "Binghatti Aquarise buyer guide",
+      "project_source": "https://www.binghatti.com/en/project/binghatti-aquarise",
+      "status_badge": "Launched / off-plan",
+      "featured": false,
+      "priority": 10
+    },
+    "governance": {
+      "verification_status": "PUBLISHED",
+      "source_references": [
+        "https://www.binghatti.com/en/project/binghatti-aquarise"
+      ],
+      "approved_fields": [
+        "developer",
+        "location",
+        "project status",
+        "property types",
+        "unit mix"
+      ],
+      "pending_fields": [
+        "starting price",
+        "payment plan",
+        "handover",
+        "current availability"
+      ],
+      "last_reviewed": "2026-09-15",
+      "reviewer": "Finding Stories project approval workflow",
+      "publish_state": "PUBLISHED",
+      "data_confidence": "verified"
+    }
+  },
+  "seo": {
+    "indexable": true,
+    "title": "Binghatti Aquarise by Binghatti | Buyer Guide",
+    "description": "Review verified Binghatti Aquarise project facts, residence types and Business Bay context, then request current availability, payment plans or floor plans.",
+    "primary_intent": "Binghatti Aquarise project details",
+    "secondary_intents": [
+      "Binghatti Aquarise availability",
+      "Binghatti Aquarise payment plan",
+      "Binghatti Aquarise floor plans"
+    ],
+    "location": "Business Bay, Dubai",
+    "unit_types": [
+      "Studios and 1 to 4 bedroom residences"
+    ],
+    "launch_status": "Launched / off-plan",
+    "faq": [
+      {
+        "question": "Is current availability at Binghatti Aquarise confirmed?",
+        "answer": "No. Finding Stories will reconfirm current Binghatti Aquarise availability with the developer when you enquire."
+      },
+      {
+        "question": "Can I request Binghatti Aquarise payment plans and floor plans?",
+        "answer": "Yes. Request the latest developer-confirmed documents through the protected enquiry form."
+      }
+    ],
+    "organic_search": {
+      "property_types": [
+        "Apartments"
+      ],
+      "unit_configurations": [
+        "Studios and 1 to 4 bedroom residences"
+      ],
+      "verified_pricing": false,
+      "payment_plan": false,
+      "completion_handover": false,
+      "location_facts": true,
+      "investment_considerations": [
+        "Current terms and exact unit availability require developer reconfirmation."
+      ],
+      "internal_link_context": [
+        "Business Bay",
+        "Binghatti",
+        "Apartments"
+      ],
+      "cta_mappings": {
+        "price": "Request Details",
+        "payment_plan": "Get Payment Plan",
+        "floor_plan": "Request Floor Plans",
+        "availability": "Check Current Availability",
+        "consultation": "Book Private Consultation",
+        "location": "Request Details",
+        "eoi": "Request Details",
+        "investment": "Book Private Consultation",
+        "residence": "Check Current Availability"
+      },
+      "supporting_pages": []
+    },
+    "hero_image": "/assets/brand/finding-stories-monogram.png",
+    "hero_alt": "Finding Stories verified guide for Binghatti Aquarise"
+  },
+  "distribution": {
+    "share_title": "Binghatti Aquarise | Verified Buyer Guide",
+    "share_description": "Review verified Binghatti Aquarise residence types and location context, with current commercial terms reconfirmed privately by Finding Stories.",
+    "share_image": "/assets/brand/finding-stories-monogram.png",
+    "short_project_summary": "A Business Bay project for buyers comparing a broad apartment mix and seeking current release details.",
+    "long_project_summary": "A Business Bay project for buyers comparing a broad apartment mix and seeking current release details. Prices, payment plans, handover and current availability are unavailable until reconfirmed.",
+    "verified_developer_name": "Binghatti",
+    "verified_location_name": "Business Bay, Dubai",
+    "property_types": [
+      "Apartments"
+    ],
+    "availability_disclaimer": "Prices, terms, completion timing and availability can change and must be reconfirmed before commitment.",
+    "brochure_available": false,
+    "floor_plan_available": false,
+    "whatsapp_share_copy": "Review the verified Binghatti Aquarise buyer guide and request current details privately:",
+    "social_copy_short": "A Business Bay project for buyers comparing a broad apartment mix and seeking current release details.",
+    "social_copy_medium": "A Business Bay project for buyers comparing a broad apartment mix and seeking current release details. Current terms and availability require reconfirmation.",
+    "social_copy_long": "A Business Bay project for buyers comparing a broad apartment mix and seeking current release details. Finding Stories publishes only reviewed facts; unavailable; request current developer-confirmed details.",
+    "linkedin_copy": "A Business Bay project for buyers comparing a broad apartment mix and seeking current release details. Finding Stories separates verified project facts from commercial details that still require developer reconfirmation. Request a private buyer review before making a commitment.",
+    "instagram_caption": "A Business Bay project for buyers comparing a broad apartment mix and seeking current release details. Current terms and availability require reconfirmation. #UAEProperty #FindingStories",
+    "facebook_copy": "A Business Bay project for buyers comparing a broad apartment mix and seeking current release details. Review verified facts and request current terms privately from Finding Stories.",
+    "x_copy": "Binghatti Aquarise in Business Bay: verified residence context, with current commercial terms reconfirmed privately by Finding Stories.",
+    "directory_summary": "A Business Bay project for buyers comparing a broad apartment mix and seeking current release details. Current commercial terms and availability are not asserted.",
+    "citation_summary": "Binghatti Aquarise is a apartments project by Binghatti in Business Bay, Dubai.",
+    "outreach_summary": "Finding Stories has published a source-reviewed buyer guide for Binghatti Aquarise, using the official developer record.",
+    "press_summary": "A review-ready Finding Stories briefing covers Binghatti Aquarise, its verified location and residence mix without asserting live inventory.",
+    "approved_external_links": [
+      "https://www.binghatti.com/en/project/binghatti-aquarise"
+    ],
+    "source_of_truth_notes": "Facts were retrieved from the official developer record on 2026-09-15; unavailable commercial fields are deliberately omitted."
+  }
+}

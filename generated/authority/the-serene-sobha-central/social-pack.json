@@ -1,0 +1,134 @@
+{
+  "project": "The Serene at Sobha Central",
+  "project_slug": "the-serene-sobha-central",
+  "campaign": "the-serene-sobha-central-project-launch",
+  "canonical_url": "https://www.finding-stories.com/projects/the-serene-sobha-central",
+  "review_required": true,
+  "external_action_performed": false,
+  "approval_owner": "Finding Stories authorized operator",
+  "buyer_intent": "The Serene at Sobha Central project details",
+  "landing_page": "https://www.finding-stories.com/projects/the-serene-sobha-central",
+  "cta": "Request current availability or speak with an advisor",
+  "conversion_events": [
+    "whatsapp",
+    "enquiry_started",
+    "successful lead submission"
+  ],
+  "attribution_note": "Existing first/latest-touch UTM capture carries source data into the lead record and notification; do not alter canonical links.",
+  "status": "prepared",
+  "published": false,
+  "visual": {
+    "reference": "/assets/brand/finding-stories-monogram.png",
+    "alt": "Finding Stories verified guide for The Serene at Sobha Central",
+    "rights_check_required": true
+  },
+  "sequence": [
+    {
+      "order": 1,
+      "channel": "linkedin"
+    },
+    {
+      "order": 2,
+      "channel": "instagram"
+    },
+    {
+      "order": 3,
+      "channel": "facebook"
+    },
+    {
+      "order": 4,
+      "channel": "x"
+    },
+    {
+      "order": 5,
+      "channel": "whatsapp"
+    }
+  ],
+  "channels": {
+    "linkedin": {
+      "headline": "The Serene at Sobha Central | Verified Buyer Guide",
+      "short": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha.",
+      "medium": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Current terms and availability require reconfirmation.",
+      "long": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Finding Stories separates verified project facts from commercial details that still require developer reconfirmation. Request a private buyer review before making a commitment.",
+      "caption": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Finding Stories separates verified project facts from commercial details that still require developer reconfirmation. Request a private buyer review before making a commitment.",
+      "cta": "Review the buyer guide and request current information privately.",
+      "canonical_url": "https://www.finding-stories.com/projects/the-serene-sobha-central",
+      "tracked_url": "https://www.finding-stories.com/projects/the-serene-sobha-central?utm_source=linkedin&utm_medium=organic_social&utm_campaign=the-serene-sobha-central-project-launch&utm_content=project_post",
+      "facts_used": [
+        "Sobha Realty",
+        "Jebel Ali, Dubai",
+        "Apartments"
+      ],
+      "disclaimer": "Prices, terms, completion timing and availability can change and must be reconfirmed before commitment.",
+      "publishing_status": "prepared"
+    },
+    "instagram": {
+      "headline": "The Serene at Sobha Central | Verified Buyer Guide",
+      "short": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha.",
+      "medium": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Current terms and availability require reconfirmation.",
+      "long": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Finding Stories publishes only reviewed facts; unavailable; request current developer-confirmed details.",
+      "caption": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Current terms and availability require reconfirmation. #UAEProperty #FindingStories",
+      "cta": "Review the buyer guide and request current information privately.",
+      "canonical_url": "https://www.finding-stories.com/projects/the-serene-sobha-central",
+      "tracked_url": "https://www.finding-stories.com/projects/the-serene-sobha-central?utm_source=instagram&utm_medium=organic_social&utm_campaign=the-serene-sobha-central-project-launch&utm_content=bio_link",
+      "facts_used": [
+        "Sobha Realty",
+        "Jebel Ali, Dubai",
+        "Apartments"
+      ],
+      "disclaimer": "Prices, terms, completion timing and availability can change and must be reconfirmed before commitment.",
+      "publishing_status": "prepared"
+    },
+    "facebook": {
+      "headline": "The Serene at Sobha Central | Verified Buyer Guide",
+      "short": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha.",
+      "medium": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Current terms and availability require reconfirmation.",
+      "long": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Finding Stories publishes only reviewed facts; unavailable; request current developer-confirmed details.",
+      "caption": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Review verified facts and request current terms privately from Finding Stories.",
+      "cta": "Review the buyer guide and request current information privately.",
+      "canonical_url": "https://www.finding-stories.com/projects/the-serene-sobha-central",
+      "tracked_url": "https://www.finding-stories.com/projects/the-serene-sobha-central?utm_source=facebook&utm_medium=organic_social&utm_campaign=the-serene-sobha-central-project-launch&utm_content=project_post",
+      "facts_used": [
+        "Sobha Realty",
+        "Jebel Ali, Dubai",
+        "Apartments"
+      ],
+      "disclaimer": "Prices, terms, completion timing and availability can change and must be reconfirmed before commitment.",
+      "publishing_status": "prepared"
+    },
+    "x": {
+      "headline": "The Serene at Sobha Central | Verified Buyer Guide",
+      "short": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha.",
+      "medium": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Current terms and availability require reconfirmation.",
+      "long": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Finding Stories publishes only reviewed facts; unavailable; request current developer-confirmed details.",
+      "caption": "The Serene at Sobha Central in Jebel Ali: verified residence context, with current commercial terms reconfirmed privately by Finding Stories.",
+      "cta": "Review the buyer guide and request current information privately.",
+      "canonical_url": "https://www.finding-stories.com/projects/the-serene-sobha-central",
+      "tracked_url": "https://www.finding-stories.com/projects/the-serene-sobha-central?utm_source=x&utm_medium=organic_social&utm_campaign=the-serene-sobha-central-project-launch&utm_content=project_post",
+      "facts_used": [
+        "Sobha Realty",
+        "Jebel Ali, Dubai",
+        "Apartments"
+      ],
+      "disclaimer": "Prices, terms, completion timing and availability can change and must be reconfirmed before commitment.",
+      "publishing_status": "prepared"
+    },
+    "whatsapp": {
+      "headline": "The Serene at Sobha Central | Verified Buyer Guide",
+      "short": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha.",
+      "medium": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Current terms and availability require reconfirmation.",
+      "long": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Finding Stories publishes only reviewed facts; unavailable; request current developer-confirmed details.",
+      "caption": "Review the verified The Serene at Sobha Central buyer guide and request current details privately:",
+      "cta": "Review the buyer guide and request current information privately.",
+      "canonical_url": "https://www.finding-stories.com/projects/the-serene-sobha-central",
+      "tracked_url": "https://www.finding-stories.com/projects/the-serene-sobha-central?utm_source=whatsapp&utm_medium=whatsapp_share&utm_campaign=the-serene-sobha-central-project-launch&utm_content=direct_share",
+      "facts_used": [
+        "Sobha Realty",
+        "Jebel Ali, Dubai",
+        "Apartments"
+      ],
+      "disclaimer": "Prices, terms, completion timing and availability can change and must be reconfirmed before commitment.",
+      "publishing_status": "prepared"
+    }
+  }
+}

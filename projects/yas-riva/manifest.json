@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "project": {
+    "slug": "yas-riva",
+    "name": "Yas Riva",
+    "developer": "Aldar",
+    "path": "/projects/yas-riva"
+  },
+  "facts": {
+    "developer": {
+      "value": "Aldar",
+      "source": "https://www.aldar.com/en/news-and-media/aldar-launches-yas-riva",
+      "verified": true
+    },
+    "location": {
+      "value": "Abu Dhabi, Abu Dhabi",
+      "source": "https://www.aldar.com/en/news-and-media/aldar-launches-yas-riva",
+      "verified": true
+    },
+    "project_status": {
+      "value": "Launched / off-plan",
+      "source": "https://www.aldar.com/en/news-and-media/aldar-launches-yas-riva",
+      "verified": true
+    },
+    "property_types": {
+      "value": "Villas",
+      "source": "https://www.aldar.com/en/news-and-media/aldar-launches-yas-riva",
+      "verified": true
+    },
+    "unit_mix": {
+      "value": "4, 5 and 6 bedroom villas",
+      "source": "https://www.aldar.com/en/news-and-media/aldar-launches-yas-riva",
+      "verified": true
+    }
+  },
+  "assets": [],
+  "rejected_assets": [],
+  "lead": {
+    "endpoint": "/api/leads",
+    "campaign_id": "yas-riva-project-launch",
+    "project_id": "yas-riva"
+  },
+  "platform": {
+    "identity": {
+      "development": null,
+      "area": "Abu Dhabi",
+      "emirate": "Abu Dhabi",
+      "project_status": "Launched / off-plan",
+      "launch_status": "Launched / off-plan",
+      "sales_status": null
+    },
+    "commercial": {
+      "starting_price": null,
+      "currency": "AED",
+      "price_range": null,
+      "payment_plan": null,
+      "eoi_information": null,
+      "reservation_requirements": null,
+      "service_charge": null,
+      "handover": null,
+      "post_handover_plan": null
+    },
+    "product": {
+      "property_types": [
+        "Villas"
+      ],
+      "unit_types": [
+        "4, 5 and 6 bedroom villas"
+      ],
+      "bedroom_configurations": [
+        "4 bedroom",
+        "5 bedroom",
+        "6 bedroom"
+      ],
+      "size_ranges": [],
+      "furnishing_status": null,
+      "branded_residence": false,
+      "positioning": []
+    },
+    "experience": {
+      "summary": "A canal-front villa collection on Yas Island, documented without implying remaining stock.",
+      "buyer_suitability": "For buyers comparing the verified location and residence mix; suitability requires an individual review.",
+      "investor_suitability": "Suitability depends on objectives, budget, time horizon and current confirmed terms; outcomes are not guaranteed.",
+      "amenities": [],
+      "views": [],
+      "connectivity": []
+    },
+    "acquisition": {
+      "whatsapp_context": "Yas Riva private enquiry",
+      "lead_form_context": "Yas Riva buyer guide",
+      "project_source": "https://www.aldar.com/en/news-and-media/aldar-launches-yas-riva",
+      "status_badge": "Launched / off-plan",
+      "featured": false,
+      "priority": 10
+    },
+    "governance": {
+      "verification_status": "PUBLISHED",
+      "source_references": [
+        "https://www.aldar.com/en/news-and-media/aldar-launches-yas-riva"
+      ],
+      "approved_fields": [
+        "developer",
+        "location",
+        "project status",
+        "property types",
+        "unit mix"
+      ],
+      "pending_fields": [
+        "starting price",
+        "payment plan",
+        "handover",
+        "current availability"
+      ],
+      "last_reviewed": "2026-09-15",
+      "reviewer": "Finding Stories project approval workflow",
+      "publish_state": "PUBLISHED",
+      "data_confidence": "verified"
+    }
+  },
+  "seo": {
+    "indexable": true,
+    "title": "Yas Riva by Aldar | Buyer Guide",
+    "description": "Review verified Yas Riva project facts, residence types and Abu Dhabi context, then request current availability, payment plans or floor plans.",
+    "primary_intent": "Yas Riva project details",
+    "secondary_intents": [
+      "Yas Riva availability",
+      "Yas Riva payment plan",
+      "Yas Riva floor plans"
+    ],
+    "location": "Abu Dhabi, Abu Dhabi",
+    "unit_types": [
+      "4, 5 and 6 bedroom villas"
+    ],
+    "launch_status": "Launched / off-plan",
+    "faq": [
+      {
+        "question": "Is current availability at Yas Riva confirmed?",
+        "answer": "No. Finding Stories will reconfirm current Yas Riva availability with the developer when you enquire."
+      },
+      {
+        "question": "Can I request Yas Riva payment plans and floor plans?",
+        "answer": "Yes. Request the latest developer-confirmed documents through the protected enquiry form."
+      }
+    ],
+    "organic_search": {
+      "property_types": [
+        "Villas"
+      ],
+      "unit_configurations": [
+        "4, 5 and 6 bedroom villas"
+      ],
+      "verified_pricing": false,
+      "payment_plan": false,
+      "completion_handover": false,
+      "location_facts": true,
+      "investment_considerations": [
+        "Current terms and exact unit availability require developer reconfirmation."
+      ],
+      "internal_link_context": [
+        "Abu Dhabi",
+        "Aldar",
+        "Villas"
+      ],
+      "cta_mappings": {
+        "price": "Request Details",
+        "payment_plan": "Get Payment Plan",
+        "floor_plan": "Request Floor Plans",
+        "availability": "Check Current Availability",
+        "consultation": "Book Private Consultation",
+        "location": "Request Details",
+        "eoi": "Request Details",
+        "investment": "Book Private Consultation",
+        "residence": "Check Current Availability"
+      },
+      "supporting_pages": []
+    },
+    "hero_image": "/assets/brand/finding-stories-monogram.png",
+    "hero_alt": "Finding Stories verified guide for Yas Riva"
+  },
+  "distribution": {
+    "share_title": "Yas Riva | Verified Buyer Guide",
+    "share_description": "Review verified Yas Riva residence types and location context, with current commercial terms reconfirmed privately by Finding Stories.",
+    "share_image": "/assets/brand/finding-stories-monogram.png",
+    "short_project_summary": "A canal-front villa collection on Yas Island, documented without implying remaining stock.",
+    "long_project_summary": "A canal-front villa collection on Yas Island, documented without implying remaining stock. Prices, payment plans, handover and current availability are unavailable until reconfirmed.",
+    "verified_developer_name": "Aldar",
+    "verified_location_name": "Abu Dhabi, Abu Dhabi",
+    "property_types": [
+      "Villas"
+    ],
+    "availability_disclaimer": "Prices, terms, completion timing and availability can change and must be reconfirmed before commitment.",
+    "brochure_available": false,
+    "floor_plan_available": false,
+    "whatsapp_share_copy": "Review the verified Yas Riva buyer guide and request current details privately:",
+    "social_copy_short": "A canal-front villa collection on Yas Island, documented without implying remaining stock.",
+    "social_copy_medium": "A canal-front villa collection on Yas Island, documented without implying remaining stock. Current terms and availability require reconfirmation.",
+    "social_copy_long": "A canal-front villa collection on Yas Island, documented without implying remaining stock. Finding Stories publishes only reviewed facts; unavailable; request current developer-confirmed details.",
+    "linkedin_copy": "A canal-front villa collection on Yas Island, documented without implying remaining stock. Finding Stories separates verified project facts from commercial details that still require developer reconfirmation. Request a private buyer review before making a commitment.",
+    "instagram_caption": "A canal-front villa collection on Yas Island, documented without implying remaining stock. Current terms and availability require reconfirmation. #UAEProperty #FindingStories",
+    "facebook_copy": "A canal-front villa collection on Yas Island, documented without implying remaining stock. Review verified facts and request current terms privately from Finding Stories.",
+    "x_copy": "Yas Riva in Abu Dhabi: verified residence context, with current commercial terms reconfirmed privately by Finding Stories.",
+    "directory_summary": "A canal-front villa collection on Yas Island, documented without implying remaining stock. Current commercial terms and availability are not asserted.",
+    "citation_summary": "Yas Riva is a villas project by Aldar in Abu Dhabi, Abu Dhabi.",
+    "outreach_summary": "Finding Stories has published a source-reviewed buyer guide for Yas Riva, using the official developer record.",
+    "press_summary": "A review-ready Finding Stories briefing covers Yas Riva, its verified location and residence mix without asserting live inventory.",
+    "approved_external_links": [
+      "https://www.aldar.com/en/news-and-media/aldar-launches-yas-riva"
+    ],
+    "source_of_truth_notes": "Facts were retrieved from the official developer record on 2026-09-15; unavailable commercial fields are deliberately omitted."
+  }
+}

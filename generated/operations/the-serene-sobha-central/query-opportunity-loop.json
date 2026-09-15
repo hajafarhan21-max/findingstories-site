@@ -1,0 +1,39 @@
+{
+  "project": "The Serene at Sobha Central",
+  "project_slug": "the-serene-sobha-central",
+  "campaign": "the-serene-sobha-central-project-launch",
+  "canonical_url": "https://www.finding-stories.com/projects/the-serene-sobha-central",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/the-serene-sobha-central/manifest.json",
+    "generated/distribution/the-serene-sobha-central.json",
+    "generated/authority/the-serene-sobha-central"
+  ],
+  "external_action_performed": false,
+  "data_status": "unavailable",
+  "allowed_classes": [
+    "BRANDED",
+    "TRANSACTIONAL",
+    "PRICE",
+    "PAYMENT_PLAN",
+    "FLOOR_PLAN",
+    "LOCATION",
+    "EOI",
+    "TOWNHOUSE",
+    "VILLA",
+    "INVESTMENT",
+    "COMPLETION",
+    "DEVELOPER",
+    "OTHER"
+  ],
+  "allowed_decisions": [
+    "already well answered",
+    "needs stronger section",
+    "needs FAQ improvement",
+    "needs internal link improvement",
+    "needs supporting content",
+    "not worth targeting"
+  ],
+  "supporting_page_gate": "Recommend a supporting page only when real query evidence shows materially distinct intent and the manifest contains enough verified buyer-useful facts. Never create one page per keyword.",
+  "queries": []
+}

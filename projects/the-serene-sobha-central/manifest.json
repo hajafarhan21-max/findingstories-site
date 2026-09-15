@@ -1,0 +1,211 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "project": {
+    "slug": "the-serene-sobha-central",
+    "name": "The Serene at Sobha Central",
+    "developer": "Sobha Realty",
+    "path": "/projects/the-serene-sobha-central"
+  },
+  "facts": {
+    "developer": {
+      "value": "Sobha Realty",
+      "source": "https://sobharealty.com/properties-in-dubai/sobha-central/the-serene",
+      "verified": true
+    },
+    "location": {
+      "value": "Jebel Ali, Dubai",
+      "source": "https://sobharealty.com/properties-in-dubai/sobha-central/the-serene",
+      "verified": true
+    },
+    "project_status": {
+      "value": "New launch",
+      "source": "https://sobharealty.com/properties-in-dubai/sobha-central/the-serene",
+      "verified": true
+    },
+    "property_types": {
+      "value": "Apartments",
+      "source": "https://sobharealty.com/properties-in-dubai/sobha-central/the-serene",
+      "verified": true
+    },
+    "unit_mix": {
+      "value": "1 and 2 bedroom apartments",
+      "source": "https://sobharealty.com/properties-in-dubai/sobha-central/the-serene",
+      "verified": true
+    }
+  },
+  "assets": [],
+  "rejected_assets": [],
+  "lead": {
+    "endpoint": "/api/leads",
+    "campaign_id": "the-serene-sobha-central-project-launch",
+    "project_id": "the-serene-sobha-central"
+  },
+  "platform": {
+    "identity": {
+      "development": null,
+      "area": "Jebel Ali",
+      "emirate": "Dubai",
+      "project_status": "New launch",
+      "launch_status": "New launch",
+      "sales_status": null
+    },
+    "commercial": {
+      "starting_price": null,
+      "currency": "AED",
+      "price_range": null,
+      "payment_plan": null,
+      "eoi_information": null,
+      "reservation_requirements": null,
+      "service_charge": null,
+      "handover": null,
+      "post_handover_plan": null
+    },
+    "product": {
+      "property_types": [
+        "Apartments"
+      ],
+      "unit_types": [
+        "1 and 2 bedroom apartments"
+      ],
+      "bedroom_configurations": [
+        "1 bedroom",
+        "2 bedroom"
+      ],
+      "size_ranges": [],
+      "furnishing_status": null,
+      "branded_residence": false,
+      "positioning": []
+    },
+    "experience": {
+      "summary": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha.",
+      "buyer_suitability": "For buyers comparing the verified location and residence mix; suitability requires an individual review.",
+      "investor_suitability": "Suitability depends on objectives, budget, time horizon and current confirmed terms; outcomes are not guaranteed.",
+      "amenities": [],
+      "views": [],
+      "connectivity": []
+    },
+    "acquisition": {
+      "whatsapp_context": "The Serene at Sobha Central private enquiry",
+      "lead_form_context": "The Serene at Sobha Central buyer guide",
+      "project_source": "https://sobharealty.com/properties-in-dubai/sobha-central/the-serene",
+      "status_badge": "New launch",
+      "featured": false,
+      "priority": 10
+    },
+    "governance": {
+      "verification_status": "PUBLISHED",
+      "source_references": [
+        "https://sobharealty.com/properties-in-dubai/sobha-central/the-serene"
+      ],
+      "approved_fields": [
+        "developer",
+        "location",
+        "project status",
+        "property types",
+        "unit mix"
+      ],
+      "pending_fields": [
+        "starting price",
+        "payment plan",
+        "handover",
+        "current availability"
+      ],
+      "last_reviewed": "2026-09-15",
+      "reviewer": "Finding Stories project approval workflow",
+      "publish_state": "PUBLISHED",
+      "data_confidence": "verified"
+    }
+  },
+  "seo": {
+    "indexable": true,
+    "title": "The Serene at Sobha Central by Sobha Realty | Buyer Guide",
+    "description": "Review verified The Serene at Sobha Central project facts, residence types and Jebel Ali context, then request current availability, payment plans or floor plans.",
+    "primary_intent": "The Serene at Sobha Central project details",
+    "secondary_intents": [
+      "The Serene at Sobha Central availability",
+      "The Serene at Sobha Central payment plan",
+      "The Serene at Sobha Central floor plans"
+    ],
+    "location": "Jebel Ali, Dubai",
+    "unit_types": [
+      "1 and 2 bedroom apartments"
+    ],
+    "launch_status": "New launch",
+    "faq": [
+      {
+        "question": "Is current availability at The Serene at Sobha Central confirmed?",
+        "answer": "No. Finding Stories will reconfirm current The Serene at Sobha Central availability with the developer when you enquire."
+      },
+      {
+        "question": "Can I request The Serene at Sobha Central payment plans and floor plans?",
+        "answer": "Yes. Request the latest developer-confirmed documents through the protected enquiry form."
+      }
+    ],
+    "organic_search": {
+      "property_types": [
+        "Apartments"
+      ],
+      "unit_configurations": [
+        "1 and 2 bedroom apartments"
+      ],
+      "verified_pricing": false,
+      "payment_plan": false,
+      "completion_handover": false,
+      "location_facts": true,
+      "investment_considerations": [
+        "Current terms and exact unit availability require developer reconfirmation."
+      ],
+      "internal_link_context": [
+        "Jebel Ali",
+        "Sobha Realty",
+        "Apartments"
+      ],
+      "cta_mappings": {
+        "price": "Request Details",
+        "payment_plan": "Get Payment Plan",
+        "floor_plan": "Request Floor Plans",
+        "availability": "Check Current Availability",
+        "consultation": "Book Private Consultation",
+        "location": "Request Details",
+        "eoi": "Request Details",
+        "investment": "Book Private Consultation",
+        "residence": "Check Current Availability"
+      },
+      "supporting_pages": []
+    },
+    "hero_image": "/assets/brand/finding-stories-monogram.png",
+    "hero_alt": "Finding Stories verified guide for The Serene at Sobha Central"
+  },
+  "distribution": {
+    "share_title": "The Serene at Sobha Central | Verified Buyer Guide",
+    "share_description": "Review verified The Serene at Sobha Central residence types and location context, with current commercial terms reconfirmed privately by Finding Stories.",
+    "share_image": "/assets/brand/finding-stories-monogram.png",
+    "short_project_summary": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha.",
+    "long_project_summary": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Prices, payment plans, handover and current availability are unavailable until reconfirmed.",
+    "verified_developer_name": "Sobha Realty",
+    "verified_location_name": "Jebel Ali, Dubai",
+    "property_types": [
+      "Apartments"
+    ],
+    "availability_disclaimer": "Prices, terms, completion timing and availability can change and must be reconfirmed before commitment.",
+    "brochure_available": false,
+    "floor_plan_available": false,
+    "whatsapp_share_copy": "Review the verified The Serene at Sobha Central buyer guide and request current details privately:",
+    "social_copy_short": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha.",
+    "social_copy_medium": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Current terms and availability require reconfirmation.",
+    "social_copy_long": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Finding Stories publishes only reviewed facts; unavailable; request current developer-confirmed details.",
+    "linkedin_copy": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Finding Stories separates verified project facts from commercial details that still require developer reconfirmation. Request a private buyer review before making a commitment.",
+    "instagram_caption": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Current terms and availability require reconfirmation. #UAEProperty #FindingStories",
+    "facebook_copy": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Review verified facts and request current terms privately from Finding Stories.",
+    "x_copy": "The Serene at Sobha Central in Jebel Ali: verified residence context, with current commercial terms reconfirmed privately by Finding Stories.",
+    "directory_summary": "A Sobha Central apartment release documented with only the residence mix confirmed by Sobha. Current commercial terms and availability are not asserted.",
+    "citation_summary": "The Serene at Sobha Central is a apartments project by Sobha Realty in Jebel Ali, Dubai.",
+    "outreach_summary": "Finding Stories has published a source-reviewed buyer guide for The Serene at Sobha Central, using the official developer record.",
+    "press_summary": "A review-ready Finding Stories briefing covers The Serene at Sobha Central, its verified location and residence mix without asserting live inventory.",
+    "approved_external_links": [
+      "https://sobharealty.com/properties-in-dubai/sobha-central/the-serene"
+    ],
+    "source_of_truth_notes": "Facts were retrieved from the official developer record on 2026-09-15; unavailable commercial fields are deliberately omitted."
+  }
+}

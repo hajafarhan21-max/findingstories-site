@@ -1,0 +1,212 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "project": {
+    "slug": "chelsea-residences",
+    "name": "Chelsea Residences",
+    "developer": "DAMAC",
+    "path": "/projects/chelsea-residences"
+  },
+  "facts": {
+    "developer": {
+      "value": "DAMAC",
+      "source": "https://www.damacproperties.com/en/projects/chelsea-residences-by-damac",
+      "verified": true
+    },
+    "location": {
+      "value": "Dubai Maritime City, Dubai",
+      "source": "https://www.damacproperties.com/en/projects/chelsea-residences-by-damac",
+      "verified": true
+    },
+    "project_status": {
+      "value": "Launched / off-plan",
+      "source": "https://www.damacproperties.com/en/projects/chelsea-residences-by-damac",
+      "verified": true
+    },
+    "property_types": {
+      "value": "Apartments",
+      "source": "https://www.damacproperties.com/en/projects/chelsea-residences-by-damac",
+      "verified": true
+    },
+    "unit_mix": {
+      "value": "1, 2 and 3 bedroom apartments",
+      "source": "https://www.damacproperties.com/en/projects/chelsea-residences-by-damac",
+      "verified": true
+    }
+  },
+  "assets": [],
+  "rejected_assets": [],
+  "lead": {
+    "endpoint": "/api/leads",
+    "campaign_id": "chelsea-residences-project-launch",
+    "project_id": "chelsea-residences"
+  },
+  "platform": {
+    "identity": {
+      "development": null,
+      "area": "Dubai Maritime City",
+      "emirate": "Dubai",
+      "project_status": "Launched / off-plan",
+      "launch_status": "Launched / off-plan",
+      "sales_status": null
+    },
+    "commercial": {
+      "starting_price": null,
+      "currency": "AED",
+      "price_range": null,
+      "payment_plan": null,
+      "eoi_information": null,
+      "reservation_requirements": null,
+      "service_charge": null,
+      "handover": null,
+      "post_handover_plan": null
+    },
+    "product": {
+      "property_types": [
+        "Apartments"
+      ],
+      "unit_types": [
+        "1, 2 and 3 bedroom apartments"
+      ],
+      "bedroom_configurations": [
+        "1 bedroom",
+        "2 bedroom",
+        "3 bedroom"
+      ],
+      "size_ranges": [],
+      "furnishing_status": null,
+      "branded_residence": false,
+      "positioning": []
+    },
+    "experience": {
+      "summary": "A DAMAC apartment project in Dubai Maritime City with a verified one-to-three-bedroom residence mix.",
+      "buyer_suitability": "For buyers comparing the verified location and residence mix; suitability requires an individual review.",
+      "investor_suitability": "Suitability depends on objectives, budget, time horizon and current confirmed terms; outcomes are not guaranteed.",
+      "amenities": [],
+      "views": [],
+      "connectivity": []
+    },
+    "acquisition": {
+      "whatsapp_context": "Chelsea Residences private enquiry",
+      "lead_form_context": "Chelsea Residences buyer guide",
+      "project_source": "https://www.damacproperties.com/en/projects/chelsea-residences-by-damac",
+      "status_badge": "Launched / off-plan",
+      "featured": false,
+      "priority": 10
+    },
+    "governance": {
+      "verification_status": "PUBLISHED",
+      "source_references": [
+        "https://www.damacproperties.com/en/projects/chelsea-residences-by-damac"
+      ],
+      "approved_fields": [
+        "developer",
+        "location",
+        "project status",
+        "property types",
+        "unit mix"
+      ],
+      "pending_fields": [
+        "starting price",
+        "payment plan",
+        "handover",
+        "current availability"
+      ],
+      "last_reviewed": "2026-09-15",
+      "reviewer": "Finding Stories project approval workflow",
+      "publish_state": "PUBLISHED",
+      "data_confidence": "verified"
+    }
+  },
+  "seo": {
+    "indexable": true,
+    "title": "Chelsea Residences by DAMAC | Buyer Guide",
+    "description": "Review verified Chelsea Residences project facts, residence types and Dubai Maritime City context, then request current availability, payment plans or floor plans.",
+    "primary_intent": "Chelsea Residences project details",
+    "secondary_intents": [
+      "Chelsea Residences availability",
+      "Chelsea Residences payment plan",
+      "Chelsea Residences floor plans"
+    ],
+    "location": "Dubai Maritime City, Dubai",
+    "unit_types": [
+      "1, 2 and 3 bedroom apartments"
+    ],
+    "launch_status": "Launched / off-plan",
+    "faq": [
+      {
+        "question": "Is current availability at Chelsea Residences confirmed?",
+        "answer": "No. Finding Stories will reconfirm current Chelsea Residences availability with the developer when you enquire."
+      },
+      {
+        "question": "Can I request Chelsea Residences payment plans and floor plans?",
+        "answer": "Yes. Request the latest developer-confirmed documents through the protected enquiry form."
+      }
+    ],
+    "organic_search": {
+      "property_types": [
+        "Apartments"
+      ],
+      "unit_configurations": [
+        "1, 2 and 3 bedroom apartments"
+      ],
+      "verified_pricing": false,
+      "payment_plan": false,
+      "completion_handover": false,
+      "location_facts": true,
+      "investment_considerations": [
+        "Current terms and exact unit availability require developer reconfirmation."
+      ],
+      "internal_link_context": [
+        "Dubai Maritime City",
+        "DAMAC",
+        "Apartments"
+      ],
+      "cta_mappings": {
+        "price": "Request Details",
+        "payment_plan": "Get Payment Plan",
+        "floor_plan": "Request Floor Plans",
+        "availability": "Check Current Availability",
+        "consultation": "Book Private Consultation",
+        "location": "Request Details",
+        "eoi": "Request Details",
+        "investment": "Book Private Consultation",
+        "residence": "Check Current Availability"
+      },
+      "supporting_pages": []
+    },
+    "hero_image": "/assets/brand/finding-stories-monogram.png",
+    "hero_alt": "Finding Stories verified guide for Chelsea Residences"
+  },
+  "distribution": {
+    "share_title": "Chelsea Residences | Verified Buyer Guide",
+    "share_description": "Review verified Chelsea Residences residence types and location context, with current commercial terms reconfirmed privately by Finding Stories.",
+    "share_image": "/assets/brand/finding-stories-monogram.png",
+    "short_project_summary": "A DAMAC apartment project in Dubai Maritime City with a verified one-to-three-bedroom residence mix.",
+    "long_project_summary": "A DAMAC apartment project in Dubai Maritime City with a verified one-to-three-bedroom residence mix. Prices, payment plans, handover and current availability are unavailable until reconfirmed.",
+    "verified_developer_name": "DAMAC",
+    "verified_location_name": "Dubai Maritime City, Dubai",
+    "property_types": [
+      "Apartments"
+    ],
+    "availability_disclaimer": "Prices, terms, completion timing and availability can change and must be reconfirmed before commitment.",
+    "brochure_available": false,
+    "floor_plan_available": false,
+    "whatsapp_share_copy": "Review the verified Chelsea Residences buyer guide and request current details privately:",
+    "social_copy_short": "A DAMAC apartment project in Dubai Maritime City with a verified one-to-three-bedroom residence mix.",
+    "social_copy_medium": "A DAMAC apartment project in Dubai Maritime City with a verified one-to-three-bedroom residence mix. Current terms and availability require reconfirmation.",
+    "social_copy_long": "A DAMAC apartment project in Dubai Maritime City with a verified one-to-three-bedroom residence mix. Finding Stories publishes only reviewed facts; unavailable; request current developer-confirmed details.",
+    "linkedin_copy": "A DAMAC apartment project in Dubai Maritime City with a verified one-to-three-bedroom residence mix. Finding Stories separates verified project facts from commercial details that still require developer reconfirmation. Request a private buyer review before making a commitment.",
+    "instagram_caption": "A DAMAC apartment project in Dubai Maritime City with a verified one-to-three-bedroom residence mix. Current terms and availability require reconfirmation. #UAEProperty #FindingStories",
+    "facebook_copy": "A DAMAC apartment project in Dubai Maritime City with a verified one-to-three-bedroom residence mix. Review verified facts and request current terms privately from Finding Stories.",
+    "x_copy": "Chelsea Residences in Dubai Maritime City: verified residence context, with current commercial terms reconfirmed privately by Finding Stories.",
+    "directory_summary": "A DAMAC apartment project in Dubai Maritime City with a verified one-to-three-bedroom residence mix. Current commercial terms and availability are not asserted.",
+    "citation_summary": "Chelsea Residences is a apartments project by DAMAC in Dubai Maritime City, Dubai.",
+    "outreach_summary": "Finding Stories has published a source-reviewed buyer guide for Chelsea Residences, using the official developer record.",
+    "press_summary": "A review-ready Finding Stories briefing covers Chelsea Residences, its verified location and residence mix without asserting live inventory.",
+    "approved_external_links": [
+      "https://www.damacproperties.com/en/projects/chelsea-residences-by-damac"
+    ],
+    "source_of_truth_notes": "Facts were retrieved from the official developer record on 2026-09-15; unavailable commercial fields are deliberately omitted."
+  }
+}

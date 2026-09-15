@@ -1,0 +1,31 @@
+{
+  "project": "Terra Gardens",
+  "project_slug": "terra-gardens",
+  "campaign": "terra-gardens-project-launch",
+  "canonical_url": "https://www.finding-stories.com/projects/terra-gardens",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/terra-gardens/manifest.json",
+    "generated/distribution/terra-gardens.json",
+    "generated/authority/terra-gardens"
+  ],
+  "external_action_performed": false,
+  "decision": "NO_CHANGE",
+  "evidence_available": false,
+  "rule": {
+    "update_only_if": [
+      "Verified project facts changed.",
+      "Search Console reveals a meaningful query gap.",
+      "Buyer questions reveal missing useful content.",
+      "Conversion behavior provides evidence of confusion.",
+      "Internal linking is demonstrably insufficient.",
+      "Stale mutable facts require reconfirmation."
+    ],
+    "do_not": [
+      "Rewrite without evidence.",
+      "Churn metadata on a schedule.",
+      "Change working sections based on speculation."
+    ]
+  },
+  "reason": "No current Search Console, buyer-question or conversion evidence is available, and no verified fact change was identified."
+}

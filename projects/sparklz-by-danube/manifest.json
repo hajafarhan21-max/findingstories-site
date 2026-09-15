@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "project": {
+    "slug": "sparklz-by-danube",
+    "name": "Sparklz by Danube",
+    "developer": "Danube",
+    "path": "/projects/sparklz-by-danube"
+  },
+  "facts": {
+    "developer": {
+      "value": "Danube",
+      "source": "https://danubeproperties.com/projects/sparklz/",
+      "verified": true
+    },
+    "location": {
+      "value": "Al Furjan, Dubai",
+      "source": "https://danubeproperties.com/projects/sparklz/",
+      "verified": true
+    },
+    "project_status": {
+      "value": "Launched / under construction",
+      "source": "https://danubeproperties.com/projects/sparklz/",
+      "verified": true
+    },
+    "property_types": {
+      "value": "Apartments",
+      "source": "https://danubeproperties.com/projects/sparklz/",
+      "verified": true
+    },
+    "unit_mix": {
+      "value": "Studios and 1 to 3 bedroom apartments",
+      "source": "https://danubeproperties.com/projects/sparklz/",
+      "verified": true
+    }
+  },
+  "assets": [],
+  "rejected_assets": [],
+  "lead": {
+    "endpoint": "/api/leads",
+    "campaign_id": "sparklz-by-danube-project-launch",
+    "project_id": "sparklz-by-danube"
+  },
+  "platform": {
+    "identity": {
+      "development": null,
+      "area": "Al Furjan",
+      "emirate": "Dubai",
+      "project_status": "Launched / under construction",
+      "launch_status": "Launched / under construction",
+      "sales_status": null
+    },
+    "commercial": {
+      "starting_price": null,
+      "currency": "AED",
+      "price_range": null,
+      "payment_plan": null,
+      "eoi_information": null,
+      "reservation_requirements": null,
+      "service_charge": null,
+      "handover": null,
+      "post_handover_plan": null
+    },
+    "product": {
+      "property_types": [
+        "Apartments"
+      ],
+      "unit_types": [
+        "Studios and 1 to 3 bedroom apartments"
+      ],
+      "bedroom_configurations": [
+        "Studio",
+        "1 bedroom",
+        "2 bedroom",
+        "3 bedroom"
+      ],
+      "size_ranges": [],
+      "furnishing_status": null,
+      "branded_residence": false,
+      "positioning": []
+    },
+    "experience": {
+      "summary": "An Al Furjan apartment project presented with verified context before buyers request current terms.",
+      "buyer_suitability": "For buyers comparing the verified location and residence mix; suitability requires an individual review.",
+      "investor_suitability": "Suitability depends on objectives, budget, time horizon and current confirmed terms; outcomes are not guaranteed.",
+      "amenities": [],
+      "views": [],
+      "connectivity": []
+    },
+    "acquisition": {
+      "whatsapp_context": "Sparklz by Danube private enquiry",
+      "lead_form_context": "Sparklz by Danube buyer guide",
+      "project_source": "https://danubeproperties.com/projects/sparklz/",
+      "status_badge": "Launched / under construction",
+      "featured": false,
+      "priority": 10
+    },
+    "governance": {
+      "verification_status": "PUBLISHED",
+      "source_references": [
+        "https://danubeproperties.com/projects/sparklz/"
+      ],
+      "approved_fields": [
+        "developer",
+        "location",
+        "project status",
+        "property types",
+        "unit mix"
+      ],
+      "pending_fields": [
+        "starting price",
+        "payment plan",
+        "handover",
+        "current availability"
+      ],
+      "last_reviewed": "2026-09-15",
+      "reviewer": "Finding Stories project approval workflow",
+      "publish_state": "PUBLISHED",
+      "data_confidence": "verified"
+    }
+  },
+  "seo": {
+    "indexable": true,
+    "title": "Sparklz by Danube by Danube | Buyer Guide",
+    "description": "Review verified Sparklz by Danube project facts, residence types and Al Furjan context, then request current availability, payment plans or floor plans.",
+    "primary_intent": "Sparklz by Danube project details",
+    "secondary_intents": [
+      "Sparklz by Danube availability",
+      "Sparklz by Danube payment plan",
+      "Sparklz by Danube floor plans"
+    ],
+    "location": "Al Furjan, Dubai",
+    "unit_types": [
+      "Studios and 1 to 3 bedroom apartments"
+    ],
+    "launch_status": "Launched / under construction",
+    "faq": [
+      {
+        "question": "Is current availability at Sparklz by Danube confirmed?",
+        "answer": "No. Finding Stories will reconfirm current Sparklz by Danube availability with the developer when you enquire."
+      },
+      {
+        "question": "Can I request Sparklz by Danube payment plans and floor plans?",
+        "answer": "Yes. Request the latest developer-confirmed documents through the protected enquiry form."
+      }
+    ],
+    "organic_search": {
+      "property_types": [
+        "Apartments"
+      ],
+      "unit_configurations": [
+        "Studios and 1 to 3 bedroom apartments"
+      ],
+      "verified_pricing": false,
+      "payment_plan": false,
+      "completion_handover": false,
+      "location_facts": true,
+      "investment_considerations": [
+        "Current terms and exact unit availability require developer reconfirmation."
+      ],
+      "internal_link_context": [
+        "Al Furjan",
+        "Danube",
+        "Apartments"
+      ],
+      "cta_mappings": {
+        "price": "Request Details",
+        "payment_plan": "Get Payment Plan",
+        "floor_plan": "Request Floor Plans",
+        "availability": "Check Current Availability",
+        "consultation": "Book Private Consultation",
+        "location": "Request Details",
+        "eoi": "Request Details",
+        "investment": "Book Private Consultation",
+        "residence": "Check Current Availability"
+      },
+      "supporting_pages": []
+    },
+    "hero_image": "/assets/brand/finding-stories-monogram.png",
+    "hero_alt": "Finding Stories verified guide for Sparklz by Danube"
+  },
+  "distribution": {
+    "share_title": "Sparklz by Danube | Verified Buyer Guide",
+    "share_description": "Review verified Sparklz by Danube residence types and location context, with current commercial terms reconfirmed privately by Finding Stories.",
+    "share_image": "/assets/brand/finding-stories-monogram.png",
+    "short_project_summary": "An Al Furjan apartment project presented with verified context before buyers request current terms.",
+    "long_project_summary": "An Al Furjan apartment project presented with verified context before buyers request current terms. Prices, payment plans, handover and current availability are unavailable until reconfirmed.",
+    "verified_developer_name": "Danube",
+    "verified_location_name": "Al Furjan, Dubai",
+    "property_types": [
+      "Apartments"
+    ],
+    "availability_disclaimer": "Prices, terms, completion timing and availability can change and must be reconfirmed before commitment.",
+    "brochure_available": false,
+    "floor_plan_available": false,
+    "whatsapp_share_copy": "Review the verified Sparklz by Danube buyer guide and request current details privately:",
+    "social_copy_short": "An Al Furjan apartment project presented with verified context before buyers request current terms.",
+    "social_copy_medium": "An Al Furjan apartment project presented with verified context before buyers request current terms. Current terms and availability require reconfirmation.",
+    "social_copy_long": "An Al Furjan apartment project presented with verified context before buyers request current terms. Finding Stories publishes only reviewed facts; unavailable; request current developer-confirmed details.",
+    "linkedin_copy": "An Al Furjan apartment project presented with verified context before buyers request current terms. Finding Stories separates verified project facts from commercial details that still require developer reconfirmation. Request a private buyer review before making a commitment.",
+    "instagram_caption": "An Al Furjan apartment project presented with verified context before buyers request current terms. Current terms and availability require reconfirmation. #UAEProperty #FindingStories",
+    "facebook_copy": "An Al Furjan apartment project presented with verified context before buyers request current terms. Review verified facts and request current terms privately from Finding Stories.",
+    "x_copy": "Sparklz by Danube in Al Furjan: verified residence context, with current commercial terms reconfirmed privately by Finding Stories.",
+    "directory_summary": "An Al Furjan apartment project presented with verified context before buyers request current terms. Current commercial terms and availability are not asserted.",
+    "citation_summary": "Sparklz by Danube is a apartments project by Danube in Al Furjan, Dubai.",
+    "outreach_summary": "Finding Stories has published a source-reviewed buyer guide for Sparklz by Danube, using the official developer record.",
+    "press_summary": "A review-ready Finding Stories briefing covers Sparklz by Danube, its verified location and residence mix without asserting live inventory.",
+    "approved_external_links": [
+      "https://danubeproperties.com/projects/sparklz/"
+    ],
+    "source_of_truth_notes": "Facts were retrieved from the official developer record on 2026-09-15; unavailable commercial fields are deliberately omitted."
+  }
+}

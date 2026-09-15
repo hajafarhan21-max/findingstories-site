@@ -1,0 +1,71 @@
+{
+  "project": "W Residences Dubai Harbour",
+  "project_slug": "w-residences-dubai-harbour",
+  "campaign": "w-residences-dubai-harbour-project-launch",
+  "canonical_url": "https://www.finding-stories.com/projects/w-residences-dubai-harbour",
+  "review_date": "2026-09-13",
+  "generated_from": [
+    "projects/w-residences-dubai-harbour/manifest.json",
+    "generated/distribution/w-residences-dubai-harbour.json",
+    "generated/authority/w-residences-dubai-harbour"
+  ],
+  "external_action_performed": false,
+  "rule": "LIVE requires independent public verification and a real evidence URL.",
+  "targets": [
+    {
+      "target": "Finding Stories LinkedIn account",
+      "verification_status": "needs_verification",
+      "owner_verified": false,
+      "relationship_status": "candidate",
+      "submission_status": "not_submitted",
+      "live_status": "not_live",
+      "last_checked": null,
+      "evidence_url": null,
+      "next_action": "Name and verify the exact social_profile opportunity, eligibility and current route before approval."
+    },
+    {
+      "target": "Finding Stories Instagram account",
+      "verification_status": "needs_verification",
+      "owner_verified": false,
+      "relationship_status": "candidate",
+      "submission_status": "not_submitted",
+      "live_status": "not_live",
+      "last_checked": null,
+      "evidence_url": null,
+      "next_action": "Name and verify the exact social_profile opportunity, eligibility and current route before approval."
+    },
+    {
+      "target": "Developer project reference opportunity",
+      "verification_status": "needs_verification",
+      "owner_verified": false,
+      "relationship_status": "candidate",
+      "submission_status": "not_submitted",
+      "live_status": "not_live",
+      "last_checked": null,
+      "evidence_url": null,
+      "next_action": "Name and verify the exact developer_owned_channel opportunity, eligibility and current route before approval."
+    },
+    {
+      "target": "Relevant UAE property editorial opportunity",
+      "verification_status": "needs_verification",
+      "owner_verified": false,
+      "relationship_status": "candidate",
+      "submission_status": "not_submitted",
+      "live_status": "not_live",
+      "last_checked": null,
+      "evidence_url": null,
+      "next_action": "Name and verify the exact editorial_publication opportunity, eligibility and current route before approval."
+    },
+    {
+      "target": "Legitimate UAE business or property directory opportunity",
+      "verification_status": "needs_verification",
+      "owner_verified": false,
+      "relationship_status": "candidate",
+      "submission_status": "not_submitted",
+      "live_status": "not_live",
+      "last_checked": null,
+      "evidence_url": null,
+      "next_action": "Name and verify the exact directory opportunity, eligibility and current route before approval."
+    }
+  ]
+}

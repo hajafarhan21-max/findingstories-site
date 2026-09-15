@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "status": "approved",
+  "project": {
+    "slug": "mar-casa",
+    "name": "Mar Casa",
+    "developer": "Deyaar",
+    "path": "/projects/mar-casa"
+  },
+  "facts": {
+    "developer": {
+      "value": "Deyaar",
+      "source": "https://deyaar.ae/en/properties/mar-casa/",
+      "verified": true
+    },
+    "location": {
+      "value": "Dubai Maritime City, Dubai",
+      "source": "https://deyaar.ae/en/properties/mar-casa/",
+      "verified": true
+    },
+    "project_status": {
+      "value": "Launched / under construction",
+      "source": "https://deyaar.ae/en/properties/mar-casa/",
+      "verified": true
+    },
+    "property_types": {
+      "value": "Apartments, Penthouses",
+      "source": "https://deyaar.ae/en/properties/mar-casa/",
+      "verified": true
+    },
+    "unit_mix": {
+      "value": "Studios and 1 to 3 bedroom residences",
+      "source": "https://deyaar.ae/en/properties/mar-casa/",
+      "verified": true
+    }
+  },
+  "assets": [],
+  "rejected_assets": [],
+  "lead": {
+    "endpoint": "/api/leads",
+    "campaign_id": "mar-casa-project-launch",
+    "project_id": "mar-casa"
+  },
+  "platform": {
+    "identity": {
+      "development": null,
+      "area": "Dubai Maritime City",
+      "emirate": "Dubai",
+      "project_status": "Launched / under construction",
+      "launch_status": "Launched / under construction",
+      "sales_status": null
+    },
+    "commercial": {
+      "starting_price": null,
+      "currency": "AED",
+      "price_range": null,
+      "payment_plan": null,
+      "eoi_information": null,
+      "reservation_requirements": null,
+      "service_charge": null,
+      "handover": null,
+      "post_handover_plan": null
+    },
+    "product": {
+      "property_types": [
+        "Apartments",
+        "Penthouses"
+      ],
+      "unit_types": [
+        "Studios and 1 to 3 bedroom residences"
+      ],
+      "bedroom_configurations": [
+        "Studio",
+        "1 bedroom",
+        "2 bedroom",
+        "3 bedroom"
+      ],
+      "size_ranges": [],
+      "furnishing_status": null,
+      "branded_residence": false,
+      "positioning": []
+    },
+    "experience": {
+      "summary": "A Deyaar seafront residential tower with current availability deliberately unasserted.",
+      "buyer_suitability": "For buyers comparing the verified location and residence mix; suitability requires an individual review.",
+      "investor_suitability": "Suitability depends on objectives, budget, time horizon and current confirmed terms; outcomes are not guaranteed.",
+      "amenities": [],
+      "views": [],
+      "connectivity": []
+    },
+    "acquisition": {
+      "whatsapp_context": "Mar Casa private enquiry",
+      "lead_form_context": "Mar Casa buyer guide",
+      "project_source": "https://deyaar.ae/en/properties/mar-casa/",
+      "status_badge": "Launched / under construction",
+      "featured": false,
+      "priority": 10
+    },
+    "governance": {
+      "verification_status": "PUBLISHED",
+      "source_references": [
+        "https://deyaar.ae/en/properties/mar-casa/"
+      ],
+      "approved_fields": [
+        "developer",
+        "location",
+        "project status",
+        "property types",
+        "unit mix"
+      ],
+      "pending_fields": [
+        "starting price",
+        "payment plan",
+        "handover",
+        "current availability"
+      ],
+      "last_reviewed": "2026-09-15",
+      "reviewer": "Finding Stories project approval workflow",
+      "publish_state": "PUBLISHED",
+      "data_confidence": "verified"
+    }
+  },
+  "seo": {
+    "indexable": true,
+    "title": "Mar Casa by Deyaar | Buyer Guide",
+    "description": "Review verified Mar Casa project facts, residence types and Dubai Maritime City context, then request current availability, payment plans or floor plans.",
+    "primary_intent": "Mar Casa project details",
+    "secondary_intents": [
+      "Mar Casa availability",
+      "Mar Casa payment plan",
+      "Mar Casa floor plans"
+    ],
+    "location": "Dubai Maritime City, Dubai",
+    "unit_types": [
+      "Studios and 1 to 3 bedroom residences"
+    ],
+    "launch_status": "Launched / under construction",
+    "faq": [
+      {
+        "question": "Is current availability at Mar Casa confirmed?",
+        "answer": "No. Finding Stories will reconfirm current Mar Casa availability with the developer when you enquire."
+      },
+      {
+        "question": "Can I request Mar Casa payment plans and floor plans?",
+        "answer": "Yes. Request the latest developer-confirmed documents through the protected enquiry form."
+      }
+    ],
+    "organic_search": {
+      "property_types": [
+        "Apartments",
+        "Penthouses"
+      ],
+      "unit_configurations": [
+        "Studios and 1 to 3 bedroom residences"
+      ],
+      "verified_pricing": false,
+      "payment_plan": false,
+      "completion_handover": false,
+      "location_facts": true,
+      "investment_considerations": [
+        "Current terms and exact unit availability require developer reconfirmation."
+      ],
+      "internal_link_context": [
+        "Dubai Maritime City",
+        "Deyaar",
+        "Apartments",
+        "Penthouses"
+      ],
+      "cta_mappings": {
+        "price": "Request Details",
+        "payment_plan": "Get Payment Plan",
+        "floor_plan": "Request Floor Plans",
+        "availability": "Check Current Availability",
+        "consultation": "Book Private Consultation",
+        "location": "Request Details",
+        "eoi": "Request Details",
+        "investment": "Book Private Consultation",
+        "residence": "Check Current Availability"
+      },
+      "supporting_pages": []
+    },
+    "hero_image": "/assets/brand/finding-stories-monogram.png",
+    "hero_alt": "Finding Stories verified guide for Mar Casa"
+  },
+  "distribution": {
+    "share_title": "Mar Casa | Verified Buyer Guide",
+    "share_description": "Review verified Mar Casa residence types and location context, with current commercial terms reconfirmed privately by Finding Stories.",
+    "share_image": "/assets/brand/finding-stories-monogram.png",
+    "short_project_summary": "A Deyaar seafront residential tower with current availability deliberately unasserted.",
+    "long_project_summary": "A Deyaar seafront residential tower with current availability deliberately unasserted. Prices, payment plans, handover and current availability are unavailable until reconfirmed.",
+    "verified_developer_name": "Deyaar",
+    "verified_location_name": "Dubai Maritime City, Dubai",
+    "property_types": [
+      "Apartments",
+      "Penthouses"
+    ],
+    "availability_disclaimer": "Prices, terms, completion timing and availability can change and must be reconfirmed before commitment.",
+    "brochure_available": false,
+    "floor_plan_available": false,
+    "whatsapp_share_copy": "Review the verified Mar Casa buyer guide and request current details privately:",
+    "social_copy_short": "A Deyaar seafront residential tower with current availability deliberately unasserted.",
+    "social_copy_medium": "A Deyaar seafront residential tower with current availability deliberately unasserted. Current terms and availability require reconfirmation.",
+    "social_copy_long": "A Deyaar seafront residential tower with current availability deliberately unasserted. Finding Stories publishes only reviewed facts; unavailable; request current developer-confirmed details.",
+    "linkedin_copy": "A Deyaar seafront residential tower with current availability deliberately unasserted. Finding Stories separates verified project facts from commercial details that still require developer reconfirmation. Request a private buyer review before making a commitment.",
+    "instagram_caption": "A Deyaar seafront residential tower with current availability deliberately unasserted. Current terms and availability require reconfirmation. #UAEProperty #FindingStories",
+    "facebook_copy": "A Deyaar seafront residential tower with current availability deliberately unasserted. Review verified facts and request current terms privately from Finding Stories.",
+    "x_copy": "Mar Casa in Dubai Maritime City: verified residence context, with current commercial terms reconfirmed privately by Finding Stories.",
+    "directory_summary": "A Deyaar seafront residential tower with current availability deliberately unasserted. Current commercial terms and availability are not asserted.",
+    "citation_summary": "Mar Casa is a apartments and penthouses project by Deyaar in Dubai Maritime City, Dubai.",
+    "outreach_summary": "Finding Stories has published a source-reviewed buyer guide for Mar Casa, using the official developer record.",
+    "press_summary": "A review-ready Finding Stories briefing covers Mar Casa, its verified location and residence mix without asserting live inventory.",
+    "approved_external_links": [
+      "https://deyaar.ae/en/properties/mar-casa/"
+    ],
+    "source_of_truth_notes": "Facts were retrieved from the official developer record on 2026-09-15; unavailable commercial fields are deliberately omitted."
+  }
+}
