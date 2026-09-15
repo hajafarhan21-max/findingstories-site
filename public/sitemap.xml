@@ -2,15 +2,12 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://www.finding-stories.com/</loc></url>
   <url><loc>https://www.finding-stories.com/projects</loc></url>
-  <url><loc>https://www.finding-stories.com/new-launches</loc></url>
-  <url><loc>https://www.finding-stories.com/pre-launch</loc></url>
-  <url><loc>https://www.finding-stories.com/recently-launched</loc></url>
-  <url><loc>https://www.finding-stories.com/under-construction</loc></url>
-  <url><loc>https://www.finding-stories.com/ready-properties</loc></url>
-  <url><loc>https://www.finding-stories.com/completed</loc></url>
-  <url><loc>https://www.finding-stories.com/resale</loc></url>
-  <url><loc>https://www.finding-stories.com/rent</loc></url>
-  <url><loc>https://www.finding-stories.com/commercial</loc></url>
+  <url><loc>https://www.finding-stories.com/projects/new-launches</loc></url>
+  <url><loc>https://www.finding-stories.com/projects/pre-launch</loc></url>
+  <url><loc>https://www.finding-stories.com/projects/off-plan</loc></url>
+  <url><loc>https://www.finding-stories.com/projects/under-construction</loc></url>
+  <url><loc>https://www.finding-stories.com/projects/ready</loc></url>
+  <url><loc>https://www.finding-stories.com/projects/resale</loc></url>
   <url><loc>https://www.finding-stories.com/areas</loc></url>
   <url><loc>https://www.finding-stories.com/areas/downtown-dubai</loc></url>
   <url><loc>https://www.finding-stories.com/areas/business-bay</loc></url>

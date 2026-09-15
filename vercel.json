@@ -520,6 +520,30 @@
     {
       "source": "/projects/:path*",
       "destination": "/api/acquisition?route=page&path=projects/:path*"
+    },
+    {
+      "source": "/projects/pre-launch",
+      "destination": "/projects-pre-launch.html"
+    },
+    {
+      "source": "/projects/new-launches",
+      "destination": "/projects-new-launches.html"
+    },
+    {
+      "source": "/projects/off-plan",
+      "destination": "/projects-off-plan.html"
+    },
+    {
+      "source": "/projects/under-construction",
+      "destination": "/projects-under-construction.html"
+    },
+    {
+      "source": "/projects/ready",
+      "destination": "/projects-ready.html"
+    },
+    {
+      "source": "/projects/resale",
+      "destination": "/projects-resale.html"
     }
   ],
   "headers": [

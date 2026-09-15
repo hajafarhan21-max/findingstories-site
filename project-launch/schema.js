@@ -32,10 +32,10 @@ const distribution = z.object({
   approved_external_links:z.array(z.string().url()).default([]), source_of_truth_notes:z.string().min(30)
 }).strict();
 const governance = z.object({
-  verification_status:z.enum(['DRAFT','SOURCE_PENDING','VERIFIED','APPROVED','PUBLISHED','STALE','ARCHIVED']),
+  verification_status:z.enum(['DRAFT','RESEARCHED','VERIFIED','APPROVED','PUBLISHED','ARCHIVED']),
   source_references:z.array(z.string().min(3)).min(1), approved_fields:z.array(z.string().min(1)),
   pending_fields:z.array(z.string().min(1)), last_reviewed:z.string().date(), reviewer:z.string().min(2),
-  publish_state:z.enum(['DRAFT','SOURCE_PENDING','VERIFIED','APPROVED','PUBLISHED','STALE','ARCHIVED']),
+  publish_state:z.enum(['DRAFT','RESEARCHED','VERIFIED','APPROVED','PUBLISHED','ARCHIVED']),
   data_confidence:z.enum(['low','moderate','verified'])
 }).strict();
 const platform = z.object({
