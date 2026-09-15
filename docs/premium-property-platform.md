@@ -33,7 +33,7 @@ Azizi Florence remains at `/azizi-florence` with its existing database-driven pa
 
 1. **Project:** create `projects/<slug>/manifest.json`, supply source-reviewed assets, fill `platform`, SEO and distribution fields, and keep status `draft` until review.
 2. **Developer or area:** add a catalog entity only after an approved project supplies enough substantive relationship content. Never generate empty locality lists as indexed claims.
-3. **Verification:** identify source references, list approved and pending fields, record reviewer/date/confidence, and progress through `DRAFT → SOURCE_PENDING → VERIFIED → APPROVED → PUBLISHED`. Use `STALE` or `ARCHIVED` when appropriate.
+3. **Verification:** identify source references, list approved and pending fields, record reviewer/date/confidence, and progress through `DRAFT → RESEARCHED → VERIFIED → APPROVED → PUBLISHED → ARCHIVED`. Only a source-backed, verified record explicitly moved to `PUBLISHED` is exposed publicly.
 4. **Generation:** run `npm run platform:generate`, `npm run seo:generate`, the distribution/authority/operations commands, and `npm run brand:generate`.
 5. **Social:** review `generated/brand-authority/linkedin-brand-launch.json` in sequence. No adapter posts automatically. Capture approval, rights and public URL outside the generated draft only after a human publishes.
 
@@ -50,4 +50,3 @@ Forms send to `/api/leads` and retain entry/current page, first/latest touch, UT
 - Run install, lint, typecheck, tests, build and every generator/validator listed in the root task.
 - Review homepage and route screenshots at desktop/mobile sizes, then inspect Florence form, WhatsApp and media behaviour independently.
 - Deploy only through the existing Git/Vercel flow. Confirm production canonical, robots, sitemap, database health and notification delivery with authorised credentials.
-
