@@ -1,6 +1,6 @@
 import { isAcceptance } from '../_lib/auth.js';
 import { acceptanceQuerySchema, acceptanceUpdateSchema } from '../_lib/acceptance.js';
-import { database } from '../_lib/db.js';
+import { database, ensureTestEvent } from '../_lib/db.js';
 import { json, method, parseJson } from '../_lib/http.js';
 
 const csv = value => `"${String(value ?? '').replaceAll('"', '""')}"`;
@@ -51,7 +51,13 @@ async function exportTest(sql,eventId,res){
 
 async function update(sql,value,res){
   let rows;
-  if(value.action==='meeting'){
+  if(value.action==='prepare'){
+    // Fixture creation is an intentional authenticated mutation. Keep the
+    // public slots GET read-only while ensuring acceptance never depends on an
+    // expired TEST event left over from an earlier deployment.
+    await ensureTestEvent(sql);
+    return json(res,200,{ok:true,is_test:true});
+  } else if(value.action==='meeting'){
     rows=await sql`SELECT confirm_event_slot(r.id,${value.slot_id}::uuid,'acceptance-test') ok FROM event_rsvps r
       JOIN events e ON e.id=r.event_id AND e.is_test=TRUE JOIN event_slots s ON s.id=${value.slot_id}::uuid AND s.event_id=e.id
       WHERE r.id=${value.rsvp_id}::uuid AND r.is_test=TRUE AND r.archived_at IS NULL`;

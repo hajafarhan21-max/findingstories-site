@@ -3,6 +3,7 @@ import { statuses } from './event.js';
 
 const uuid = z.string().uuid();
 export const acceptanceUpdateSchema = z.discriminatedUnion('action', [
+  z.object({ action:z.literal('prepare') }).strict(),
   z.object({ action:z.literal('assign'), rsvp_id:uuid, assigned_to:z.string().trim().min(1).max(100) }).strict(),
   z.object({ action:z.literal('status'), rsvp_id:uuid, status:z.enum(statuses), lost_reason:z.string().trim().max(500).optional().default('') }).strict(),
   z.object({ action:z.literal('meeting'), rsvp_id:uuid, slot_id:uuid }).strict(),

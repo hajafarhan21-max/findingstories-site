@@ -18,6 +18,7 @@ test('acceptance authentication requires a separate strong exact bearer credenti
 test('acceptance input permits only the narrow synthetic workflow',()=>{
   const id='11111111-1111-4111-8111-111111111111';
   for(const value of [
+    {action:'prepare'},
     {action:'assign',rsvp_id:id,assigned_to:'Test RM'},
     {action:'status',rsvp_id:id,status:'contacted'},
     {action:'meeting',rsvp_id:id,slot_id:id},
@@ -41,11 +42,13 @@ test('every acceptance data path is rooted in both TEST event and TEST RSVP pred
   for(const operation of ['assign','status','meeting','site_visit','activity','archive'])assert.match(source,new RegExp(`value\\.action==='${operation}'`));
 });
 
-test('production acceptance uses no human admin credential and archives its one synthetic row',async()=>{
+test('production acceptance prepares its fixture and archives its two synthetic rows',async()=>{
   const [script,workflow]=await Promise.all([readFile('scripts/acceptance-production.mjs','utf8'),readFile('.github/workflows/production.yml','utf8')]);
   assert.doesNotMatch(script,/ADMIN_PASSWORD|\/api\/admin\/login|Cookie/);
   assert.match(script,/Authorization:`Bearer \$\{secret\}`/);
-  assert.match(script,/action:'archive',rsvp_id:created\.data\.id/);
+  assert.match(script,/patch\(\{action:'prepare'\}\)/);
+  assert.match(script,/for\(const item of created\.reverse\(\)\)/);
+  assert.match(script,/booked_count\),before,'archival must restore exact initial capacity'/);
   assert.match(script,/try\{[\s\S]+\}finally\{/);
   assert.match(workflow,/secrets\.ACCEPTANCE_TEST_SECRET/);
   assert.match(workflow,/npm run acceptance:production/);
@@ -53,6 +56,15 @@ test('production acceptance uses no human admin credential and archives its one 
   assert.match(script,/https:\/\/www\.finding-stories\.com/);
   assert.match(script,/timeoutMs:60000/);
   assert.match(script,/retries:options\.method\?0:2/);
+});
+
+test('acceptance repairs the expired-fixture response that produced undefined instead of true',async()=>{
+  const [endpoint,script]=await Promise.all([readFile('api/acceptance/events.js','utf8'),readFile('scripts/acceptance-production.mjs','utf8')]);
+  const expiredResponse={event:null,dates:[],slots:[]};
+  assert.equal(expiredResponse.event?.is_test,undefined);
+  assert.throws(()=>assert.equal(expiredResponse.event?.is_test,true),/undefined/);
+  assert.match(endpoint,/value\.action==='prepare'[\s\S]{0,300}ensureTestEvent\(sql\)/);
+  assert.ok(script.indexOf("patch({action:'prepare'})")<script.indexOf("publicRequest('/api/events/slots?test=true')"));
 });
 
 test('acceptance requests tolerate cold starts and retry safe inspection failures',async()=>{
@@ -88,7 +100,7 @@ test('production guardian is deployment-triggered, TEST-constrained, and reconci
   assert.match(workflow,/ACCEPTANCE_TEST_SECRET: \$\{\{ secrets\.ACCEPTANCE_TEST_SECRET \}\}/);
   assert.match(workflow,/npm run smoke:production/);
   assert.match(workflow,/npm run acceptance:production/);
-  assert.match(workflow,/actions\/upload-artifact@v4/);
+  assert.match(workflow,/actions\/upload-artifact@v7/);
   assert.doesNotMatch(workflow,/ADMIN_PASSWORD|DATABASE_URL|vercel deploy/);
   assert.match(reconciler,/finding-stories-production-guardian/);
   assert.match(reconciler,/issue','create/);
