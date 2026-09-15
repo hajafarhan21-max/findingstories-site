@@ -2,7 +2,9 @@
 
 The **Production Guardian** workflow runs after the repository's Production workflow succeeds and can also be dispatched manually. It checks `/api/health` and public event routes, then runs the authenticated production acceptance journey. The journey creates a uniquely identified synthetic RSVP under the reusable TEST event, verifies its CRM lead, idempotency, capacity, assignment, meeting, site visit, status, activity, report, and CSV export, and archives the synthetic RSVP in a `finally` block.
 
-The acceptance API uses a dedicated machine secret rather than an administrator session. Every read and mutation is constrained by both TEST-event and TEST-RSVP predicates. The guardian stops before acceptance when health fails, preserves both logs as a 14-day artifact, and creates or updates one marker-identified GitHub incident with the failing stage and log tail. A later successful run comments on and closes the open incident.
+The acceptance API uses a dedicated machine secret rather than an administrator session. Every read and mutation is constrained by both TEST-event and TEST-RSVP predicates. Preparation archives active synthetic rows left by an interrupted run, repairs the TEST marker on their legacy linked leads, and reconciles every TEST slot to the authoritative count of non-archived confirmed RSVPs. Archival performs the same exact recount while explicitly excluding the row changed in its data-modifying CTE; this avoids PostgreSQL's shared-snapshot visibility trap and makes repeated preparation and cleanup drift-free. Genuine events, RSVPs, slots, and leads are never updated.
+
+The Production and Production Guardian workflows share one concurrency lock. Guardian fails explicitly when its triggering Production workflow failed instead of appearing successful because its only job was skipped. The guardian stops before acceptance when health fails, preserves both logs as a 14-day artifact, and creates or updates one marker-identified GitHub incident with the failing stage and log tail. A later successful run comments on and closes the open incident.
 
 ## Operations-agent decision
 
