@@ -29,6 +29,15 @@ test('truncated and extension-spoofed images fail byte-level inspection',async()
   await assert.rejects(inspectImage(fake),/INVALID_IMAGE_MIME/);
 });
 
+test('an otherwise valid project cannot enter preview without a reviewed location map',async()=>{
+  const dir=await mkdtemp(join(tmpdir(),'project-launch-no-map-'));
+  const manifest={schema_version:1,status:'ready_for_preview',project:{slug:'blocked',name:'Blocked project',developer:'Binghatti',path:'/projects/blocked'},facts:{},assets:[],rejected_assets:[],lead:{endpoint:'/api/leads',campaign_id:'blocked',project_id:'blocked'}};
+  const file=join(dir,'manifest.json');await writeFile(file,JSON.stringify(manifest));
+  const report=await auditManifest(file);
+  assert.equal(report.passed,false);
+  assert.deepEqual(report.errors.map(error=>error.code),['LOCATION_MAP_MISSING_OR_UNVERIFIED']);
+});
+
 test('reusable production acceptance is wired and Florence primary enquiry has analytics',async()=>{
   const [runner,template,pkg]=await Promise.all([readFile('project-launch/production-acceptance.js','utf8'),readFile('api/_lib/azizi-florence.js','utf8'),readFile('package.json','utf8')]);
   assert.match(runner,/ASSET_APPROVAL_MISMATCH/);assert.match(runner,/LEAD_PERSISTENCE_OR_IDEMPOTENCY_FAILED/);assert.match(runner,/same_record/);assert.match(runner,/whatsapp_safe/);
