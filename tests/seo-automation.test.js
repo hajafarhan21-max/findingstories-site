@@ -66,7 +66,7 @@ test('every approved project has reusable organic acquisition inputs and homepag
     assert.ok(project.hero_alt);
     assert.ok(project.faq?.length);
     assert.ok(project.organic_search?.property_types.length);
-    assert.ok(project.organic_search?.unit_configurations.length>=1);
+    assert.ok(project.organic_search?.unit_configurations.length>=5);
     assert.equal(project.organic_search?.supporting_pages.length,0);
     for(const intent of ['price','payment_plan','floor_plan','location','eoi','investment','residence'])assert.ok(project.organic_search?.cta_mappings[intent]);
     assert.ok(home.includes(`href="${project.path}"`),`${project.slug} homepage discovery`);

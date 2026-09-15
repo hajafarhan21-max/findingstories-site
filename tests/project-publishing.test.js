@@ -21,10 +21,10 @@ test('source evidence and verified confidence are mandatory for publication',asy
     const candidate=JSON.parse(JSON.stringify(record));mutate(candidate);assert.equal(publicationDecision(candidate).public,false);
   }
 });
-test('the verified launch portfolio and its discovery relationships are automatic',async()=>{
-  const projects=await loadPublicProjects();assert.equal(projects.length,10);assert.ok(projects.some(x=>x.slug==='azizi-florence'));
+test('only Florence is recovered and its discovery relationships are automatic',async()=>{
+  const projects=await loadPublicProjects();assert.deepEqual(projects.map(x=>x.slug),['azizi-florence']);
   assert.equal(projectsFor({developer:'azizi-developments'}).length,1);
-  assert.equal(projectsFor({area:'sharjah'}).length,2);
+  assert.equal(projectsFor({area:'sharjah'}).length,1);
   assert.equal(projectsFor({propertyType:'townhouses'}).length,1);
 });
 test('required project collections are canonical and generated without invented inventory',async()=>{
@@ -32,11 +32,6 @@ test('required project collections are canonical and generated without invented 
   const [xml,prelaunch,ready]=await Promise.all([readFile('public/sitemap.xml','utf8'),readFile('public/projects-pre-launch.html','utf8'),readFile('public/projects-ready.html','utf8')]);
   for(const route of PROJECT_COLLECTION_ROUTES)assert.match(xml,new RegExp(`<loc>https://www.finding-stories.com${route}</loc>`));
   assert.match(prelaunch,/Azizi Florence/);assert.doesNotMatch(ready,/data-project data-area=/);
-  for(const project of projectsFor().filter(x=>x.slug!=='azizi-florence')){
-    const page=await readFile(`public/projects-${project.slug}.html`,'utf8');
-    for(const cta of ['Request Details','Get Payment Plan','Request Floor Plans','Check Current Availability','Book Private Consultation','WhatsApp'])assert.match(page,new RegExp(cta),`${project.slug}: ${cta}`);
-    assert.match(page,/fetch is handled by the shared protected form client|data-lead-form/);
-  }
 });
 test('inventory enquiry client preserves project, page and UTM attribution in protected lead API submissions',async()=>{
   const client=await readFile('public/platform.js','utf8');
