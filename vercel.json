@@ -82,6 +82,10 @@
       "destination": "/areas.html"
     },
     {
+      "source": "/areas/jebel-ali",
+      "destination": "/areas-jebel-ali.html"
+    },
+    {
       "source": "/areas/downtown-dubai",
       "destination": "/areas-downtown-dubai.html"
     },
@@ -544,6 +548,38 @@
     {
       "source": "/projects/resale",
       "destination": "/projects-resale.html"
+    },
+    {
+      "source": "/projects/terra-gardens",
+      "destination": "/projects-terra-gardens.html"
+    },
+    {
+      "source": "/projects/chelsea-residences",
+      "destination": "/projects-chelsea-residences.html"
+    },
+    {
+      "source": "/projects/the-serene-sobha-central",
+      "destination": "/projects-the-serene-sobha-central.html"
+    },
+    {
+      "source": "/projects/sparklz-by-danube",
+      "destination": "/projects-sparklz-by-danube.html"
+    },
+    {
+      "source": "/projects/w-residences-dubai-harbour",
+      "destination": "/projects-w-residences-dubai-harbour.html"
+    },
+    {
+      "source": "/projects/yas-riva",
+      "destination": "/projects-yas-riva.html"
+    },
+    {
+      "source": "/projects/mar-casa",
+      "destination": "/projects-mar-casa.html"
+    },
+    {
+      "source": "/projects/olfah",
+      "destination": "/projects-olfah.html"
     },
     {
       "source": "/projects/:path*",

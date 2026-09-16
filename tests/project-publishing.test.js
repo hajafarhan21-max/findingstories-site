@@ -21,10 +21,10 @@ test('source evidence and verified confidence are mandatory for publication',asy
     const candidate=JSON.parse(JSON.stringify(record));mutate(candidate);assert.equal(publicationDecision(candidate).public,false);
   }
 });
-test('only Florence is recovered and its discovery relationships are automatic',async()=>{
+test('Florence remains in the strict manifest registry while project guides add discovery relationships',async()=>{
   const projects=await loadPublicProjects();assert.deepEqual(projects.map(x=>x.slug),['azizi-florence']);
   assert.equal(projectsFor({developer:'azizi-developments'}).length,1);
-  assert.equal(projectsFor({area:'sharjah'}).length,1);
+  assert.equal(projectsFor({area:'sharjah'}).length,2);
   assert.equal(projectsFor({propertyType:'townhouses'}).length,1);
 });
 test('required project collections are canonical and generated without invented inventory',async()=>{
