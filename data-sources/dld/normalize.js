@@ -1,6 +1,6 @@
 import {dldTransactionSchema} from './schema.js';
 
-const aliases={
+export const DLD_FIELD_ALIASES={
   sourceId:['transaction_id','transaction_number','transactionId','id'],transactionDate:['instance_date','transaction_date','transactionDate'],
   transactionType:['group_en','procedure_name_en','procedure_name','transaction_type','transactionType'],transactionSubtype:['procedure_en','procedure_sub_name_en','transaction_sub_type','transactionSubtype'],registrationType:['is_offplan_en','reg_type_en','reg_type','registration_type'],
   freehold:['is_free_hold_en','is_free_hold','freehold'],usage:['usage_en','property_usage_en','property_usage','usage'],area:['area_en','area_name_en','area_name','area'],
@@ -10,7 +10,7 @@ const aliases={
   masterProject:['master_project_en','master_project'],project:['project_en','project_name_en','project_name','project'],buyerCount:['total_buyer','no_of_parties_role_1','buyer_count'],sellerCount:['total_seller','no_of_parties_role_2','seller_count'],nearestMetro:['nearest_metro_en','nearest_metro'],nearestMall:['nearest_mall_en','nearest_mall'],nearestLandmark:['nearest_landmark_en','nearest_landmark']
 };
 const canonicalKey=value=>value.trim().toLocaleLowerCase('en-US');
-const mappedKeys=new Set(Object.values(aliases).flat().map(canonicalKey));
+const mappedKeys=new Set(Object.values(DLD_FIELD_ALIASES).flat().map(canonicalKey));
 const pick=(raw,names)=>{const key=names.map(canonicalKey).find(name=>raw[name]!==undefined&&raw[name]!==null&&raw[name]!=='');return key?raw[key]:null};
 const text=value=>value===null?null:String(value).trim()||null;
 const number=value=>{if(value===null)return null;const parsed=typeof value==='string'?Number(value.replaceAll(',','')):Number(value);return Number.isFinite(parsed)&&parsed>=0?parsed:null};
@@ -19,7 +19,7 @@ const date=value=>{if(value===null)return null;const match=String(value).match(/
 
 export function normalizeDldRecord(raw,{mapArea=()=>({status:'UNMAPPED',canonicalName:null,canonicalSlug:null,method:null}),mapProject=()=>({status:'UNMAPPED',canonicalProject:null,canonicalSlug:null,developer:null,method:null})}={}){
   const normalizedRaw=Object.fromEntries(Object.entries(raw).map(([name,value])=>[canonicalKey(name),value]));
-  const get=key=>pick(normalizedRaw,aliases[key]);
+  const get=key=>pick(normalizedRaw,DLD_FIELD_ALIASES[key]);
   const transactionSizeSqm=number(get('transactionSizeSqm')),propertySizeSqm=number(get('propertySizeSqm')),amountAed=number(get('amountAed'));
   const transactionSizeSqft=transactionSizeSqm===null?null:transactionSizeSqm*10.7639,propertySizeSqft=propertySizeSqm===null?null:propertySizeSqm*10.7639,size=propertySizeSqft??transactionSizeSqft;
   const sourceAreaName=text(get('area')),areaMapping=mapArea(sourceAreaName),projectMapping=mapProject(text(get('project')));

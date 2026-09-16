@@ -22,6 +22,8 @@ for (const file of staticEntries) {
   await access(file);
   await cp(file, `dist/${file}`, { recursive: true });
 }
+await mkdir('dist/generated/intelligence/dld',{recursive:true});
+try { for (const file of await readdir('generated/intelligence/dld')) await cp(`generated/intelligence/dld/${file}`,`dist/generated/intelligence/dld/${file}`,{recursive:true}); } catch { /* A snapshot is created only after a successful manual import. */ }
 for (const file of await readdir('public')) {
   await cp(`public/${file}`, `dist/${file}`, { recursive: true });
 }

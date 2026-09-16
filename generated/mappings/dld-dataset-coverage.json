@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-09-16T00:00:00.000Z",
+  "datasets": [],
+  "supported_import_schemas": [{
+    "dataset": "DLD Transactions",
+    "status": "SCHEMA_READY",
+    "source_filename": null,
+    "available_columns": ["TRANSACTION_NUMBER", "INSTANCE_DATE", "GROUP_EN", "PROCEDURE_EN", "IS_OFFPLAN_EN", "IS_FREE_HOLD_EN", "USAGE_EN", "AREA_EN", "PROP_TYPE_EN", "PROP_SB_TYPE_EN", "TRANS_VALUE", "PROCEDURE_AREA", "ACTUAL_AREA", "ROOMS_EN", "PARKING", "NEAREST_METRO_EN", "NEAREST_MALL_EN", "NEAREST_LANDMARK_EN", "TOTAL_BUYER", "TOTAL_SELLER", "MASTER_PROJECT_EN", "PROJECT_EN", "BUILDING_NAME_EN"],
+    "canonical_fields": ["sourceId", "transactionDate", "transactionType", "transactionSubtype", "registrationType", "freehold", "usage", "area", "propertyType", "propertySubtype", "amountAed", "transactionSizeSqm", "propertySizeSqm", "rooms", "parking", "nearestMetro", "nearestMall", "nearestLandmark", "buyerCount", "sellerCount", "masterProject", "project"],
+    "unmapped_fields": ["BUILDING_NAME_EN"],
+    "retention": "Unmapped non-empty official fields are retained in additionalOfficialFields.",
+    "relationships": {"area":"canonicalAreaSlug", "project":"canonicalProjectSlug", "developer":"verified project mapping"},
+    "usable_dimensions": ["period", "transaction type", "registration type", "area", "property type", "property subtype", "bedrooms", "project"],
+    "unsupported_dimensions": ["ROI", "yield", "appreciation", "forecast", "ranking"],
+    "record_counts": {"read":0, "accepted":0, "rejected":0, "duplicates":0}
+  }]
+}
