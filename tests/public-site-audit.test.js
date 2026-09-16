@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';
+test('newsletter forms use deployed rewrite endpoints',async()=>{const js=await readFile('public/platform.js','utf8');assert.match(js,/\/api\/newsletter\/subscribe/);assert.match(js,/\/api\/newsletter\/unsubscribe/);assert.doesNotMatch(js,/fetch\('\/api\/newsletter\?action=/)});
+test('production QA commands are registered',async()=>{const pkg=JSON.parse(await readFile('package.json','utf8'));assert.equal(pkg.scripts['audit:routes'],'node scripts/audit-public-site.mjs');assert.ok(pkg.scripts['audit:links']);assert.ok(pkg.scripts['audit:empty-pages'])});
