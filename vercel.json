@@ -134,6 +134,10 @@
       "destination": "/areas-al-furjan.html"
     },
     {
+      "source": "/areas/al-barsha-south",
+      "destination": "/areas-al-barsha-south.html"
+    },
+    {
       "source": "/areas/al-jaddaf",
       "destination": "/areas-al-jaddaf.html"
     },
@@ -518,10 +522,6 @@
       "destination": "/api/acquisition?route=page&path=dubai/:path*"
     },
     {
-      "source": "/projects/:path*",
-      "destination": "/api/acquisition?route=page&path=projects/:path*"
-    },
-    {
       "source": "/projects/pre-launch",
       "destination": "/projects-pre-launch.html"
     },
@@ -544,6 +544,10 @@
     {
       "source": "/projects/resale",
       "destination": "/projects-resale.html"
+    },
+    {
+      "source": "/projects/:path*",
+      "destination": "/api/acquisition?route=page&path=projects/:path*"
     }
   ],
   "headers": [
