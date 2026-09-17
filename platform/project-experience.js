@@ -37,7 +37,7 @@ export function projectPublicationDecision(project){
 }
 
 export function enrichProject(project){
-  const media=project.image?[{id:`${project.slug}-hero`,kind:'hero',path:project.image,alt:project.imageAlt,sourceUrl:project.verification?.source?.url??project.source?.url,sourceType:project.verification?.source?.type??'OFFICIAL_PROJECT_MATERIAL',reviewedAt:project.verification?.lastReviewed??project.source?.retrieved,projectSlug:project.slug,usageState:'APPROVED',verificationState:'VERIFIED'}]:[];
+  const media=project.media??(project.image?[{id:`${project.slug}-hero`,kind:'hero',path:project.image,alt:project.imageAlt,sourceUrl:project.verification?.source?.url??project.source?.url,sourceType:project.verification?.source?.type??'OFFICIAL_PROJECT_MATERIAL',reviewedAt:project.verification?.lastReviewed??project.source?.retrieved,projectSlug:project.slug,usageState:'APPROVED',verificationState:'VERIFIED'}]:[]);
   return Object.freeze({...project,
     qualityState:'public-ready', visualFallback:media.length?'NONE':'BRANDED', media:Object.freeze(media), theme:projectTheme(project.slug),
     snapshot:Object.freeze({propertyTypes:project.propertyTypes,bedroomMix:project.bedrooms,sizeRange:null,ownership:null,serviceCharge:null}),
