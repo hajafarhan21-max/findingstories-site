@@ -1,18 +1,32 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 3,
   "generatedAt": "2026-09-17",
   "publishedProjects": 9,
-  "totals": {
+  "fullyPopulated": 0,
+  "officialSourceLimited": 9,
+  "beforeCoverage": {
     "hero": 3,
     "exterior": 3,
     "interior": 3,
     "amenities": 3,
     "unitPlans": 1,
     "locationMap": 1,
-    "pricing": 0,
+    "pricing": 2,
+    "sizes": 2,
     "paymentPlan": 0,
-    "handover": 0,
-    "sizes": 0,
+    "handover": 0
+  },
+  "totals": {
+    "hero": 8,
+    "exterior": 7,
+    "interior": 7,
+    "amenities": 7,
+    "unitPlans": 3,
+    "locationMap": 3,
+    "pricing": 3,
+    "paymentPlan": 0,
+    "handover": 1,
+    "sizes": 3,
     "projectFacts": 9,
     "sourceProvenance": 9
   },
@@ -20,16 +34,28 @@
     {
       "slug": "azizi-florence",
       "name": "Azizi Florence",
+      "classification": "OFFICIAL_SOURCE_LIMITED",
+      "customerFallback": "Unknown optional facts are omitted; location falls back to verified community context.",
+      "mediaCounts": {
+        "hero": 1,
+        "exterior": 0,
+        "interior": 0,
+        "amenities": 0,
+        "lifestyle": 0,
+        "floorPlans": 0,
+        "masterplan": 0,
+        "locationMap": 0
+      },
       "hero": "VERIFIED_AND_PUBLISHED",
       "exterior": "VERIFIED_AND_PUBLISHED",
       "interior": "VERIFIED_AND_PUBLISHED",
       "amenities": "VERIFIED_AND_PUBLISHED",
       "unitPlans": "VERIFIED_AND_PUBLISHED",
       "locationMap": "VERIFIED_AND_PUBLISHED",
-      "pricing": "SOURCE_NOT_FOUND",
-      "paymentPlan": "SOURCE_NOT_FOUND",
-      "handover": "SOURCE_NOT_FOUND",
-      "sizes": "SOURCE_NOT_FOUND",
+      "pricing": "SOURCE_NOT_PUBLISHED",
+      "paymentPlan": "SOURCE_NOT_PUBLISHED",
+      "handover": "SOURCE_NOT_PUBLISHED",
+      "sizes": "SOURCE_NOT_PUBLISHED",
       "projectFacts": "VERIFIED_AND_PUBLISHED",
       "sourceProvenance": "VERIFIED_AND_PUBLISHED",
       "officialSources": [
@@ -39,205 +65,341 @@
         "startingPrice",
         "paymentPlan",
         "handover",
-        "currentAvailability",
-        "sizeRange"
-      ]
+        "sizeRange",
+        "currentAvailability"
+      ],
+      "unresolvedDetails": {
+        "startingPrice": "Live official inventory confirmation is not represented by published project material.",
+        "paymentPlan": "Live official inventory confirmation is not represented by published project material.",
+        "handover": "Live official inventory confirmation is not represented by published project material.",
+        "sizeRange": "Live official inventory confirmation is not represented by published project material."
+      }
     },
     {
       "slug": "terra-gardens",
       "name": "Terra Gardens",
+      "classification": "OFFICIAL_SOURCE_LIMITED",
+      "customerFallback": "Unknown optional facts are omitted; location falls back to verified community context.",
+      "mediaCounts": {
+        "hero": 1,
+        "exterior": 3,
+        "interior": 3,
+        "amenities": 2,
+        "lifestyle": 3,
+        "floorPlans": 0,
+        "masterplan": 0,
+        "locationMap": 0
+      },
       "hero": "VERIFIED_AND_PUBLISHED",
       "exterior": "VERIFIED_AND_PUBLISHED",
       "interior": "VERIFIED_AND_PUBLISHED",
       "amenities": "VERIFIED_AND_PUBLISHED",
-      "unitPlans": "SOURCE_NOT_FOUND",
-      "locationMap": "SOURCE_NOT_FOUND",
-      "pricing": "SOURCE_NOT_FOUND",
-      "paymentPlan": "SOURCE_NOT_FOUND",
-      "handover": "SOURCE_NOT_FOUND",
-      "sizes": "SOURCE_NOT_FOUND",
+      "unitPlans": "SOURCE_NOT_PUBLISHED",
+      "locationMap": "SOURCE_NOT_PUBLISHED",
+      "pricing": "VERIFIED_AND_PUBLISHED",
+      "paymentPlan": "SOURCE_NOT_PUBLISHED",
+      "handover": "SOURCE_NOT_PUBLISHED",
+      "sizes": "VERIFIED_AND_PUBLISHED",
       "projectFacts": "VERIFIED_AND_PUBLISHED",
       "sourceProvenance": "VERIFIED_AND_PUBLISHED",
       "officialSources": [
-        "https://www.emaar.com/en/properties/terra-gardens-at-expo-living"
+        "https://www.emaar.com/en/properties/terra-gardens-at-expo-living",
+        "https://uae-cms.emaar.com/uploads/428953_brochure_File_032bce8224.pdf"
       ],
       "unresolved": [
-        "startingPrice",
         "paymentPlan",
         "handover",
-        "currentAvailability",
-        "sizeRange"
-      ]
+        "currentAvailability"
+      ],
+      "unresolvedDetails": {
+        "paymentPlan": "The official project page reports that a unit payment plan is unavailable and the official brochure contains no schedule.",
+        "handover": "Neither the official project page nor the 28-page official brochure publishes a completion date."
+      }
     },
     {
       "slug": "chelsea-residences",
       "name": "Chelsea Residences",
-      "hero": "SOURCE_NOT_FOUND",
-      "exterior": "SOURCE_NOT_FOUND",
-      "interior": "SOURCE_NOT_FOUND",
-      "amenities": "SOURCE_NOT_FOUND",
-      "unitPlans": "SOURCE_NOT_FOUND",
-      "locationMap": "SOURCE_NOT_FOUND",
-      "pricing": "SOURCE_NOT_FOUND",
-      "paymentPlan": "SOURCE_NOT_FOUND",
-      "handover": "SOURCE_NOT_FOUND",
-      "sizes": "SOURCE_NOT_FOUND",
+      "classification": "OFFICIAL_SOURCE_LIMITED",
+      "customerFallback": "Unknown optional facts are omitted; location falls back to verified community context.",
+      "mediaCounts": {
+        "hero": 0,
+        "exterior": 0,
+        "interior": 0,
+        "amenities": 0,
+        "lifestyle": 0,
+        "floorPlans": 0,
+        "masterplan": 0,
+        "locationMap": 0
+      },
+      "hero": "SOURCE_NOT_PUBLISHED",
+      "exterior": "SOURCE_NOT_PUBLISHED",
+      "interior": "SOURCE_NOT_PUBLISHED",
+      "amenities": "SOURCE_NOT_PUBLISHED",
+      "unitPlans": "SOURCE_NOT_PUBLISHED",
+      "locationMap": "SOURCE_NOT_PUBLISHED",
+      "pricing": "SOURCE_NOT_PUBLISHED",
+      "paymentPlan": "SOURCE_NOT_PUBLISHED",
+      "handover": "SOURCE_NOT_PUBLISHED",
+      "sizes": "SOURCE_NOT_PUBLISHED",
       "projectFacts": "VERIFIED_AND_PUBLISHED",
       "sourceProvenance": "VERIFIED_AND_PUBLISHED",
       "officialSources": [
-        "https://www.damacproperties.com/en/projects/chelsea-residences-by-damac"
+        "https://www.damacproperties.com/en/projects/chelsea-residences/",
+        "https://www.damacproperties.com/en/blog/damac-chelsea-residences-unit-types-floor-plans-and-layouts-2378/"
       ],
       "unresolved": [
         "startingPrice",
         "paymentPlan",
         "handover",
-        "currentAvailability",
-        "sizeRange"
-      ]
+        "sizeRange",
+        "currentAvailability"
+      ],
+      "unresolvedDetails": {
+        "startingPrice": "The official DAMAC project and layout pages returned access-denied responses during review; no claim was taken from a third party.",
+        "paymentPlan": "The official DAMAC pages returned access-denied responses and no accessible official brochure was linked.",
+        "handover": "The official DAMAC pages returned access-denied responses and no accessible official brochure was linked.",
+        "sizeRange": "The official DAMAC layout article was access-denied; third-party size claims were rejected."
+      }
     },
     {
       "slug": "the-serene-sobha-central",
       "name": "The Serene at Sobha Central",
+      "classification": "OFFICIAL_SOURCE_LIMITED",
+      "customerFallback": "Unknown optional facts are omitted; location falls back to verified community context.",
+      "mediaCounts": {
+        "hero": 1,
+        "exterior": 1,
+        "interior": 1,
+        "amenities": 5,
+        "lifestyle": 0,
+        "floorPlans": 2,
+        "masterplan": 0,
+        "locationMap": 1
+      },
       "hero": "VERIFIED_AND_PUBLISHED",
       "exterior": "VERIFIED_AND_PUBLISHED",
       "interior": "VERIFIED_AND_PUBLISHED",
       "amenities": "VERIFIED_AND_PUBLISHED",
-      "unitPlans": "SOURCE_NOT_FOUND",
-      "locationMap": "SOURCE_NOT_FOUND",
-      "pricing": "SOURCE_NOT_FOUND",
-      "paymentPlan": "SOURCE_NOT_FOUND",
-      "handover": "SOURCE_NOT_FOUND",
-      "sizes": "SOURCE_NOT_FOUND",
+      "unitPlans": "VERIFIED_AND_PUBLISHED",
+      "locationMap": "VERIFIED_AND_PUBLISHED",
+      "pricing": "VERIFIED_AND_PUBLISHED",
+      "paymentPlan": "SOURCE_NOT_PUBLISHED",
+      "handover": "VERIFIED_AND_PUBLISHED",
+      "sizes": "VERIFIED_AND_PUBLISHED",
       "projectFacts": "VERIFIED_AND_PUBLISHED",
       "sourceProvenance": "VERIFIED_AND_PUBLISHED",
       "officialSources": [
-        "https://sobharealty.com/properties-in-dubai/sobha-central/the-serene"
+        "https://sobharealty.com/properties-in-dubai/sobha-central/the-serene",
+        "https://sobharealty.com/sites/default/files/2025-08/SOBHA%20CENTRAL%20-%20THE%20SERENE%20BROCHURE_0.pdf"
       ],
       "unresolved": [
-        "startingPrice",
         "paymentPlan",
-        "handover",
-        "currentAvailability",
-        "sizeRange"
-      ]
+        "currentAvailability"
+      ],
+      "unresolvedDetails": {
+        "paymentPlan": "The official project page and 64-page official brochure publish no payment schedule."
+      }
     },
     {
       "slug": "sparklz-by-danube",
       "name": "Sparklz by Danube",
-      "hero": "SOURCE_NOT_FOUND",
-      "exterior": "SOURCE_NOT_FOUND",
-      "interior": "SOURCE_NOT_FOUND",
-      "amenities": "SOURCE_NOT_FOUND",
-      "unitPlans": "SOURCE_NOT_FOUND",
-      "locationMap": "SOURCE_NOT_FOUND",
-      "pricing": "SOURCE_NOT_FOUND",
-      "paymentPlan": "SOURCE_NOT_FOUND",
-      "handover": "SOURCE_NOT_FOUND",
-      "sizes": "SOURCE_NOT_FOUND",
+      "classification": "OFFICIAL_SOURCE_LIMITED",
+      "customerFallback": "Unknown optional facts are omitted; location falls back to verified community context.",
+      "mediaCounts": {
+        "hero": 1,
+        "exterior": 0,
+        "interior": 0,
+        "amenities": 0,
+        "lifestyle": 0,
+        "floorPlans": 0,
+        "masterplan": 0,
+        "locationMap": 0
+      },
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "SOURCE_NOT_PUBLISHED",
+      "interior": "SOURCE_NOT_PUBLISHED",
+      "amenities": "SOURCE_NOT_PUBLISHED",
+      "unitPlans": "SOURCE_NOT_PUBLISHED",
+      "locationMap": "SOURCE_NOT_PUBLISHED",
+      "pricing": "SOURCE_NOT_PUBLISHED",
+      "paymentPlan": "SOURCE_NOT_PUBLISHED",
+      "handover": "SOURCE_NOT_PUBLISHED",
+      "sizes": "SOURCE_NOT_PUBLISHED",
       "projectFacts": "VERIFIED_AND_PUBLISHED",
       "sourceProvenance": "VERIFIED_AND_PUBLISHED",
       "officialSources": [
-        "https://danubeproperties.com/projects/sparklz/"
+        "https://danubeproperties.com/projects/sparklz/",
+        "https://danubeproperties.com/wp-content/uploads/2026/05/sparklz.jpg"
       ],
       "unresolved": [
         "startingPrice",
         "paymentPlan",
         "handover",
-        "currentAvailability",
-        "sizeRange"
-      ]
+        "sizeRange",
+        "currentAvailability"
+      ],
+      "unresolvedDetails": {
+        "startingPrice": "The official project route now redirects to a single official project image and exposes no commercial record.",
+        "paymentPlan": "The retired official project route exposes no payment schedule or brochure.",
+        "handover": "The retired official project route exposes no completion statement or brochure.",
+        "sizeRange": "The retired official project route exposes no unit schedule or brochure."
+      }
     },
     {
       "slug": "w-residences-dubai-harbour",
       "name": "W Residences Dubai Harbour",
-      "hero": "SOURCE_NOT_FOUND",
-      "exterior": "SOURCE_NOT_FOUND",
-      "interior": "SOURCE_NOT_FOUND",
-      "amenities": "SOURCE_NOT_FOUND",
-      "unitPlans": "SOURCE_NOT_FOUND",
-      "locationMap": "SOURCE_NOT_FOUND",
-      "pricing": "SOURCE_NOT_FOUND",
-      "paymentPlan": "SOURCE_NOT_FOUND",
-      "handover": "SOURCE_NOT_FOUND",
-      "sizes": "SOURCE_NOT_FOUND",
+      "classification": "OFFICIAL_SOURCE_LIMITED",
+      "customerFallback": "Unknown optional facts are omitted; location falls back to verified community context.",
+      "mediaCounts": {
+        "hero": 1,
+        "exterior": 1,
+        "interior": 1,
+        "amenities": 1,
+        "lifestyle": 1,
+        "floorPlans": 0,
+        "masterplan": 0,
+        "locationMap": 0
+      },
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "VERIFIED_AND_PUBLISHED",
+      "interior": "VERIFIED_AND_PUBLISHED",
+      "amenities": "VERIFIED_AND_PUBLISHED",
+      "unitPlans": "SOURCE_NOT_PUBLISHED",
+      "locationMap": "SOURCE_NOT_PUBLISHED",
+      "pricing": "VERIFIED_AND_PUBLISHED",
+      "paymentPlan": "SOURCE_NOT_PUBLISHED",
+      "handover": "SOURCE_NOT_PUBLISHED",
+      "sizes": "SOURCE_NOT_PUBLISHED",
       "projectFacts": "VERIFIED_AND_PUBLISHED",
       "sourceProvenance": "VERIFIED_AND_PUBLISHED",
       "officialSources": [
         "https://www.arada.com/en/w-residences-dubai-harbour/"
       ],
       "unresolved": [
-        "startingPrice",
         "paymentPlan",
         "handover",
-        "currentAvailability",
-        "sizeRange"
-      ]
+        "sizeRange",
+        "currentAvailability"
+      ],
+      "unresolvedDetails": {
+        "paymentPlan": "The official project page does not publish payment milestones.",
+        "handover": "The official project page does not publish a completion date.",
+        "sizeRange": "The official project page does not publish a unit area schedule or downloadable floor-plan document."
+      }
     },
     {
       "slug": "yas-riva",
       "name": "Yas Riva",
-      "hero": "SOURCE_NOT_FOUND",
-      "exterior": "SOURCE_NOT_FOUND",
-      "interior": "SOURCE_NOT_FOUND",
-      "amenities": "SOURCE_NOT_FOUND",
-      "unitPlans": "SOURCE_NOT_FOUND",
-      "locationMap": "SOURCE_NOT_FOUND",
-      "pricing": "SOURCE_NOT_FOUND",
-      "paymentPlan": "SOURCE_NOT_FOUND",
-      "handover": "SOURCE_NOT_FOUND",
-      "sizes": "SOURCE_NOT_FOUND",
+      "classification": "OFFICIAL_SOURCE_LIMITED",
+      "customerFallback": "Unknown optional facts are omitted; location falls back to verified community context.",
+      "mediaCounts": {
+        "hero": 1,
+        "exterior": 1,
+        "interior": 1,
+        "amenities": 1,
+        "lifestyle": 1,
+        "floorPlans": 0,
+        "masterplan": 0,
+        "locationMap": 0
+      },
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "VERIFIED_AND_PUBLISHED",
+      "interior": "VERIFIED_AND_PUBLISHED",
+      "amenities": "VERIFIED_AND_PUBLISHED",
+      "unitPlans": "SOURCE_NOT_PUBLISHED",
+      "locationMap": "SOURCE_NOT_PUBLISHED",
+      "pricing": "SOURCE_NOT_PUBLISHED",
+      "paymentPlan": "SOURCE_NOT_PUBLISHED",
+      "handover": "SOURCE_NOT_PUBLISHED",
+      "sizes": "SOURCE_NOT_PUBLISHED",
       "projectFacts": "VERIFIED_AND_PUBLISHED",
       "sourceProvenance": "VERIFIED_AND_PUBLISHED",
       "officialSources": [
+        "https://www.aldar.com/properties/en/launch/Yas-Riva",
         "https://www.aldar.com/en/news-and-media/aldar-launches-yas-riva"
       ],
       "unresolved": [
         "startingPrice",
         "paymentPlan",
         "handover",
-        "currentAvailability",
-        "sizeRange"
-      ]
+        "sizeRange",
+        "currentAvailability"
+      ],
+      "unresolvedDetails": {
+        "startingPrice": "The official launch page and Aldar launch announcement do not publish a starting price.",
+        "paymentPlan": "The official launch page and launch announcement contain no payment schedule.",
+        "handover": "The official launch page and launch announcement contain no completion date.",
+        "sizeRange": "The official launch page and launch announcement contain no villa area schedule."
+      }
     },
     {
       "slug": "mar-casa",
       "name": "Mar Casa",
-      "hero": "SOURCE_NOT_FOUND",
-      "exterior": "SOURCE_NOT_FOUND",
-      "interior": "SOURCE_NOT_FOUND",
-      "amenities": "SOURCE_NOT_FOUND",
-      "unitPlans": "SOURCE_NOT_FOUND",
-      "locationMap": "SOURCE_NOT_FOUND",
-      "pricing": "SOURCE_NOT_FOUND",
-      "paymentPlan": "SOURCE_NOT_FOUND",
-      "handover": "SOURCE_NOT_FOUND",
-      "sizes": "SOURCE_NOT_FOUND",
+      "classification": "OFFICIAL_SOURCE_LIMITED",
+      "customerFallback": "Unknown optional facts are omitted; location falls back to verified community context.",
+      "mediaCounts": {
+        "hero": 1,
+        "exterior": 1,
+        "interior": 1,
+        "amenities": 1,
+        "lifestyle": 1,
+        "floorPlans": 3,
+        "masterplan": 0,
+        "locationMap": 1
+      },
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "VERIFIED_AND_PUBLISHED",
+      "interior": "VERIFIED_AND_PUBLISHED",
+      "amenities": "VERIFIED_AND_PUBLISHED",
+      "unitPlans": "VERIFIED_AND_PUBLISHED",
+      "locationMap": "VERIFIED_AND_PUBLISHED",
+      "pricing": "SOURCE_NOT_PUBLISHED",
+      "paymentPlan": "SOURCE_NOT_PUBLISHED",
+      "handover": "SOURCE_NOT_PUBLISHED",
+      "sizes": "VERIFIED_AND_PUBLISHED",
       "projectFacts": "VERIFIED_AND_PUBLISHED",
       "sourceProvenance": "VERIFIED_AND_PUBLISHED",
       "officialSources": [
-        "https://deyaar.ae/en/properties/mar-casa/"
+        "https://deyaar.ae/en/properties/mar-casa/",
+        "https://www.deyaar.ae/wp-content/uploads/2023/07/MAR-CASA-Brochure.pdf"
       ],
       "unresolved": [
         "startingPrice",
         "paymentPlan",
         "handover",
-        "currentAvailability",
-        "sizeRange"
-      ]
+        "currentAvailability"
+      ],
+      "unresolvedDetails": {
+        "startingPrice": "The official project page and 61-page brochure contain no current starting price.",
+        "paymentPlan": "The official project page and brochure contain no payment schedule.",
+        "handover": "The official project page and brochure contain no completion date."
+      }
     },
     {
       "slug": "olfah",
       "name": "Olfah",
-      "hero": "SOURCE_NOT_FOUND",
-      "exterior": "SOURCE_NOT_FOUND",
-      "interior": "SOURCE_NOT_FOUND",
-      "amenities": "SOURCE_NOT_FOUND",
-      "unitPlans": "SOURCE_NOT_FOUND",
-      "locationMap": "SOURCE_NOT_FOUND",
-      "pricing": "SOURCE_NOT_FOUND",
-      "paymentPlan": "SOURCE_NOT_FOUND",
-      "handover": "SOURCE_NOT_FOUND",
-      "sizes": "SOURCE_NOT_FOUND",
+      "classification": "OFFICIAL_SOURCE_LIMITED",
+      "customerFallback": "Unknown optional facts are omitted; location falls back to verified community context.",
+      "mediaCounts": {
+        "hero": 1,
+        "exterior": 1,
+        "interior": 1,
+        "amenities": 1,
+        "lifestyle": 1,
+        "floorPlans": 0,
+        "masterplan": 0,
+        "locationMap": 0
+      },
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "VERIFIED_AND_PUBLISHED",
+      "interior": "VERIFIED_AND_PUBLISHED",
+      "amenities": "VERIFIED_AND_PUBLISHED",
+      "unitPlans": "SOURCE_NOT_PUBLISHED",
+      "locationMap": "SOURCE_NOT_PUBLISHED",
+      "pricing": "SOURCE_NOT_PUBLISHED",
+      "paymentPlan": "SOURCE_NOT_PUBLISHED",
+      "handover": "SOURCE_NOT_PUBLISHED",
+      "sizes": "SOURCE_NOT_PUBLISHED",
       "projectFacts": "VERIFIED_AND_PUBLISHED",
       "sourceProvenance": "VERIFIED_AND_PUBLISHED",
       "officialSources": [
@@ -247,9 +409,15 @@
         "startingPrice",
         "paymentPlan",
         "handover",
-        "currentAvailability",
-        "sizeRange"
-      ]
+        "sizeRange",
+        "currentAvailability"
+      ],
+      "unresolvedDetails": {
+        "startingPrice": "The official Alef project page does not publish a starting price.",
+        "paymentPlan": "The official Alef project page does not publish payment milestones.",
+        "handover": "The official Alef project page does not publish a completion date.",
+        "sizeRange": "The official Alef project page does not publish unit areas or an accessible brochure."
+      }
     }
   ]
 }
