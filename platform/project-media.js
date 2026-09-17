@@ -5,7 +5,8 @@
 const reviewed='2026-09-16';
 const media=(projectSlug,id,kind,sourceUrl,sha256,width,height,alt)=>Object.freeze({
   id:`${projectSlug}-${id}`,projectSlug,kind,sourceUrl,sourceType:'OFFICIAL_DEVELOPER_PROJECT_PAGE',
-  sha256,width,height,alt,reviewedAt:reviewed,usageState:'APPROVED',verificationState:'VERIFIED',
+  originalFilename:decodeURIComponent(new URL(sourceUrl).pathname.split('/').at(-1)),assetType:'IMAGE',mediaRole:kind,
+  sha256,width,height,alt,retrievedAt:reviewed,reviewedAt:reviewed,approvalState:'APPROVED',usageState:'APPROVED',verificationState:'VERIFIED',
   path:`/assets/projects/${projectSlug}/${id}`
 });
 

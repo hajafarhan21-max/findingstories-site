@@ -35,7 +35,9 @@
     "intelligence:generate": "node scripts/generate-intelligence.mjs",
     "audit:routes": "node scripts/audit-public-site.mjs",
     "audit:links": "node scripts/audit-public-site.mjs --check=links",
-    "audit:empty-pages": "node scripts/audit-public-site.mjs --check=empty"
+    "audit:empty-pages": "node scripts/audit-public-site.mjs --check=empty",
+    "audit:projects": "node scripts/audit-project-completeness.mjs",
+    "validate:project-media": "node scripts/audit-project-completeness.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
