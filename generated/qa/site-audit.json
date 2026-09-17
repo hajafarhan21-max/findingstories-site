@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
   "total_routes": 137,
-  "populated_routes": 127,
-  "intentional_partial_routes": 10,
+  "populated_routes": 128,
+  "intentional_partial_routes": 9,
   "broken_routes": 0,
   "manual_dld_datasets_discovered": 0,
   "datasets_successfully_mapped": 0,
@@ -12,7 +12,7 @@
   "property_type_pages_populated": 10,
   "fields_mapped": 0,
   "fields_unmapped": 0,
-  "links_checked": 6157,
+  "links_checked": 6195,
   "failures": [],
   "records": [
     {
@@ -21,15 +21,15 @@
       "source": "homepage",
       "render": "generated HTML",
       "meaningful": true,
-      "data": "governed empty state",
+      "data": "catalog / approved source",
       "cta": "working lead CTA",
       "attribution": "preserved",
       "seo": "canonical, title, description",
       "mobile": "responsive rules checked",
       "desktop": "generated layout checked",
-      "problem": "no approved publishable records",
-      "resolution": "intentional explanatory state + enquiry/discovery path",
-      "status": "INTENTIONALLY GATED"
+      "problem": "none",
+      "resolution": "none required",
+      "status": "PASS"
     },
     {
       "route": "/areas",
@@ -1617,7 +1617,7 @@
     },
     {
       "route": "/projects/chelsea-residences",
-      "title": "Chelsea Residences project guide | Finding Stories",
+      "title": "Chelsea Residences by DAMAC | Dubai Maritime City",
       "source": "projects",
       "render": "generated HTML",
       "meaningful": true,
@@ -1633,7 +1633,7 @@
     },
     {
       "route": "/projects/mar-casa",
-      "title": "Mar Casa project guide | Finding Stories",
+      "title": "Mar Casa by Deyaar | Dubai Maritime City",
       "source": "projects",
       "render": "generated HTML",
       "meaningful": true,
@@ -1681,7 +1681,7 @@
     },
     {
       "route": "/projects/olfah",
-      "title": "Olfah project guide | Finding Stories",
+      "title": "Olfah by Alef | Sharjah",
       "source": "projects",
       "render": "generated HTML",
       "meaningful": true,
@@ -1745,7 +1745,7 @@
     },
     {
       "route": "/projects/sparklz-by-danube",
-      "title": "Sparklz by Danube project guide | Finding Stories",
+      "title": "Sparklz by Danube by Danube | Al Furjan",
       "source": "projects",
       "render": "generated HTML",
       "meaningful": true,
@@ -1761,7 +1761,7 @@
     },
     {
       "route": "/projects/terra-gardens",
-      "title": "Terra Gardens project guide | Finding Stories",
+      "title": "Terra Gardens by Emaar | Expo City",
       "source": "projects",
       "render": "generated HTML",
       "meaningful": true,
@@ -1777,7 +1777,7 @@
     },
     {
       "route": "/projects/the-serene-sobha-central",
-      "title": "The Serene at Sobha Central project guide | Finding Stories",
+      "title": "The Serene at Sobha Central by Sobha Realty | Jebel Ali",
       "source": "projects",
       "render": "generated HTML",
       "meaningful": true,
@@ -1809,7 +1809,7 @@
     },
     {
       "route": "/projects/w-residences-dubai-harbour",
-      "title": "W Residences Dubai Harbour project guide | Finding Stories",
+      "title": "W Residences Dubai Harbour by Arada | Dubai Harbour",
       "source": "projects",
       "render": "generated HTML",
       "meaningful": true,
@@ -1825,7 +1825,7 @@
     },
     {
       "route": "/projects/yas-riva",
-      "title": "Yas Riva project guide | Finding Stories",
+      "title": "Yas Riva by Aldar | Abu Dhabi",
       "source": "projects",
       "render": "generated HTML",
       "meaningful": true,

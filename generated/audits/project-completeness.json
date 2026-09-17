@@ -1,0 +1,255 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-17",
+  "publishedProjects": 9,
+  "totals": {
+    "hero": 3,
+    "exterior": 3,
+    "interior": 3,
+    "amenities": 3,
+    "unitPlans": 1,
+    "locationMap": 1,
+    "pricing": 0,
+    "paymentPlan": 0,
+    "handover": 0,
+    "sizes": 0,
+    "projectFacts": 9,
+    "sourceProvenance": 9
+  },
+  "projects": [
+    {
+      "slug": "azizi-florence",
+      "name": "Azizi Florence",
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "VERIFIED_AND_PUBLISHED",
+      "interior": "VERIFIED_AND_PUBLISHED",
+      "amenities": "VERIFIED_AND_PUBLISHED",
+      "unitPlans": "VERIFIED_AND_PUBLISHED",
+      "locationMap": "VERIFIED_AND_PUBLISHED",
+      "pricing": "SOURCE_NOT_FOUND",
+      "paymentPlan": "SOURCE_NOT_FOUND",
+      "handover": "SOURCE_NOT_FOUND",
+      "sizes": "SOURCE_NOT_FOUND",
+      "projectFacts": "VERIFIED_AND_PUBLISHED",
+      "sourceProvenance": "VERIFIED_AND_PUBLISHED",
+      "officialSources": [
+        "/projects/azizi-florence/manifest.json"
+      ],
+      "unresolved": [
+        "startingPrice",
+        "paymentPlan",
+        "handover",
+        "currentAvailability",
+        "sizeRange"
+      ]
+    },
+    {
+      "slug": "terra-gardens",
+      "name": "Terra Gardens",
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "VERIFIED_AND_PUBLISHED",
+      "interior": "VERIFIED_AND_PUBLISHED",
+      "amenities": "VERIFIED_AND_PUBLISHED",
+      "unitPlans": "SOURCE_NOT_FOUND",
+      "locationMap": "SOURCE_NOT_FOUND",
+      "pricing": "SOURCE_NOT_FOUND",
+      "paymentPlan": "SOURCE_NOT_FOUND",
+      "handover": "SOURCE_NOT_FOUND",
+      "sizes": "SOURCE_NOT_FOUND",
+      "projectFacts": "VERIFIED_AND_PUBLISHED",
+      "sourceProvenance": "VERIFIED_AND_PUBLISHED",
+      "officialSources": [
+        "https://www.emaar.com/en/properties/terra-gardens-at-expo-living"
+      ],
+      "unresolved": [
+        "startingPrice",
+        "paymentPlan",
+        "handover",
+        "currentAvailability",
+        "sizeRange"
+      ]
+    },
+    {
+      "slug": "chelsea-residences",
+      "name": "Chelsea Residences",
+      "hero": "SOURCE_NOT_FOUND",
+      "exterior": "SOURCE_NOT_FOUND",
+      "interior": "SOURCE_NOT_FOUND",
+      "amenities": "SOURCE_NOT_FOUND",
+      "unitPlans": "SOURCE_NOT_FOUND",
+      "locationMap": "SOURCE_NOT_FOUND",
+      "pricing": "SOURCE_NOT_FOUND",
+      "paymentPlan": "SOURCE_NOT_FOUND",
+      "handover": "SOURCE_NOT_FOUND",
+      "sizes": "SOURCE_NOT_FOUND",
+      "projectFacts": "VERIFIED_AND_PUBLISHED",
+      "sourceProvenance": "VERIFIED_AND_PUBLISHED",
+      "officialSources": [
+        "https://www.damacproperties.com/en/projects/chelsea-residences-by-damac"
+      ],
+      "unresolved": [
+        "startingPrice",
+        "paymentPlan",
+        "handover",
+        "currentAvailability",
+        "sizeRange"
+      ]
+    },
+    {
+      "slug": "the-serene-sobha-central",
+      "name": "The Serene at Sobha Central",
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "VERIFIED_AND_PUBLISHED",
+      "interior": "VERIFIED_AND_PUBLISHED",
+      "amenities": "VERIFIED_AND_PUBLISHED",
+      "unitPlans": "SOURCE_NOT_FOUND",
+      "locationMap": "SOURCE_NOT_FOUND",
+      "pricing": "SOURCE_NOT_FOUND",
+      "paymentPlan": "SOURCE_NOT_FOUND",
+      "handover": "SOURCE_NOT_FOUND",
+      "sizes": "SOURCE_NOT_FOUND",
+      "projectFacts": "VERIFIED_AND_PUBLISHED",
+      "sourceProvenance": "VERIFIED_AND_PUBLISHED",
+      "officialSources": [
+        "https://sobharealty.com/properties-in-dubai/sobha-central/the-serene"
+      ],
+      "unresolved": [
+        "startingPrice",
+        "paymentPlan",
+        "handover",
+        "currentAvailability",
+        "sizeRange"
+      ]
+    },
+    {
+      "slug": "sparklz-by-danube",
+      "name": "Sparklz by Danube",
+      "hero": "SOURCE_NOT_FOUND",
+      "exterior": "SOURCE_NOT_FOUND",
+      "interior": "SOURCE_NOT_FOUND",
+      "amenities": "SOURCE_NOT_FOUND",
+      "unitPlans": "SOURCE_NOT_FOUND",
+      "locationMap": "SOURCE_NOT_FOUND",
+      "pricing": "SOURCE_NOT_FOUND",
+      "paymentPlan": "SOURCE_NOT_FOUND",
+      "handover": "SOURCE_NOT_FOUND",
+      "sizes": "SOURCE_NOT_FOUND",
+      "projectFacts": "VERIFIED_AND_PUBLISHED",
+      "sourceProvenance": "VERIFIED_AND_PUBLISHED",
+      "officialSources": [
+        "https://danubeproperties.com/projects/sparklz/"
+      ],
+      "unresolved": [
+        "startingPrice",
+        "paymentPlan",
+        "handover",
+        "currentAvailability",
+        "sizeRange"
+      ]
+    },
+    {
+      "slug": "w-residences-dubai-harbour",
+      "name": "W Residences Dubai Harbour",
+      "hero": "SOURCE_NOT_FOUND",
+      "exterior": "SOURCE_NOT_FOUND",
+      "interior": "SOURCE_NOT_FOUND",
+      "amenities": "SOURCE_NOT_FOUND",
+      "unitPlans": "SOURCE_NOT_FOUND",
+      "locationMap": "SOURCE_NOT_FOUND",
+      "pricing": "SOURCE_NOT_FOUND",
+      "paymentPlan": "SOURCE_NOT_FOUND",
+      "handover": "SOURCE_NOT_FOUND",
+      "sizes": "SOURCE_NOT_FOUND",
+      "projectFacts": "VERIFIED_AND_PUBLISHED",
+      "sourceProvenance": "VERIFIED_AND_PUBLISHED",
+      "officialSources": [
+        "https://www.arada.com/en/w-residences-dubai-harbour/"
+      ],
+      "unresolved": [
+        "startingPrice",
+        "paymentPlan",
+        "handover",
+        "currentAvailability",
+        "sizeRange"
+      ]
+    },
+    {
+      "slug": "yas-riva",
+      "name": "Yas Riva",
+      "hero": "SOURCE_NOT_FOUND",
+      "exterior": "SOURCE_NOT_FOUND",
+      "interior": "SOURCE_NOT_FOUND",
+      "amenities": "SOURCE_NOT_FOUND",
+      "unitPlans": "SOURCE_NOT_FOUND",
+      "locationMap": "SOURCE_NOT_FOUND",
+      "pricing": "SOURCE_NOT_FOUND",
+      "paymentPlan": "SOURCE_NOT_FOUND",
+      "handover": "SOURCE_NOT_FOUND",
+      "sizes": "SOURCE_NOT_FOUND",
+      "projectFacts": "VERIFIED_AND_PUBLISHED",
+      "sourceProvenance": "VERIFIED_AND_PUBLISHED",
+      "officialSources": [
+        "https://www.aldar.com/en/news-and-media/aldar-launches-yas-riva"
+      ],
+      "unresolved": [
+        "startingPrice",
+        "paymentPlan",
+        "handover",
+        "currentAvailability",
+        "sizeRange"
+      ]
+    },
+    {
+      "slug": "mar-casa",
+      "name": "Mar Casa",
+      "hero": "SOURCE_NOT_FOUND",
+      "exterior": "SOURCE_NOT_FOUND",
+      "interior": "SOURCE_NOT_FOUND",
+      "amenities": "SOURCE_NOT_FOUND",
+      "unitPlans": "SOURCE_NOT_FOUND",
+      "locationMap": "SOURCE_NOT_FOUND",
+      "pricing": "SOURCE_NOT_FOUND",
+      "paymentPlan": "SOURCE_NOT_FOUND",
+      "handover": "SOURCE_NOT_FOUND",
+      "sizes": "SOURCE_NOT_FOUND",
+      "projectFacts": "VERIFIED_AND_PUBLISHED",
+      "sourceProvenance": "VERIFIED_AND_PUBLISHED",
+      "officialSources": [
+        "https://deyaar.ae/en/properties/mar-casa/"
+      ],
+      "unresolved": [
+        "startingPrice",
+        "paymentPlan",
+        "handover",
+        "currentAvailability",
+        "sizeRange"
+      ]
+    },
+    {
+      "slug": "olfah",
+      "name": "Olfah",
+      "hero": "SOURCE_NOT_FOUND",
+      "exterior": "SOURCE_NOT_FOUND",
+      "interior": "SOURCE_NOT_FOUND",
+      "amenities": "SOURCE_NOT_FOUND",
+      "unitPlans": "SOURCE_NOT_FOUND",
+      "locationMap": "SOURCE_NOT_FOUND",
+      "pricing": "SOURCE_NOT_FOUND",
+      "paymentPlan": "SOURCE_NOT_FOUND",
+      "handover": "SOURCE_NOT_FOUND",
+      "sizes": "SOURCE_NOT_FOUND",
+      "projectFacts": "VERIFIED_AND_PUBLISHED",
+      "sourceProvenance": "VERIFIED_AND_PUBLISHED",
+      "officialSources": [
+        "https://www.alefgroup.ae/properties/olfah/"
+      ],
+      "unresolved": [
+        "startingPrice",
+        "paymentPlan",
+        "handover",
+        "currentAvailability",
+        "sizeRange"
+      ]
+    }
+  ]
+}

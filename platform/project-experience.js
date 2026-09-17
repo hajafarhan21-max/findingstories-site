@@ -24,7 +24,22 @@ export function projectTheme(slug){
 }
 
 export function approvedMedia(media=[]){
-  return media.filter(item=>item?.sourceUrl&&item?.sourceType&&item?.reviewedAt&&item?.projectSlug&&item?.usageState==='APPROVED'&&item?.verificationState==='VERIFIED');
+  return media.filter(item=>item?.sourceUrl&&item?.sourceType&&(item?.retrievedAt||item?.reviewedAt)&&item?.projectSlug&&item?.usageState==='APPROVED'&&item?.verificationState==='VERIFIED');
+}
+
+export function mediaByRole(media=[]){
+  const roles={hero:null,exteriors:[],interiors:[],amenities:[],lifestyle:[],masterplan:[],floorPlans:[],locationMap:null};
+  for(const item of approvedMedia(media)){
+    if(item.kind==='hero')roles.hero=item;
+    else if(item.kind==='exterior')roles.exteriors.push(item);
+    else if(item.kind==='interior')roles.interiors.push(item);
+    else if(item.kind==='amenity')roles.amenities.push(item);
+    else if(item.kind==='lifestyle')roles.lifestyle.push(item);
+    else if(item.kind==='masterplan')roles.masterplan.push(item);
+    else if(item.kind==='floor-plan')roles.floorPlans.push(item);
+    else if(item.kind==='location-map')roles.locationMap=item;
+  }
+  return Object.freeze(roles);
 }
 
 export function projectPublicationDecision(project){
@@ -38,8 +53,11 @@ export function projectPublicationDecision(project){
 
 export function enrichProject(project){
   const media=project.media??(project.image?[{id:`${project.slug}-hero`,kind:'hero',path:project.image,alt:project.imageAlt,sourceUrl:project.verification?.source?.url??project.source?.url,sourceType:project.verification?.source?.type??'OFFICIAL_PROJECT_MATERIAL',reviewedAt:project.verification?.lastReviewed??project.source?.retrieved,projectSlug:project.slug,usageState:'APPROVED',verificationState:'VERIFIED'}]:[]);
+  const structuredMedia=mediaByRole(media);
+  const units=project.units??project.bedrooms.map(bedrooms=>({name:`${bedrooms} bedroom`,bedrooms,bathrooms:null,size:null,balcony:null,floorPlans:structuredMedia.floorPlans.filter(plan=>plan.unitType===bedrooms)}));
   return Object.freeze({...project,
     qualityState:'public-ready', visualFallback:media.length?'NONE':'BRANDED', media:Object.freeze(media), theme:projectTheme(project.slug),
+    mediaGroups:structuredMedia,units:Object.freeze(units),
     snapshot:Object.freeze({propertyTypes:project.propertyTypes,bedroomMix:project.bedrooms,sizeRange:null,ownership:null,serviceCharge:null}),
     commercial:Object.freeze({startingPrice:null,paymentPlan:null,booking:null,fees:null,handover:null,availability:'REQUIRES_CONFIRMATION',verifiedAt:null}),
     story:Object.freeze({
@@ -49,7 +67,7 @@ export function enrichProject(project){
       community:`The verified project location is ${project.area}, ${project.emirate}. Travel times and nearby destinations are omitted until project-specific evidence is approved.`,
       buyerConsiderations:[`Confirm which ${project.propertyTypes.join(' or ').toLowerCase()} remain available.`,`Request the current price, payment milestones and completion position in writing.`,`Review the unit-specific plan, orientation, fees and contract before commitment.`]
     }),
-    location:Object.freeze({label:`${project.area}, ${project.emirate}`,map:null,nearby:[]}),
+    location:Object.freeze({label:`${project.area}, ${project.emirate}`,map:structuredMedia.locationMap,nearby:[],mapStatus:structuredMedia.locationMap?'VERIFIED_AND_PUBLISHED':'SOURCE_NOT_FOUND',mapUnavailableReason:structuredMedia.locationMap?null:'No project-specific map or coordinates have passed source and usage review; an area label is shown instead.'}),
     documents:Object.freeze([]),
     conversion:Object.freeze({enquiryContext:`project:${project.slug}`,primaryLabel:'Request current project details',brochureLabel:null,viewingLabel:'Arrange a private consultation'}),
     governance:Object.freeze({sources:[project.source??project.verification?.source].filter(Boolean),reviewedAt:project.source?.retrieved??project.verification?.lastReviewed,unknownFields:['startingPrice','paymentPlan','handover','currentAvailability','sizeRange'],freshness:'REVIEW_CURRENT'})
