@@ -73,10 +73,10 @@ export const PROJECT_MEDIA=Object.freeze({
     brochureMedia('mar-casa','floor-plan-3br','floor-plan','https://www.deyaar.ae/wp-content/uploads/2023/07/MAR-CASA-Brochure.pdf',51,'assets-source/project-media/mar-3br.webp.base64','0817dec33470b62184d605b094a4247b148f3c674b1722332b85bf618484b216',1400,788,'Official Mar Casa three-bedroom floor plan','3')
   ]),
   'olfah':Object.freeze([
-    media('olfah','hero','hero','https://www.alefgroup.ae/wp-content/uploads/2026/04/Group-72743-scaled.jpg','2cef0904363167f48c64cee6d1ea5261de5945d902a6f01e4d1a28010f56d314',2560,978,'Olfah landscaped community'),
+    media('olfah','hero','hero','https://www.alefgroup.ae/wp-content/uploads/2026/04/Group-72743-scaled.jpg','2cef0904363167f48c64cee6d1ea5261de5945d902a6f01e4d1a28010f56d314',2560,978,'Olfah landscaped community','assets-source/project-media/olfah-hero.jpg.base64'),
     media('olfah','exterior-1','exterior','https://www.alefgroup.ae/wp-content/uploads/2026/05/Community-3.jpg','3bda4aabe7102a72874bd6c53a100761949a608f5be796413b7607f173161242',972,603,'Olfah residential exterior','assets-source/project-media/olfah-exterior-1.jpg.base64'),
-    media('olfah','interior-1','interior','https://www.alefgroup.ae/wp-content/uploads/2026/05/Property-1.jpg','fb0835bf5bf6070e836268d3c6f2128e47e1fa1f239e89718eabd22d8f544717',1296,804,'Olfah apartment interior'),
-    media('olfah','amenity-1','amenity','https://www.alefgroup.ae/wp-content/uploads/2026/05/Community-4.jpg','d29ab40e2aab27b0168006aca5207f3706abb6157f5126014e7f239585dcad4a',972,603,'Olfah landscaped amenity'),
-    media('olfah','lifestyle-1','lifestyle','https://www.alefgroup.ae/wp-content/uploads/2026/05/Community-5-2x.jpg','272c434a59202d6956c153cd4b5aaf47df867bc5a3b0f0d8a208474185e515f8',972,603,'Olfah community lifestyle')
+    media('olfah','interior-1','interior','https://www.alefgroup.ae/wp-content/uploads/2026/05/Property-1.jpg','fb0835bf5bf6070e836268d3c6f2128e47e1fa1f239e89718eabd22d8f544717',1296,804,'Olfah apartment interior','assets-source/project-media/olfah-interior-1.jpg.base64'),
+    media('olfah','amenity-1','amenity','https://www.alefgroup.ae/wp-content/uploads/2026/05/Community-4.jpg','d29ab40e2aab27b0168006aca5207f3706abb6157f5126014e7f239585dcad4a',972,603,'Olfah landscaped amenity','assets-source/project-media/olfah-amenity-1.jpg.base64'),
+    media('olfah','lifestyle-1','lifestyle','https://www.alefgroup.ae/wp-content/uploads/2026/05/Community-5-2x.jpg','272c434a59202d6956c153cd4b5aaf47df867bc5a3b0f0d8a208474185e515f8',972,603,'Olfah community lifestyle','assets-source/project-media/olfah-lifestyle-1.jpg.base64')
   ])
 });

@@ -37,7 +37,8 @@
     "audit:links": "node scripts/audit-public-site.mjs --check=links",
     "audit:empty-pages": "node scripts/audit-public-site.mjs --check=empty",
     "audit:projects": "node scripts/audit-project-completeness.mjs",
-    "validate:project-media": "node scripts/audit-project-completeness.mjs"
+    "validate:project-media": "node scripts/audit-project-completeness.mjs",
+    "audit:final": "node scripts/generate-final-production-audit.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.1",
