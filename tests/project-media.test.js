@@ -1,5 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {readFile} from 'node:fs/promises';
 import {PROJECT_MEDIA} from '../platform/project-media.js';
 import {approvedMedia} from '../platform/project-experience.js';
 
@@ -18,4 +20,12 @@ test('portfolio media is approved, project-specific, official and isolated',()=>
       assert.match(item.sourceType,/^OFFICIAL_DEVELOPER_(PROJECT_PAGE|BROCHURE)$/);
     }
   }
+});
+
+test('pinned Olfah source bytes match the approved upstream checksum',async()=>{
+  const asset=PROJECT_MEDIA.olfah.find(item=>item.id==='olfah-exterior-1');
+  const encoded=await readFile(asset.localSource,'utf8');
+  const bytes=Buffer.from(encoded.replace(/\s/g,''),'base64');
+  assert.equal(createHash('sha256').update(bytes).digest('hex'),asset.sha256);
+  assert.equal(asset.sourceUrl,'https://www.alefgroup.ae/wp-content/uploads/2026/05/Community-3.jpg');
 });
