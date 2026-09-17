@@ -25,7 +25,7 @@ test('Florence remains in the strict manifest registry while project guides add 
   const projects=await loadPublicProjects();assert.deepEqual(projects.map(x=>x.slug),['azizi-florence']);
   assert.equal(projectsFor({developer:'azizi-developments'}).length,1);
   assert.equal(projectsFor({area:'sharjah'}).length,2);
-  assert.equal(projectsFor({propertyType:'townhouses'}).length,1);
+  assert.equal(projectsFor({propertyType:'townhouses'}).length,2);
 });
 test('required project collections are canonical and generated without invented inventory',async()=>{
   assert.deepEqual(PROJECT_COLLECTION_ROUTES,['/projects/new-launches','/projects/pre-launch','/projects/off-plan','/projects/under-construction','/projects/ready','/projects/resale']);

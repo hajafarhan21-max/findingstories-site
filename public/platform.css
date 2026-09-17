@@ -40,3 +40,13 @@
 .project-image picture,.project-image picture img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.project-gallery-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.project-gallery-grid figure{margin:0;background:var(--paper);border:1px solid var(--line)}.project-gallery-grid picture,.project-gallery-grid img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}.project-gallery-grid figcaption{padding:14px 16px;color:var(--muted);font-size:.78rem}.project-hero picture{position:absolute;inset:0;width:100%;height:100%}.project-hero picture img{width:100%;height:100%;object-fit:cover}
 @media(max-width:980px){.project-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:620px){.project-gallery-grid{grid-template-columns:1fr}}
 .residence-grid article{min-height:0}.residence-grid dl{display:grid;gap:8px;margin:18px 0}.residence-grid dl div{display:flex;justify-content:space-between;gap:20px;border-top:1px solid var(--line);padding-top:8px}.residence-grid dt{color:var(--muted)}.residence-grid dd{margin:0;text-align:right}.location-panel figure{margin:0}.location-panel picture,.location-panel img,.unit-plans picture,.unit-plans img{display:block;width:100%;height:auto;object-fit:contain}.location-panel figcaption{padding:10px 0;color:var(--muted)}
+/* Populated project facts collapse cleanly when optional official data is unavailable. */
+.project-snapshot{grid-template-columns:repeat(4,1fr)}
+.project-fact-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;padding:1px;background:var(--line)}
+.project-fact-grid p{margin:0;padding:22px;background:var(--paper)}
+.availability-note{margin:20px 0 0;color:var(--muted)}
+.amenity-list,.nearby-list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.amenity-list li,.nearby-list li{padding:18px;border:1px solid var(--line);background:var(--paper)}
+.nearby-list{grid-template-columns:repeat(2,minmax(0,1fr));margin:22px 0}
+@media(max-width:980px){.project-fact-grid,.amenity-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.project-fact-grid,.amenity-list,.nearby-list{grid-template-columns:1fr}}

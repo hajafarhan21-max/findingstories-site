@@ -9,7 +9,8 @@ test('verified project records remain useful project guides when availability is
   for(const project of PUBLISHED_PROJECTS.filter(project=>project.slug!=='azizi-florence')){
     const html=await readFile(`public/projects-${project.slug}.html`,'utf8');
     assert.match(html,/PROJECT GUIDE/);
-    assert.match(html,/Current availability:<\/strong> Requires confirmation/);
+    assert.match(html,/Current availability requires confirmation/);
+    assert.doesNotMatch(html,/SOURCE_NOT_FOUND|SOURCE_NOT_PUBLISHED|VERIFIED_AND_PUBLISHED|Confirm privately|Floor plan not published/);
     assert.doesNotMatch(html,/No approved match yet|records that have cleared publication controls/);
   }
 });

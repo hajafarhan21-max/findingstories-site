@@ -47,30 +47,33 @@ export function projectPublicationDecision(project){
   if(project?.qualityState!=='public-ready')return {public:false,reason:'NOT_PUBLIC_READY'};
   if(required.some(value=>!value))return {public:false,reason:'MINIMUM_CONTENT_MISSING'};
   if(!approvedMedia(project.media).length&&project.visualFallback!=='BRANDED')return {public:false,reason:'VISUAL_NOT_GOVERNED'};
-  if(project.startingPrice!==null||project.handover!==null||project.paymentPlan!==null)return {public:false,reason:'UNVERIFIED_COMMERCIAL_VALUE'};
+  const asserted=['startingPrice','handover','paymentPlan'].filter(field=>project[field]!==null&&project[field]!==undefined);
+  if(asserted.some(field=>!project.factSources?.[field]))return {public:false,reason:'UNVERIFIED_COMMERCIAL_VALUE'};
   return {public:true,reason:'PUBLIC_READY'};
 }
 
 export function enrichProject(project){
   const media=project.media??(project.image?[{id:`${project.slug}-hero`,kind:'hero',path:project.image,alt:project.imageAlt,sourceUrl:project.verification?.source?.url??project.source?.url,sourceType:project.verification?.source?.type??'OFFICIAL_PROJECT_MATERIAL',reviewedAt:project.verification?.lastReviewed??project.source?.retrieved,projectSlug:project.slug,usageState:'APPROVED',verificationState:'VERIFIED'}]:[]);
   const structuredMedia=mediaByRole(media);
-  const units=project.units??project.bedrooms.map(bedrooms=>({name:`${bedrooms} bedroom`,bedrooms,bathrooms:null,size:null,balcony:null,floorPlans:structuredMedia.floorPlans.filter(plan=>plan.unitType===bedrooms)}));
+  const units=(project.units??project.bedrooms.map(bedrooms=>({name:bedrooms==='Studio'?'Studio':`${bedrooms} bedroom`,bedrooms,bathrooms:null,size:null,balcony:null}))).map(unit=>Object.freeze({...unit,floorPlans:structuredMedia.floorPlans.filter(plan=>plan.unitType===unit.bedrooms)}));
+  const sizeRange=project.sizeRange??null;
+  const unknownFields=['startingPrice','paymentPlan','handover','sizeRange'].filter(field=>field==='sizeRange'?!sizeRange:project[field]===null||project[field]===undefined);
   return Object.freeze({...project,
     qualityState:'public-ready', visualFallback:media.length?'NONE':'BRANDED', media:Object.freeze(media), theme:projectTheme(project.slug),
     mediaGroups:structuredMedia,units:Object.freeze(units),
-    snapshot:Object.freeze({propertyTypes:project.propertyTypes,bedroomMix:project.bedrooms,sizeRange:null,ownership:null,serviceCharge:null}),
-    commercial:Object.freeze({startingPrice:null,paymentPlan:null,booking:null,fees:null,handover:null,availability:'REQUIRES_CONFIRMATION',verifiedAt:null}),
+    snapshot:Object.freeze({propertyTypes:project.propertyTypes,bedroomMix:project.bedrooms,sizeRange,ownership:project.ownership??null,serviceCharge:null}),
+    commercial:Object.freeze({startingPrice:project.startingPrice??null,paymentPlan:project.paymentPlan??null,booking:null,fees:null,handover:project.handover??null,status:project.projectStatus??project.launchStatus,availability:'REQUIRES_CONFIRMATION',verifiedAt:project.source?.retrieved??null}),
     story:Object.freeze({
-      overview:project.summary,
-      residences:`The official project record identifies ${project.unitTypes?.join(' and ')||project.propertyTypes.join(' and ')}. Finding Stories separates that published mix from live inventory.`,
-      architecture:null, amenities:[], lifestyle:null,
-      community:`The verified project location is ${project.area}, ${project.emirate}. Travel times and nearby destinations are omitted until project-specific evidence is approved.`,
+      overview:project.overview??project.summary,
+      residences:project.residences??`The official project record identifies ${project.unitTypes?.join(' and ')||project.propertyTypes.join(' and ')}. Finding Stories separates that published mix from live inventory.`,
+      architecture:project.architecture??null, amenities:project.amenities??[], lifestyle:project.lifestyle??null,
+      community:project.locationNarrative??`The verified project location is ${project.area}, ${project.emirate}.`,
       buyerConsiderations:[`Confirm which ${project.propertyTypes.join(' or ').toLowerCase()} remain available.`,`Request the current price, payment milestones and completion position in writing.`,`Review the unit-specific plan, orientation, fees and contract before commitment.`]
     }),
-    location:Object.freeze({label:`${project.area}, ${project.emirate}`,map:structuredMedia.locationMap,nearby:[],mapStatus:structuredMedia.locationMap?'VERIFIED_AND_PUBLISHED':'SOURCE_NOT_FOUND',mapUnavailableReason:structuredMedia.locationMap?null:'No project-specific map or coordinates have passed source and usage review; an area label is shown instead.'}),
-    documents:Object.freeze([]),
+    location:Object.freeze({label:`${project.area}, ${project.emirate}`,map:structuredMedia.locationMap,nearby:project.nearby??[],mapStatus:structuredMedia.locationMap?'VERIFIED_AND_PUBLISHED':'SOURCE_NOT_PUBLISHED',mapUnavailableReason:structuredMedia.locationMap?null:'Explore the verified community context while requesting unit-specific directions from an advisor.'}),
+    documents:Object.freeze((project.researchSources??[]).filter(item=>item.url.endsWith('.pdf'))),
     conversion:Object.freeze({enquiryContext:`project:${project.slug}`,primaryLabel:'Request current project details',brochureLabel:null,viewingLabel:'Arrange a private consultation'}),
-    governance:Object.freeze({sources:[project.source??project.verification?.source].filter(Boolean),reviewedAt:project.source?.retrieved??project.verification?.lastReviewed,unknownFields:['startingPrice','paymentPlan','handover','currentAvailability','sizeRange'],freshness:'REVIEW_CURRENT'})
+    governance:Object.freeze({sources:project.researchSources??[project.source??project.verification?.source].filter(Boolean),reviewedAt:project.source?.retrieved??project.verification?.lastReviewed,unknownFields:[...unknownFields,'currentAvailability'],unresolvedReasons:project.unresolvedReasons??{},freshness:'REVIEW_CURRENT'})
   });
 }
 
