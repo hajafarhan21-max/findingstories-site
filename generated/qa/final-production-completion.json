@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-09-17",
+  "productionOrigin": "https://www.finding-stories.com",
+  "florence": {
+    "rootCause": "The approved pre-platform Florence source is e24bf57. PR #111 appended an unapproved desktop override to public/azizi-florence.css that changed the approved hero height and added padding on top of the existing fixed-header offset. That double-offset mutation broke the immutable hero geometry and could constrain or clip its copy. The earlier checks hashed the already-mutated file and therefore blessed the regression instead of comparing critical layout rules with the historical approved contract.",
+    "responsibleCommit": "a73574d / PR #111 (unapproved Florence CSS override)",
+    "responsibleFiles": [
+      "public/azizi-florence.css",
+      "platform/protected-pages.json",
+      "tests/protected-pages.test.js"
+    ],
+    "restorationSourceCommit": "e24bf57",
+    "protection": "Hash contract plus deny-by-default route/output ownership and generator mutation regression test"
+  },
+  "routes": {
+    "canonicalRegistry": 121,
+    "audited": 137,
+    "linksChecked": 6196,
+    "broken": 0,
+    "empty": 0
+  },
+  "publishedProjects": 9,
+  "projectCompleteness": {
+    "azizi-florence": {
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "VERIFIED_AND_PUBLISHED",
+      "interior": "VERIFIED_AND_PUBLISHED",
+      "amenities": "VERIFIED_AND_PUBLISHED",
+      "lifestyle": "SOURCE_NOT_PUBLISHED",
+      "floorPlans": "VERIFIED_AND_PUBLISHED",
+      "masterplan": "SOURCE_NOT_PUBLISHED",
+      "locationMap": "VERIFIED_AND_PUBLISHED",
+      "missingEvidence": [
+        "lifestyle",
+        "masterplan"
+      ]
+    },
+    "terra-gardens": {
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "VERIFIED_AND_PUBLISHED",
+      "interior": "VERIFIED_AND_PUBLISHED",
+      "amenities": "VERIFIED_AND_PUBLISHED",
+      "lifestyle": "VERIFIED_AND_PUBLISHED",
+      "floorPlans": "SOURCE_NOT_PUBLISHED",
+      "masterplan": "SOURCE_NOT_PUBLISHED",
+      "locationMap": "SOURCE_NOT_PUBLISHED",
+      "missingEvidence": [
+        "floorPlans",
+        "masterplan",
+        "locationMap"
+      ]
+    },
+    "chelsea-residences": {
+      "hero": "SOURCE_NOT_PUBLISHED",
+      "exterior": "SOURCE_NOT_PUBLISHED",
+      "interior": "SOURCE_NOT_PUBLISHED",
+      "amenities": "SOURCE_NOT_PUBLISHED",
+      "lifestyle": "SOURCE_NOT_PUBLISHED",
+      "floorPlans": "SOURCE_NOT_PUBLISHED",
+      "masterplan": "SOURCE_NOT_PUBLISHED",
+      "locationMap": "SOURCE_NOT_PUBLISHED",
+      "missingEvidence": [
+        "hero",
+        "exterior",
+        "interior",
+        "amenities",
+        "lifestyle",
+        "floorPlans",
+        "masterplan",
+        "locationMap"
+      ]
+    },
+    "the-serene-sobha-central": {
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "VERIFIED_AND_PUBLISHED",
+      "interior": "VERIFIED_AND_PUBLISHED",
+      "amenities": "VERIFIED_AND_PUBLISHED",
+      "lifestyle": "SOURCE_NOT_PUBLISHED",
+      "floorPlans": "VERIFIED_AND_PUBLISHED",
+      "masterplan": "SOURCE_NOT_PUBLISHED",
+      "locationMap": "VERIFIED_AND_PUBLISHED",
+      "missingEvidence": [
+        "lifestyle",
+        "masterplan"
+      ]
+    },
+    "sparklz-by-danube": {
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "SOURCE_NOT_PUBLISHED",
+      "interior": "SOURCE_NOT_PUBLISHED",
+      "amenities": "SOURCE_NOT_PUBLISHED",
+      "lifestyle": "SOURCE_NOT_PUBLISHED",
+      "floorPlans": "SOURCE_NOT_PUBLISHED",
+      "masterplan": "SOURCE_NOT_PUBLISHED",
+      "locationMap": "SOURCE_NOT_PUBLISHED",
+      "missingEvidence": [
+        "exterior",
+        "interior",
+        "amenities",
+        "lifestyle",
+        "floorPlans",
+        "masterplan",
+        "locationMap"
+      ]
+    },
+    "w-residences-dubai-harbour": {
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "VERIFIED_AND_PUBLISHED",
+      "interior": "VERIFIED_AND_PUBLISHED",
+      "amenities": "VERIFIED_AND_PUBLISHED",
+      "lifestyle": "VERIFIED_AND_PUBLISHED",
+      "floorPlans": "SOURCE_NOT_PUBLISHED",
+      "masterplan": "SOURCE_NOT_PUBLISHED",
+      "locationMap": "SOURCE_NOT_PUBLISHED",
+      "missingEvidence": [
+        "floorPlans",
+        "masterplan",
+        "locationMap"
+      ]
+    },
+    "yas-riva": {
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "VERIFIED_AND_PUBLISHED",
+      "interior": "VERIFIED_AND_PUBLISHED",
+      "amenities": "VERIFIED_AND_PUBLISHED",
+      "lifestyle": "VERIFIED_AND_PUBLISHED",
+      "floorPlans": "SOURCE_NOT_PUBLISHED",
+      "masterplan": "SOURCE_NOT_PUBLISHED",
+      "locationMap": "SOURCE_NOT_PUBLISHED",
+      "missingEvidence": [
+        "floorPlans",
+        "masterplan",
+        "locationMap"
+      ]
+    },
+    "mar-casa": {
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "VERIFIED_AND_PUBLISHED",
+      "interior": "VERIFIED_AND_PUBLISHED",
+      "amenities": "VERIFIED_AND_PUBLISHED",
+      "lifestyle": "VERIFIED_AND_PUBLISHED",
+      "floorPlans": "VERIFIED_AND_PUBLISHED",
+      "masterplan": "SOURCE_NOT_PUBLISHED",
+      "locationMap": "VERIFIED_AND_PUBLISHED",
+      "missingEvidence": [
+        "masterplan"
+      ]
+    },
+    "olfah": {
+      "hero": "VERIFIED_AND_PUBLISHED",
+      "exterior": "VERIFIED_AND_PUBLISHED",
+      "interior": "VERIFIED_AND_PUBLISHED",
+      "amenities": "VERIFIED_AND_PUBLISHED",
+      "lifestyle": "VERIFIED_AND_PUBLISHED",
+      "floorPlans": "SOURCE_NOT_PUBLISHED",
+      "masterplan": "SOURCE_NOT_PUBLISHED",
+      "locationMap": "SOURCE_NOT_PUBLISHED",
+      "missingEvidence": [
+        "floorPlans",
+        "masterplan",
+        "locationMap"
+      ]
+    }
+  },
+  "conversionPathsVerified": [
+    "homepage private enquiry",
+    "project request details",
+    "payment plan when published",
+    "floor plans when published",
+    "availability",
+    "private consultation",
+    "Florence enquiry",
+    "newsletter subscription",
+    "WhatsApp"
+  ],
+  "seo": {
+    "canonicalHost": "www.finding-stories.com",
+    "sitemap": "generated",
+    "robots": "generated",
+    "structuredData": "project and Florence templates",
+    "status": "PASS"
+  },
+  "systems": {
+    "leadApi": "PASS — existing API contract retained",
+    "smtp": "PASS — Gmail SMTP architecture retained",
+    "newsletter": "PASS — existing acquisition route retained",
+    "rsvpAcceptance": "PASS — lifecycle unchanged and regression covered",
+    "dld": "TRUTHFUL_UNAVAILABLE — no validated official snapshot in this build",
+    "publicationGates": "PASS",
+    "mediaGovernance": "PASS",
+    "backendHealth": "CODE_AND_TEST_VERIFIED; live credentials required for external production probe"
+  },
+  "externalDependencies": [
+    "DATABASE_URL / production database",
+    "Gmail SMTP credentials",
+    "optional official validated DLD snapshot",
+    "production deployment and live smoke-test access"
+  ],
+  "remainingHumanActions": [
+    "Deploy the reviewed commit",
+    "Run credentialed production smoke and health checks",
+    "Submit or monitor canonical URLs in Search Console",
+    "Provide a validated official DLD snapshot if market metrics are desired"
+  ],
+  "priorities": {
+    "p0RevenueBlocking": [],
+    "p1LaunchRequired": [],
+    "p2Optimization": [
+      "Expand only project-specific governed optional media as official evidence becomes available",
+      "Run recurring real-browser visual regression captures in deployment CI"
+    ]
+  }
+}
