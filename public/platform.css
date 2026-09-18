@@ -58,13 +58,14 @@
 .project-image>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 
 
-/* Brand visibility repair: the approved master PNG includes generous export whitespace.
-   Keep the real owner-provided artwork, but scale the artwork inside its header/footer viewport. */
-.site-header .brand{width:190px;height:72px;overflow:hidden}
-.site-header .brand picture{display:block;width:100%;height:100%;overflow:hidden}
-.site-header .brand picture img{width:100%;height:100%;max-width:none;object-fit:cover;transform:scale(1.85);transform-origin:center}
-.footer-brand{overflow:hidden}
-.footer-brand>img{width:240px;height:112px;max-width:none;object-fit:cover;object-position:center;transform:scale(1.55);transform-origin:center}
+/* Brand visibility repair: preserve the complete owner-provided master logo.
+   The source uses a square export canvas around a horizontal wordmark, so
+   cover/scale crops the artwork. Render the complete source instead. */
+.site-header .brand{width:190px;height:72px;overflow:visible}
+.site-header .brand picture{display:block;width:100%;height:100%;overflow:visible}
+.site-header .brand picture img{width:100%;height:100%;max-width:none;object-fit:contain;object-position:center;transform:none}
+.footer-brand{overflow:visible}
+.footer-brand>img{width:240px;height:112px;max-width:none;object-fit:contain;object-position:center;transform:none}
 @media(max-width:980px){
   .site-header .brand{width:170px;height:64px}
 }
@@ -74,5 +75,4 @@
 }
 @media(max-width:420px){
   .site-header .brand{width:58px;height:56px}
-  .site-header .brand picture img{object-fit:contain;transform:none}
 }
