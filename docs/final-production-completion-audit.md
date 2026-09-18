@@ -14,9 +14,9 @@ Generated 17 September 2026. This report records repository and deterministic bu
 
 ## Florence regression and restoration
 
-The last reviewed bespoke Florence lineage immediately before the generic project work is commit **e24bf57**. History does **not** show PR #106 directly changing a Florence-owned file. The last direct hero-layout edit was **f1ada31**, which combined a bounded hero height with fixed-header padding and could compress or clip the left-side story on shorter desktop viewports. Commit **67bd014** then introduced the standard project renderer in `scripts/generate-platform.mjs`, its shared rules in `public/platform.css`, and only a loose Florence test in `tests/project-experience.test.js`. The renderer did exclude Florence by slug, but there was no enforceable ownership boundary: another generator or output-path change could still mutate its files. The test checked only for `renderAziziFlorence` and a hero file larger than 1 KB, so it could pass after layout, CSS, section, or route corruption.
+The exact approved bespoke Florence restoration source is commit **e24bf57**. PR #111 later appended an unapproved desktop rule to `public/azizi-florence.css`, changing the approved bounded hero height and adding padding on top of the existing fixed-header margin. That double offset mutated the hero geometry. Commit **67bd014** had previously introduced the standard project renderer in `scripts/generate-platform.mjs`, its shared rules in `public/platform.css`, and only a loose Florence test in `tests/project-experience.test.js`. The renderer did exclude Florence by slug, but there was no enforceable ownership boundary: another generator or output-path change could still mutate its files. The test checked only for `renderAziziFlorence` and a hero file larger than 1 KB, so it could pass after layout, CSS, section, or route corruption.
 
-Florence now has an explicit protected-page registry, a reviewed hash contract over its renderer, handler, stylesheet, client and media, generator output guards, a before/after generator mutation test, and structural journey assertions. A Florence-specific short-viewport rule prevents the fixed navigation from reducing or clipping the approved hero story. Later SEO, sharing, source-governance and lead improvements remain intact.
+Florence now has an explicit protected-page registry, a reviewed hash contract over its renderer, handler, stylesheet, client and media, generator output guards, a before/after generator mutation test, and structural journey assertions. The Florence stylesheet is restored byte-for-byte to `e24bf57`. Later SEO, sharing, source-governance and lead improvements remain intact because they do not alter that visual contract. The permanent contract now covers file hashes, deterministic rendered output, required DOM landmarks, approved hero dimensions, desktop/mobile CSS rules, and forbidden layout overrides.
 
 ## Project media completeness
 
@@ -38,7 +38,7 @@ Detailed missing-evidence states are in `generated/qa/final-production-completio
 
 ## Customer journey, layout and conversion
 
-The shared standard-project renderer uses a governed hero or branded state, non-empty snapshot facts, overview, optional commercial facts, populated residences, optional governed gallery, optional amenities, intentional location state, buyer questions, source/currentness, conversion choices, related projects and footer. Optional sections are emitted only when data exists. Responsive rules cover 1440/1024 desktop composition, 768 tablet reflow and 390 mobile single-column flow, with bounded media ratios and overflow clipping.
+All eight generated published project pages—Terra Gardens, Chelsea Residences, The Serene at Sobha Central, Sparklz by Danube, W Residences Dubai Harbour, Yas Riva, Mar Casa and Olfah—were audited against the master hierarchy at all four responsive widths. The shared standard-project renderer uses a governed hero or branded state, non-empty snapshot facts, overview, optional commercial facts, populated residences, optional governed gallery, optional amenities, intentional location state, buyer questions, source/currentness, conversion choices, related projects and footer. Optional sections are emitted only when data exists. Responsive rules cover 1440/1024 desktop composition, 768 tablet reflow and 390 mobile single-column flow, with bounded media ratios and overflow clipping.
 
 Verified paths: homepage enquiry; standard-project Request Details, conditional Payment Plan and Floor Plans, Check Availability, Private Consultation and WhatsApp; Florence enquiry; newsletter. All retain the existing acquisition/lead APIs and attribution implementation. Gmail SMTP, lead numbering, Dubai timestamp formatting, duplicate handling and API contracts were not replaced. Resend was not introduced.
 
@@ -68,7 +68,7 @@ None in the repository. Deployment and credentialed smoke verification are opera
 ### P2 Optimization
 
 - Add optional media only when project-specific official evidence and usage approval exist.
-- Add recurring browser screenshot baselines in deployment CI. Browser screenshot tooling was unavailable in this container, so no claim of screenshot QA is made; deterministic DOM/CSS checks were used instead.
+- Add recurring browser screenshot baselines in deployment CI. Real Chromium screenshot QA was performed at 1440, 1024, 768 and 390 widths for Florence and representative generated project/homepage routes; screenshots remain uncommitted. Deterministic DOM/CSS contracts also enforce those responsive states in CI.
 
 ## External dependencies and human actions
 
