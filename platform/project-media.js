@@ -34,7 +34,8 @@ export const PROJECT_MEDIA=Object.freeze({
   'the-serene-sobha-central':Object.freeze([
     media('the-serene-sobha-central','hero','hero','https://sobharealty.com/sites/default/files/2025-08/Banner%201440x618%20%E2%80%93%2014.jpg','8560a6c3d7574f05c8ea25db19b2ccd612a686184f319b007b49f1426ecc34c3',2880,1236,'The Serene tower at Sobha Central against the Dubai skyline'),
     media('the-serene-sobha-central','exterior','exterior','https://sobharealty.com/sites/default/files/2025-08/Listing%20372x274%20%E2%80%93%2040.jpg','02c84d991db01abacb7504a83099a69522f7ba95f933c9d40b96c287973d2f72',744,548,'The Serene and Sobha Central landscaped podium'),
-    media('the-serene-sobha-central','interior','interior','https://sobharealty.com/sites/default/files/2025-08/Listing%20372x274%20%E2%80%93%2041.jpg','479d7cc620965d5d7a00ffbfc8e81a7d14d8dc3f35cd3648088fbfdb890156ef',744,548,'Open-plan residence interior at The Serene'),
+    // Upstream bytes for the previously reviewed interior changed on Sobha's server.
+    // Fail closed: omit the asset until the replacement bytes are independently reviewed and re-pinned.
     media('the-serene-sobha-central','amenity-pool','amenity','https://sobharealty.com/sites/default/files/2025-08/Listing%20372x274%20%E2%80%93%2043.jpg','5f1cdd06337f58b5e5729606245f4416db5b92c0848757cd9d9ae17e3d94b74b',744,548,'Landscaped swimming pool at The Serene, Sobha Central'),
     media('the-serene-sobha-central','amenity-2','amenity','https://sobharealty.com/sites/default/files/2025-08/Listing%20372x274%20%E2%80%93%2042.jpg','509c469aa53a1ebd85dda2664d489295b5beb7bfd3fe90f39f98a6af74b8af18',744,548,'Lifestyle amenity at The Serene'),
     media('the-serene-sobha-central','amenity-3','amenity','https://sobharealty.com/sites/default/files/2025-08/Listing%20372x274%20%E2%80%93%2044.jpg','b10281b6e7744f4dee9c9721a50741e0362b5a1d339b324ee0b6565066ca3245',744,548,'Landscaped leisure space at The Serene'),
