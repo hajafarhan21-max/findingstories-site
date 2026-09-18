@@ -34,8 +34,6 @@ export const PROJECT_MEDIA=Object.freeze({
   'the-serene-sobha-central':Object.freeze([
     // Sobha's remote project-page image bytes changed after review.
     // Fail closed for all remote Serene media until the replacement bytes are independently reviewed and re-pinned.
-    // Upstream bytes for the previously reviewed interior changed on Sobha's server.
-    // Fail closed: omit the asset until the replacement bytes are independently reviewed and re-pinned.
     brochureMedia('the-serene-sobha-central','location-map','location-map','https://sobharealty.com/sites/default/files/2025-08/SOBHA%20CENTRAL%20-%20THE%20SERENE%20BROCHURE_0.pdf',29,'assets-source/project-media/serene-map.webp.base64','eb79c1d7b138b98dfa1df10205d27130c40b307e97e779e11b621df682ae86a1',1400,990,'Official location plan for Sobha Central'),
     brochureMedia('the-serene-sobha-central','floor-plan-1br','floor-plan','https://sobharealty.com/sites/default/files/2025-08/SOBHA%20CENTRAL%20-%20THE%20SERENE%20BROCHURE_0.pdf',34,'assets-source/project-media/serene-1br.webp.base64','f988a03678847ffdf212e35326c57a9e68fcf25227f586dfb900590bd0ce7f6f',834,1179,'Official one-bedroom floor plan at The Serene','1'),
     brochureMedia('the-serene-sobha-central','floor-plan-2br','floor-plan','https://sobharealty.com/sites/default/files/2025-08/SOBHA%20CENTRAL%20-%20THE%20SERENE%20BROCHURE_0.pdf',61,'assets-source/project-media/serene-2br.webp.base64','1dc577ea2daa29c49874e22f6f33b52cd0a4e5e3a72067a8ebbf22d7989a0a5f',834,1179,'Official two-bedroom floor plan at The Serene','2')
