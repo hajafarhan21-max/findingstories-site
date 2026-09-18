@@ -3,12 +3,12 @@
   "generatedAt": "2026-09-17",
   "productionOrigin": "https://www.finding-stories.com",
   "florence": {
-    "rootCause": "Git history shows PR #106 commit 67bd014 did not directly edit Florence; it introduced the generic project renderer and shared visual system without a deny-by-default ownership boundary. The last direct pre-platform hero-layout change was f1ada31 in public/azizi-florence.css. Its fixed-height hero plus header padding could compress or clip the left-side story on shorter desktops. The prior regression check only asserted a renderer symbol and asset size, so it could not detect CSS/layout mutation, section loss, or route-output replacement.",
-    "responsibleCommit": "f1ada31 (direct hero layout); 67bd014 (missing generator isolation)",
+    "rootCause": "The approved pre-platform Florence source is e24bf57. PR #111 appended an unapproved desktop override to public/azizi-florence.css that changed the approved hero height and added padding on top of the existing fixed-header offset. That double-offset mutation broke the immutable hero geometry and could constrain or clip its copy. The earlier checks hashed the already-mutated file and therefore blessed the regression instead of comparing critical layout rules with the historical approved contract.",
+    "responsibleCommit": "a73574d / PR #111 (unapproved Florence CSS override)",
     "responsibleFiles": [
-      "scripts/generate-platform.mjs",
-      "public/platform.css",
-      "tests/project-experience.test.js"
+      "public/azizi-florence.css",
+      "platform/protected-pages.json",
+      "tests/protected-pages.test.js"
     ],
     "restorationSourceCommit": "e24bf57",
     "protection": "Hash contract plus deny-by-default route/output ownership and generator mutation regression test"

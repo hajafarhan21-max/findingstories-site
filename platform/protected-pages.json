@@ -7,7 +7,7 @@
       "files": {
         "api/_lib/azizi-florence.js": "bfb0e94efd6ba81d041b72340eb4a01f8d4755e62964f7d34d56162cb9fc9d73",
         "api/_lib/azizi-florence-page.js": "1903a4d690b6ddb3baf66a87e783b90e623891d49bcbc711e8c4210e9b2e7b6e",
-        "public/azizi-florence.css": "d3c2defc7892ba5086d997179e7215b0f7cba0f5ab3d0668839f3b54e88b7a4d",
+        "public/azizi-florence.css": "7d3458dc4c1bd44b8f28fbe4cdfd4cd26f60d6224a9a8d3c895e90885a6a45d2",
         "public/azizi-florence.js": "c3782a2a146897b4cf5d026ef016ea090b429312a3e855b5f2783f96f816b4f6",
         "public/assets/azizi-florence/hero.webp": "07c4ba4e4527577034103a20713d37b9c4aceb4a7a7bd31310f9aabcd50a86c3",
         "public/assets/azizi-florence/overview-main.webp": "5a5756982b0a6b81a362b1f7624dbd3674dc1f938c4e18b9dd36f0aabe07b505",
@@ -20,6 +20,34 @@
         "public/assets/azizi-florence/residence-4br-villa.webp": "003387b2ddcdb9d6c8ed6fbd4fa40696593c47f995f21f826c4d739c7532331a",
         "public/assets/azizi-florence/residence-5br-villa.webp": "2908bf6fd44b4403fdf388a2ab388fb3ed399808c2bd7fae8c8952a6be66fb22",
         "public/assets/azizi-florence/residence-6br-villa.webp": "7b1b9a52cf9dafc1fc7d9342d09ff2853600e6460aa1c9dfe23d1bf08f30101e"
+      },
+      "renderedOutputSha256": "1525ad6acedc566c28cffd12fbe205514709c8b1cb864eb052ed62f24434a78f",
+      "visualContract": {
+        "sourceCommit": "e24bf57",
+        "requiredCss": [
+          "\\.hero\\{height:min\\(880px,100vh\\);min-height:720px",
+          "\\.hero-content\\{[^}]*width:min\\(670px,54%\\);[^}]*padding:150px 0 80px",
+          "@media\\(max-width:800px\\)\\{[^}]*body\\{padding-bottom:66px\\}",
+          "\\.hero-content\\{width:100%;padding:190px 22px 48px\\}",
+          "@media\\(max-width:520px\\)\\{\\.hero\\{height:720px;min-height:720px\\}\\.hero-content\\{padding-top:150px\\}"
+        ],
+        "forbiddenCss": [
+          "min-height:max\\(720px,100svh\\)"
+        ],
+        "viewports": {
+          "390": {
+            "heroCopyWidth": "100%"
+          },
+          "768": {
+            "heroCopyWidth": "100%"
+          },
+          "1024": {
+            "heroCopyMinWidth": 430
+          },
+          "1440": {
+            "heroCopyMinWidth": 520
+          }
+        }
       }
     }
   }
