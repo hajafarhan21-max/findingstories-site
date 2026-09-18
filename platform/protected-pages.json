@@ -7,7 +7,7 @@
       "files": {
         "api/_lib/azizi-florence.js": "bfb0e94efd6ba81d041b72340eb4a01f8d4755e62964f7d34d56162cb9fc9d73",
         "api/_lib/azizi-florence-page.js": "1903a4d690b6ddb3baf66a87e783b90e623891d49bcbc711e8c4210e9b2e7b6e",
-        "public/azizi-florence.css": "7d3458dc4c1bd44b8f28fbe4cdfd4cd26f60d6224a9a8d3c895e90885a6a45d2",
+        "public/azizi-florence.css": "78c34f2dfe19e1313497c2ae7e719579735ac3a1520e7e2acad98680cc36b4d1",
         "public/azizi-florence.js": "c3782a2a146897b4cf5d026ef016ea090b429312a3e855b5f2783f96f816b4f6",
         "public/assets/azizi-florence/hero.webp": "07c4ba4e4527577034103a20713d37b9c4aceb4a7a7bd31310f9aabcd50a86c3",
         "public/assets/azizi-florence/overview-main.webp": "5a5756982b0a6b81a362b1f7624dbd3674dc1f938c4e18b9dd36f0aabe07b505",
@@ -29,7 +29,8 @@
           "\\.hero-content\\{[^}]*width:min\\(670px,54%\\);[^}]*padding:150px 0 80px",
           "@media\\(max-width:800px\\)\\{[^}]*body\\{padding-bottom:66px\\}",
           "\\.hero-content\\{width:100%;padding:190px 22px 48px\\}",
-          "@media\\(max-width:520px\\)\\{\\.hero\\{height:720px;min-height:720px\\}\\.hero-content\\{padding-top:150px\\}"
+          "@media\\(max-width:520px\\)\\{\\.hero\\{height:720px;min-height:720px\\}\\.hero-content\\{padding-top:150px\\}",
+          "\\.hero-content\\{width:min\\(calc\\(670px \\+ max\\(5vw,calc\\(\\(100vw - 1320px\\)\\/2\\)\\)\\),62vw\\)\\}"
         ],
         "forbiddenCss": [
           "min-height:max\\(720px,100svh\\)"
@@ -47,7 +48,8 @@
           "1440": {
             "heroCopyMinWidth": 520
           }
-        }
+        },
+        "note": "Wide-desktop regression fix: hero-content outer width includes the centered page gutter so the approved copy measure cannot collapse."
       }
     }
   }
