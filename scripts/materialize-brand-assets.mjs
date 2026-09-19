@@ -5,6 +5,7 @@ import {decodeImageBase64} from './materialize-florence-assets.mjs';
 export const MATERIALIZED_BRAND_ASSETS=Object.freeze([
   {source:'assets-source/brand/finding-stories-master-logo.png.base64',output:'public/assets/brand/finding-stories-master-logo.png',format:'png'},
   {source:'assets-source/brand/finding-stories-monogram.png.base64',output:'public/assets/brand/finding-stories-monogram.png',format:'png'},
+  {source:'assets-source/brand/finding-stories-approved-monogram.webp.base64',output:'public/assets/brand/finding-stories-approved-monogram.webp',format:'webp'},
   {source:'assets-source/brand/premium-finding-stories-banner.png.base64',output:'public/assets/brand/premium-finding-stories-banner.png',format:'png'}
 ]);
 
