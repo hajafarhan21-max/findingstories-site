@@ -98,3 +98,16 @@
 .footer-brand::before{content:"";display:block;width:58px;height:58px;flex:0 0 58px;background:url('/assets/brand/finding-stories-approved-monogram.webp') center/contain no-repeat}
 .footer-brand::after{content:"FINDING STORIES";display:block;white-space:nowrap;font:400 1.08rem/1 var(--font-display);letter-spacing:.105em;color:#f4efe5}
 @media(max-width:620px){.footer-brand{width:220px;min-height:56px;gap:10px}.footer-brand::before{width:50px;height:50px;flex-basis:50px}.footer-brand::after{font-size:.96rem}}
+
+
+/* Footer brand layout alignment repair (approved production treatment, 2026-09-20).
+   Keep the approved FS architectural monogram + wordmark on one row and restore
+   the brand description below at normal readable width. */
+.footer-branding{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.footer-brand{width:auto;max-width:100%;min-height:58px;display:flex;align-items:center;justify-content:flex-start;gap:14px;overflow:visible;margin:0 0 14px}
+.footer-brand>img{display:none}
+.footer-brand::before{content:"";display:block;width:58px;height:58px;flex:0 0 58px;background:url('/assets/brand/finding-stories-approved-monogram.webp') center/contain no-repeat}
+.footer-brand::after{content:"FINDING STORIES";display:block;white-space:nowrap;font:400 1.08rem/1 var(--font-display);letter-spacing:.105em;color:#f4efe5}
+.footer-branding>p{width:100%;max-width:360px;margin:0;line-height:1.65}
+@media(max-width:980px){.footer-branding>p{max-width:320px}}
+@media(max-width:620px){.footer-brand{min-height:52px;gap:12px;margin-bottom:12px}.footer-brand::before{width:52px;height:52px;flex-basis:52px}.footer-brand::after{font-size:.98rem}.footer-branding>p{max-width:100%}}
