@@ -76,3 +76,15 @@
 @media(max-width:420px){
   .site-header .brand{width:58px;height:56px}
 }
+
+
+/* Approved Finding Stories header lockup repair (2026-09-19).
+   Use the approved monogram as the graphic mark and render the brand name beside it.
+   This avoids forcing the square master-logo artwork into a shallow navigation slot. */
+.site-header .brand{width:248px;height:72px;display:flex;align-items:center;justify-content:flex-start;gap:12px;overflow:visible;flex:0 0 auto}
+.site-header .brand picture{display:none}
+.site-header .brand::before{content:"";display:block;width:58px;height:58px;flex:0 0 58px;background:url('/assets/brand/finding-stories-monogram.png') center/contain no-repeat}
+.site-header .brand::after{content:"FINDING STORIES";display:block;white-space:nowrap;font:400 1.18rem/1 var(--font-display);letter-spacing:.105em;color:var(--ink)}
+@media(max-width:980px){.site-header .brand{width:226px;height:64px}.site-header .brand::before{width:52px;height:52px;flex-basis:52px}.site-header .brand::after{font-size:1.08rem}}
+@media(max-width:620px){.site-header .brand{width:204px;height:56px;gap:10px}.site-header .brand::before{width:46px;height:46px;flex-basis:46px}.site-header .brand::after{font-size:.98rem}}
+@media(max-width:420px){.site-header .brand{width:56px;height:56px}.site-header .brand::before{width:52px;height:52px;flex-basis:52px}.site-header .brand::after{display:none}}
