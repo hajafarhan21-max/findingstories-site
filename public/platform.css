@@ -111,3 +111,14 @@
 .footer-branding>p{width:100%;max-width:360px;margin:0;line-height:1.65}
 @media(max-width:980px){.footer-branding>p{max-width:320px}}
 @media(max-width:620px){.footer-brand{min-height:52px;gap:12px;margin-bottom:12px}.footer-brand::before{width:52px;height:52px;flex-basis:52px}.footer-brand::after{font-size:.98rem}.footer-branding>p{max-width:100%}}
+
+
+/* Final footer lockup structure repair (2026-09-20).
+   Actual generated markup is .footer-brand > img + p. Place the approved
+   monogram and wordmark on row one, then span the existing description below. */
+.footer-grid>.footer-brand{width:100%;max-width:390px;min-height:0;display:grid;grid-template-columns:58px minmax(0,1fr);grid-template-rows:auto auto;align-items:center;column-gap:14px;row-gap:14px;margin:0;overflow:visible}
+.footer-grid>.footer-brand>img{display:none}
+.footer-grid>.footer-brand::before{content:"";grid-column:1;grid-row:1;display:block;width:58px;height:58px;background:url('/assets/brand/finding-stories-approved-monogram.webp') center/contain no-repeat}
+.footer-grid>.footer-brand::after{content:"FINDING STORIES";grid-column:2;grid-row:1;display:block;white-space:nowrap;font:400 1.08rem/1 var(--font-display);letter-spacing:.105em;color:#f4efe5}
+.footer-grid>.footer-brand>p{grid-column:1/-1;grid-row:2;width:auto;max-width:360px;margin:0;color:#eee7dc;line-height:1.65}
+@media(max-width:620px){.footer-grid>.footer-brand{max-width:100%;grid-template-columns:52px minmax(0,1fr);column-gap:12px;row-gap:12px}.footer-grid>.footer-brand::before{width:52px;height:52px}.footer-grid>.footer-brand::after{font-size:.98rem}.footer-grid>.footer-brand>p{max-width:100%}}
