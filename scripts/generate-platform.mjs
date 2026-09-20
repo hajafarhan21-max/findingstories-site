@@ -1,6 +1,7 @@
 import {assertGeneratorOutputPath} from '../platform/page-ownership.js';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {AREAS,DEVELOPERS,PROPERTY_TYPES,STATUS_GROUPS,PLATFORM_ROUTES,PUBLISHED_PROJECTS,projectsFor} from '../platform/catalog.js';
+import {inventoryForDeveloper} from '../platform/developer-inventory.js';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const canonical=p=>`https://www.finding-stories.com${p==='/'?'/':p}`;
 const options=(xs,placeholder)=>`<option value="">${placeholder}</option>`+xs.map(x=>`<option value="${x.slug}">${esc(x.name||x.label)}</option>`).join('');
@@ -33,8 +34,9 @@ pages.areas=directory('Explore UAE Areas','Substantive directory records are sep
 pages.developers=directory('UAE Property Developers','Official-source directory records without implied live stock.','/developers',DEVELOPERS,'DEVELOPER');
 for(const d of DEVELOPERS){
  const developerProjects=projectsFor({developer:d.slug});
- const lifecycle=STATUS_GROUPS.map(status=>({status,projects:developerProjects.filter(project=>project.statusSlug===status.slug)}));
- const lifecycleHtml=`<section class="section developer-lifecycle"><div class="section-inner"><div class="section-head"><div><p class="eyebrow">PROJECT LIFECYCLE</p><h2>Published ${esc(d.name)} project records.</h2></div><p>Only source-verified project guides are shown. Empty lifecycle groups remain explicit rather than implying inventory.</p></div><div class="lifecycle-grid">${lifecycle.map(group=>`<article class="lifecycle-card"><span>${esc(group.status.label)}</span><strong>${group.projects.length}</strong><p>${group.projects.length?group.projects.map(project=>`<a href="${project.path}">${esc(project.name)}</a>`).join(''): 'No verified public project record yet.'}</p></article>`).join('')}</div></div></section>`;
+ const inventory=inventoryForDeveloper(d.slug).filter(item=>!developerProjects.some(project=>project.name===item.name));
+ const lifecycle=STATUS_GROUPS.map(status=>({status,projects:developerProjects.filter(project=>project.statusSlug===status.slug),inventory:inventory.filter(item=>item.statusSlug===status.slug)}));
+ const lifecycleHtml=`<section class="section developer-lifecycle"><div class="section-inner"><div class="section-head"><div><p class="eyebrow">PROJECT LIFECYCLE</p><h2>Verified ${esc(d.name)} project records.</h2></div><p>Public project guides link through directly. Additional source-backed developer records are shown as research inventory only; they do not imply live availability.</p></div><div class="lifecycle-grid">${lifecycle.map(group=>{const total=group.projects.length+group.inventory.length;const guides=group.projects.map(project=>`<a href="${project.path}">${esc(project.name)}</a>`).join('');const records=group.inventory.map(item=>`<a href="${esc(item.sourceUrl)}" rel="nofollow noopener">${esc(item.name)} <small>· official source ↗</small></a>`).join('');return `<article class="lifecycle-card"><span>${esc(group.status.label)}</span><strong>${total}</strong><p>${total?[guides,records].filter(Boolean).join(''):'No verified project record yet.'}</p></article>`}).join('')}</div><p class="source-note">Lifecycle labels reflect cited official developer sources reviewed 20 September 2026. Current sales availability, pricing and inventory require separate confirmation.</p></div></section>`;
  pages[`developers-${d.slug}`]=detail(`${d.name} projects`,d.description,`/developers/${d.slug}`,d.source,developerProjects).replace('</main>',lifecycleHtml+'</main>');
 }
 function projectGuide(p){
