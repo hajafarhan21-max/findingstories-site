@@ -122,3 +122,12 @@
 .footer-grid>.footer-brand::after{content:"FINDING STORIES";grid-column:2;grid-row:1;display:block;white-space:nowrap;font:400 1.08rem/1 var(--font-display);letter-spacing:.105em;color:#f4efe5}
 .footer-grid>.footer-brand>p{grid-column:1/-1;grid-row:2;width:auto;max-width:360px;margin:0;color:#eee7dc;line-height:1.65}
 @media(max-width:620px){.footer-grid>.footer-brand{max-width:100%;grid-template-columns:52px minmax(0,1fr);column-gap:12px;row-gap:12px}.footer-grid>.footer-brand::before{width:52px;height:52px}.footer-grid>.footer-brand::after{font-size:.98rem}.footer-grid>.footer-brand>p{max-width:100%}}
+
+
+/* Production content activation: improve dark editorial-card legibility and lifecycle discovery. */
+.section.dark .link-card h3,.section.dark .link-card p,.section.dark .link-card span{color:#f4efe5}
+.section.dark .link-card p{opacity:.84}
+.section.dark .link-card{border-color:rgba(244,239,229,.24)}
+.section.dark .link-card:hover{border-color:rgba(244,239,229,.58)}
+.collections-head{margin-top:56px}
+.intelligence-preview .source-note span{display:block;margin-top:8px;line-height:1.55}
