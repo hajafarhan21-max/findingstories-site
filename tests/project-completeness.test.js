@@ -26,7 +26,7 @@ test('unknown optional fields do not exclude discovery records',()=>{
 });
 test('default Buy UI retains all cards and only shows empty state for a genuine zero result',async()=>{
   const html=await readFile('public/projects.html','utf8');
-  assert.equal((html.match(/data-project data-intent="Buy"/g)||[]).length,12);
+  assert.equal((html.match(/data-project data-intent="Buy"/g)||[]).length,PUBLISHED_PROJECTS.length);
   assert.match(html,/<option>Buy<\/option>/);
   assert.match(html,/data-empty hidden/);
   const js=await readFile('public/platform.js','utf8');
