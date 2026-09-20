@@ -131,3 +131,18 @@
 .section.dark .link-card:hover{border-color:rgba(244,239,229,.58)}
 .collections-head{margin-top:56px}
 .intelligence-preview .source-note span{display:block;margin-top:8px;line-height:1.55}
+
+
+/* Phase 2 production population: readable research cards + premium governed visual fallbacks. */
+.section.dark .link-card{background:#fffdf9;border-color:#dcd4c6;color:var(--ink)}
+.section.dark .link-card h3{color:var(--ink)}
+.section.dark .link-card p{color:var(--muted);opacity:1}
+.section.dark .link-card span{color:var(--gold)}
+.section.dark .link-card:hover,.section.dark .link-card:focus-visible{border-color:var(--gold);box-shadow:0 18px 45px rgba(0,0,0,.16)}
+.project-image-placeholder{position:relative;isolation:isolate;background:
+radial-gradient(circle at 76% 18%,color-mix(in srgb,var(--project-soft) 88%,white),transparent 23%),
+linear-gradient(135deg,color-mix(in srgb,var(--project-accent) 84%,#171713),#171713 72%)}
+.project-image-placeholder:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.32;background:
+linear-gradient(115deg,transparent 0 46%,rgba(255,255,255,.18) 46.2% 46.7%,transparent 47%),
+linear-gradient(25deg,transparent 0 62%,rgba(215,195,156,.22) 62.2% 62.8%,transparent 63%)}
+.project-image-placeholder:after{content:"FINDING STORIES · VERIFIED PROJECT GUIDE";position:absolute;right:22px;top:22px;font-size:.55rem;letter-spacing:.16em;color:rgba(255,255,255,.78)}
