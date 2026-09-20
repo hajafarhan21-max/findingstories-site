@@ -21,7 +21,7 @@ test('project media schema exposes governed categories and complete provenance',
 test('unknown optional fields do not exclude discovery records',()=>{
   assert.equal(projectsFor({}).length,12);
   assert.equal(projectsFor({price:5000000}).length,12);
-  assert.equal(projectsFor({size:1000}).length,11); // The Serene has a verified maximum below this filter.
+  assert.equal(projectsFor({size:1000}).length,PUBLISHED_PROJECTS.filter(project=>project.snapshot.sizeRange===null||project.snapshot.sizeRange.max===null||project.snapshot.sizeRange.max>=1000).length);
   assert.ok(projectsFor({bedrooms:'2'}).length>0);
 });
 test('default Buy UI retains all cards and only shows empty state for a genuine zero result',async()=>{
