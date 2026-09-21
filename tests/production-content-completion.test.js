@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {PUBLISHED_PROJECTS} from '../platform/catalog.js';
 
 test('verified project records remain useful project guides when availability is unknown',async()=>{
-  assert.equal(PUBLISHED_PROJECTS.length,12);
+  assert.equal(PUBLISHED_PROJECTS.length,15);
   assert.equal(PUBLISHED_PROJECTS.filter(project=>project.currentAvailability!=='UNVERIFIED').length,11);
   for(const project of PUBLISHED_PROJECTS.filter(project=>project.slug!=='azizi-florence')){
     const html=await readFile(`public/projects-${project.slug}.html`,'utf8');
