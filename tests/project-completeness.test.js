@@ -5,7 +5,7 @@ import {PUBLISHED_PROJECTS,projectsFor} from '../platform/catalog.js';
 import {STATES,auditProject} from '../scripts/audit-project-completeness.mjs';
 
 test('every published project has a complete, enumerated evidence audit',()=>{
-  assert.equal(PUBLISHED_PROJECTS.length,12);
+  assert.equal(PUBLISHED_PROJECTS.length,15);
   for(const project of PUBLISHED_PROJECTS){
     const row=auditProject(project);
     for(const [key,value] of Object.entries(row))if(!['slug','name','classification','customerFallback','mediaCounts','officialSources','unresolved','unresolvedDetails'].includes(key))assert.ok(STATES.includes(value),`${project.slug}.${key}`);
@@ -19,8 +19,8 @@ test('project media schema exposes governed categories and complete provenance',
   }
 });
 test('unknown optional fields do not exclude discovery records',()=>{
-  assert.equal(projectsFor({}).length,12);
-  assert.equal(projectsFor({price:5000000}).length,12);
+  assert.equal(projectsFor({}).length,PUBLISHED_PROJECTS.length);
+  assert.equal(projectsFor({price:5000000}).length,PUBLISHED_PROJECTS.length);
   assert.equal(projectsFor({size:1000}).length,PUBLISHED_PROJECTS.filter(project=>project.snapshot.sizeRange===null||project.snapshot.sizeRange.max===null||project.snapshot.sizeRange.max>=1000).length);
   assert.ok(projectsFor({bedrooms:'2'}).length>0);
 });
