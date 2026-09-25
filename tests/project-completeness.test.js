@@ -5,7 +5,7 @@ import {PUBLISHED_PROJECTS,projectsFor} from '../platform/catalog.js';
 import {STATES,auditProject} from '../scripts/audit-project-completeness.mjs';
 
 test('every published project has a complete, enumerated evidence audit',()=>{
-  assert.equal(PUBLISHED_PROJECTS.length,15);
+  assert.equal(PUBLISHED_PROJECTS.length,18);
   for(const project of PUBLISHED_PROJECTS){
     const row=auditProject(project);
     for(const [key,value] of Object.entries(row))if(!['slug','name','classification','customerFallback','mediaCounts','officialSources','unresolved','unresolvedDetails'].includes(key))assert.ok(STATES.includes(value),`${project.slug}.${key}`);
