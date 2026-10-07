@@ -32,7 +32,7 @@ export function fallback(lead) {
   const timeline=/immediate|30 day|0.?3 month/i.test(lead.purchase_timeline||'')?12:/3.?6 month/i.test(lead.purchase_timeline||'')?7:0;
   const contactability=(lead.phone?8:0)+(lead.email?3:0)+(lead.preferred_contact_method?2:0);
   const discovery=(lead.acquisition_project?5:0)+(lead.budget_intent?3:0)+(lead.bedroom_intent?2:0);
-  const score = Math.min(100, 10 + filled.length * 4 + timeline + contactability + discovery + intent);
+  const score = Math.min(100, 9 + filled.length * 4 + timeline + contactability + discovery + intent);
   const missing = ['email','country_of_residence','budget','preferred_areas','payment_method','purchase_timeline'].filter(k => !lead[k]);
   return { lead_score: score, temperature: score >= 75 ? 'Hot' : score >= 45 ? 'Warm' : 'Cold', qualification_summary: 'Deterministic fallback qualification; AI review was unavailable.', requirement_summary: [lead.purpose, lead.property_type, lead.budget].filter(Boolean).join(' · ') || 'Initial enquiry', missing_information: missing, next_action: 'Review the captured requirement and contact the lead with consent.', whatsapp_follow_up_draft: `Hello ${lead.name}, thank you for contacting Finding Stories. May we arrange a brief call to understand your UAE property requirement?`, call_opener: `Hello ${lead.name}, this is Finding Stories following up on your property enquiry.` };
 }
