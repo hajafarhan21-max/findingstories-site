@@ -6,7 +6,7 @@ import { followUpDate, persistAndSchedule, qualifySavedLead } from '../api/_lib/
 
 test('fallback temperature follows score bands', () => {
   const result = fallback({ name: 'Haja', purchase_timeline: 'Immediately', country_of_residence: 'UAE', purpose: 'Investment', budget: 'AED 2m', property_type: 'Apartment', bedrooms: '2', preferred_areas: 'Dubai Hills', payment_method: 'Cash', owns_uae_property: 'No' });
-  assert.equal(result.lead_score, 70);
+  assert.equal(result.lead_score, 57);
   assert.equal(result.temperature, 'Warm');
 });
 
@@ -59,4 +59,11 @@ test('Hot, Warm and Cold follow-up rules use 0, 1 and 3 days', () => {
   assert.equal(followUpDate('Hot', '2026-07-30T10:00:00Z'), '2026-07-30');
   assert.equal(followUpDate('Warm', '2026-07-30T10:00:00Z'), '2026-07-31');
   assert.equal(followUpDate('Cold', '2026-07-30T10:00:00Z'), '2026-08-02');
+});
+
+
+test('discovery and high-intent signals can promote a qualified lead to Hot', () => {
+  const result = fallback({ name:'Investor', phone:'+971501234567', email:'investor@example.com', preferred_contact_method:'WhatsApp', purchase_timeline:'Immediately', country_of_residence:'UAE', purpose:'Investment', budget:'AED 2m', property_type:'Apartment', bedrooms:'2', preferred_areas:'Dubai', payment_method:'Cash', owns_uae_property:'Yes', acquisition_project:'Published Project', budget_intent:'AED 2m', bedroom_intent:'2', acquisition_signals:['project_page_enquiry','payment_plan_interest','meeting_request','site_visit_request'] });
+  assert.equal(result.temperature, 'Hot');
+  assert.ok(result.lead_score >= 75);
 });
