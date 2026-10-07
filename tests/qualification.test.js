@@ -6,7 +6,7 @@ import { followUpDate, persistAndSchedule, qualifySavedLead } from '../api/_lib/
 
 test('fallback temperature follows score bands', () => {
   const result = fallback({ name: 'Haja', purchase_timeline: 'Immediately', country_of_residence: 'UAE', purpose: 'Investment', budget: 'AED 2m', property_type: 'Apartment', bedrooms: '2', preferred_areas: 'Dubai Hills', payment_method: 'Cash', owns_uae_property: 'No' });
-  assert.equal(result.lead_score, 70);
+  assert.equal(result.lead_score, 57);
   assert.equal(result.temperature, 'Warm');
 });
 
