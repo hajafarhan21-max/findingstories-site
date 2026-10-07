@@ -6,6 +6,10 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/api/investor-discovery",
+      "destination": "/api/acquisition?route=investor-discovery"
+    },
+    {
       "source": "/api/newsletter/subscribe",
       "destination": "/api/acquisition?route=newsletter&action=subscribe"
     },
