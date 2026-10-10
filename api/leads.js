@@ -109,7 +109,7 @@ export default async function handler(req, res) {
     await persistRespondAndSchedule({
       lead:attributedLead,
       persist: value => persistLead(sql, value),
-      respond: saved => json(res, saved.duplicate ? 200 : 201, { ok: true, id: saved.id, duplicate: saved.duplicate,
+      respond: saved => json(res, saved.duplicate ? 200 : 201, { ok: true, duplicate: saved.duplicate,
         message: 'Thank you. Haja and the Finding Stories team will review your requirement.' }),
       schedule: scheduleQualification,
       background: saved => runPostPersistence({ saved, lead:attributedLead, project:attributedProject, sql })
