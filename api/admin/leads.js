@@ -1,4 +1,5 @@
 import revenueHandler from '../_lib/revenue-route.js';
+import revenueOperationsSnapshot from '../_lib/revenue-operations-snapshot.js';
 import { isAdmin } from '../_lib/auth.js';
 import { database } from '../_lib/db.js';
 import { json, method } from '../_lib/http.js';
@@ -13,6 +14,7 @@ export default async function handler(req, res) {
   const crmRoutes={me:crmMe,leads:crmLeads,tasks:crmTasks,opportunities:crmOpportunities,launch:crmLaunch,campaigns:crmCampaigns};
   if(req.query?.crm&&crmRoutes[req.query.crm])return crmRoutes[req.query.crm](req,res);
   if (req.query?.view === 'revenue') return revenueHandler(req, res);
+  if (req.query?.view === 'revenue-operations') return revenueOperationsSnapshot(req, res);
   if (!method(req, res, ['GET'])) return;
   if (!isAdmin(req)) return json(res, 401, { error: 'Authentication required.' });
   try {
