@@ -6,6 +6,10 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/damac-lagoons-sorento",
+      "destination": "/damac-lagoons-sorento.html"
+    },
+    {
       "source": "/api/investor-discovery",
       "destination": "/api/acquisition?route=investor-discovery"
     },
